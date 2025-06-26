@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [user, setUser] = useState(null); // Using state instead of localStorage
@@ -23,28 +24,28 @@ const Header = () => {
             <span className="brand-name">BluCollar</span>
           </a>
           <nav className="nav-links">
-            <a href="/" className="nav-link">Home</a>
-            <a href="/about" className="nav-link">About Us</a>
-            <a href="/services" className="nav-link">Services</a>
-            <a href="/find-workers" className="nav-link">Find a Worker</a>
-            <a href="/contact" className="nav-link">Contact</a>
+            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/about" className="nav-link">About Us</Link>
+            <Link to="/services" className="nav-link">Services</Link>
+            <Link to="/find-workers" className="nav-link">Find a Worker</Link>
+            <Link to="/contact" className="nav-link">Contact</Link>
           </nav>
           <div className="nav-buttons">
             {!user && (
               <>
-                <a href="/login" className="header-btn header-btn-outline">Login</a>
-                <a href="/signup" className="header-btn header-btn-solid">Get started</a>
+                <Link to="/login" className="header-btn header-btn-outline">Login</Link>
+                <Link to="/signup" className="header-btn header-btn-solid">Get started</Link>
               </>
             )}
             {user && (
-              <a href="/account-settings" className="header-avatar-link" title="My Account">
+              <Link to="/account-settings" className="header-avatar-link" title="My Account">
                 <div className="header-avatar">
                   {user.profilePhoto
                     ? <img src={user.profilePhoto} alt="Account" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
                     : (user.name ? user.name[0].toUpperCase() : <FaUser />)
                   }
                 </div>
-              </a>
+              </Link>
             )}
           </div>
         </div>
@@ -67,19 +68,19 @@ const Header = () => {
         
         {isMobileMenuOpen && (
           <div className="mobile-menu">
-            <a href="/" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Home</a>
-            <a href="/about" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>About Us</a>
-            <a href="/services" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Services</a>
-            <a href="/find-workers" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Find a Worker</a>
-            <a href="/contact" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
+            <Link to="/" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+            <Link to="/about" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>About Us</Link>
+            <Link to="/services" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Services</Link>
+            <Link to="/find-workers" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Find a Worker</Link>
+            <Link to="/contact" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
             {!user && (
               <>
-                <a href="/login" className="header-btn header-btn-outline" onClick={() => setIsMobileMenuOpen(false)}>Login</a>
-                <a href="/signup" className="header-btn header-btn-solid" onClick={() => setIsMobileMenuOpen(false)}>Get started</a>
+                <Link to="/login" className="header-btn header-btn-outline" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
+                <Link to="/signup" className="header-btn header-btn-solid" onClick={() => setIsMobileMenuOpen(false)}>Get started</Link>
               </>
             )}
             {user && (
-              <a href="/account-settings" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>My Account</a>
+              <Link to="/account-settings" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>My Account</Link>
             )}
           </div>
         )}
