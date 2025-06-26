@@ -4,7 +4,8 @@ let socket = null;
 
 export const initializeSocket = () => {
   if (!socket) {
-    socket = io('http://localhost:8000', {
+    const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-fku9.onrender.com';
+    socket = io(SOCKET_URL, {
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,

@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { translations } from '../../locales/workerDashboard'; // Will create this later
 import './WorkerSignup.css'; // Reusing general styles
+import 'aos/dist/aos.css';
+
+const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-fku9.onrender.com';
 
 function WorkerDashboard() {
   const navigate = useNavigate();

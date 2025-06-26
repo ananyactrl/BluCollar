@@ -30,7 +30,14 @@ async function findMatchingWorkers(db, serviceType) {
                                 : (worker.specializations || []); // Ensure it's an array
 
         // Parse other JSON fields as per DESCRIBE output
-        const skills = typeof worker.skills === 'string' ? JSON.parse(worker.skills) : (worker.skills || []);
+        let skills;
+        try {
+          skills = JSON.parse(worker.skills);
+          if (!Array.isArray(skills)) throw new Error();
+        } catch {
+          // Fallback: treat as comma-separated string
+          skills = worker.skills.split(',').map(s => s.trim());
+        }
         const certifications = typeof worker.certifications === 'string' ? JSON.parse(worker.certifications) : (worker.certifications || []);
         const documents = typeof worker.documents === 'string' ? JSON.parse(worker.documents) : (worker.documents || []);
         const availability = typeof worker.availability === 'string' ? JSON.parse(worker.availability) : (worker.availability || {});
@@ -146,7 +153,14 @@ async function getWorkerProfile(db, workerId) {
       }
       const worker = results[0];
       // Parse JSON fields
-      worker.skills = worker.skills ? JSON.parse(worker.skills) : [];
+      let skills;
+      try {
+        skills = JSON.parse(worker.skills);
+        if (!Array.isArray(skills)) throw new Error();
+      } catch {
+        // Fallback: treat as comma-separated string
+        skills = worker.skills.split(',').map(s => s.trim());
+      }
       worker.certifications = worker.certifications ? JSON.parse(worker.certifications) : [];
       worker.portfolio_files = worker.portfolio_files ? JSON.parse(worker.portfolio_files) : [];
       worker.documents = worker.documents ? JSON.parse(worker.documents) : [];

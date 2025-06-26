@@ -192,14 +192,18 @@ export default function JobRequestForm() {
           <div className="request-form-container">
             <div className="request-form-header">
               <h1>Your Active Job Request</h1>
-              <p>You already have an active job request. You can cancel it below.</p>
+              <p>You already have an active job request. You can cancel it below or view all your bookings.</p>
             </div>
-            <div className="active-job-details">
-              <p><b>Service:</b> {activeRequest.service}</p>
-              <p><b>Date:</b> {activeRequest.date}</p>
-              <p><b>Time:</b> {activeRequest.time}</p>
-              <p><b>Status:</b> {activeRequest.status}</p>
-              <button className="submit-btn" onClick={() => handleCancel(activeRequest.id)}>Cancel Request</button>
+            <div className="active-job-details" style={{ background: '#f8fafc', borderRadius: 12, padding: 20, marginBottom: 18, boxShadow: '0 2px 8px rgba(18,52,89,0.06)' }}>
+              <div style={{ marginBottom: 8 }}><b>Service:</b> {activeRequest.service}</div>
+              <div style={{ marginBottom: 8 }}><b>Date:</b> {activeRequest.date}</div>
+              <div style={{ marginBottom: 8 }}><b>Time:</b> {activeRequest.time}</div>
+              <div style={{ marginBottom: 8 }}><b>Status:</b> <span style={{ color: activeRequest.status === 'pending' ? '#f59e42' : '#1A4C81', fontWeight: 600 }}>{activeRequest.status}</span></div>
+              {activeRequest.workerName && <div style={{ marginBottom: 8 }}><b>Assigned Worker:</b> {activeRequest.workerName}</div>}
+            </div>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button className="submit-btn" style={{ background: '#dc2626' }} onClick={() => handleCancel(activeRequest.id)}>Cancel Request</button>
+              <button className="submit-btn" style={{ background: '#1A4C81' }} onClick={() => navigate('/my-bookings')}>Go to My Bookings</button>
             </div>
           </div>
         </div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import './AccountDetails.css';
 
+const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-fku9.onrender.com';
+
 export default function AccountDetails() {
   // Get user from localStorage
   const user = JSON.parse(localStorage.getItem('workerUser')) || {

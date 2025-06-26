@@ -129,6 +129,11 @@ export default function ClientDashboard() {
                     <button className="dashboard-login-btn" onClick={() => navigate('/login')}>Login</button>
                 )}
             </div>
+            {user && (
+                <div className="dashboard-welcome" style={{ padding: '1.5rem 1.5rem 0 1.5rem', fontSize: '1.4rem', fontWeight: 600, color: '#123459' }}>
+                    Welcome back, {user.name.split(' ')[0]}!
+                </div>
+            )}
             <header className="dashboard-header">
                 <h1>My Bookings</h1>
                 <p>Manage your upcoming and past service bookings.</p>

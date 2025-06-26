@@ -9,6 +9,8 @@ import heroImage1 from '../../assets/AdobeStock_431135906_Preview.jpeg';
 import heroImage2 from '../../assets/AdobeStock_458508034_Preview.jpeg';
 import heroImage3 from '../../assets/AdobeStock_845208776_Preview.jpeg';
 
+const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-fku9.onrender.com';
+
 const heroImages = [heroImage1, heroImage2, heroImage3];
 
 const WorkerLanding = () => {

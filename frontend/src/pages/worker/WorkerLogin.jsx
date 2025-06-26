@@ -6,6 +6,8 @@ import './WorkerSignup.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
+const API = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+
 function WorkerLogin() {
   const navigate = useNavigate();
   const [language, setLanguage] = useState('english');
