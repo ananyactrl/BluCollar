@@ -1,0 +1,279 @@
+/* Base styles are now mobile-first */
+:root {
+  --primary-color: #1a2a4c;
+  --primary-light: #2e4a8d;
+  --page-bg: #f7fafc;
+  --form-bg: #ffffff;
+  --text-color-dark: #1a2a4c;
+  --text-color-light: #ffffff;
+  --text-color-secondary: #718096;
+  --border-color: #e2e8f0;
+}
+
+body {
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.signup-page-wrapper {
+  background-color: var(--page-bg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  min-height: 100dvh; /* Use dynamic viewport height for better mobile support */
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1024px;
+  background-color: var(--form-bg);
+  overflow: hidden;
+  /* Remove min-height: 100vh to let content determine height */
+  min-height: auto;
+}
+
+/* Info Panel (Top on Mobile) */
+.info-panel {
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+  padding: 2rem 1.5rem; /* Reduced padding for mobile */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.info-content {
+  max-width: 450px;
+}
+
+.info-title {
+  font-family: serif;
+  font-size: 1.75rem; /* Slightly smaller for mobile */
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1rem; /* Reduced margin */
+}
+
+.info-text {
+  font-size: 0.95rem; /* Slightly smaller for mobile */
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Form Panel (Bottom on Mobile) */
+.form-panel {
+  background-color: var(--form-bg);
+  padding: 2rem 1.5rem; /* Consistent padding */
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start; /* Align to top instead of center on mobile */
+  justify-content: center;
+  overflow-y: auto; /* Allow scrolling if needed */
+}
+
+.signup-form {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto; /* Center the form */
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Hide labels since we're using placeholders */
+.form-group label {
+  display: none;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db; /* Light grey border */
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--text-color-dark) !important; /* Force dark text color */
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  background-color: #ffffff !important; /* Force white background */
+  /* Fix for iOS zoom on input focus */
+  font-size: 16px;
+  /* Ensure text is visible on all browsers */
+  -webkit-text-fill-color: var(--text-color-dark) !important;
+  opacity: 1 !important;
+  padding-right: 1rem;
+}
+
+.form-group input::placeholder {
+  color: #6b7280; /* Grey placeholder text */
+  opacity: 1;
+}
+
+/* Prevent iOS zoom when font-size is less than 16px */
+@media screen and (max-width: 767px) {
+  .form-group input {
+      font-size: 16px;
+      color: #1a2a4c !important; /* Force dark text on mobile */
+      -webkit-text-fill-color: #1a2a4c !important;
+      background-color: #ffffff !important;
+      border: 1px solid #d1d5db !important; /* Light grey border on mobile */
+  }
+  
+  .form-group input::placeholder {
+      color: #6b7280 !important;
+  }
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color); /* Blue border on focus */
+  box-shadow: 0 0 0 3px rgba(26, 42, 76, 0.2);
+  color: var(--text-color-dark) !important; /* Ensure text stays visible on focus */
+  -webkit-text-fill-color: var(--text-color-dark) !important;
+}
+
+.form-group input:focus::placeholder {
+  color: #9ca3af; /* Lighter placeholder on focus */
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s ease;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: var(--primary-light);
+}
+
+.submit-btn:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.login-link-container {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem; /* Add bottom margin for mobile */
+  color: var(--text-color-secondary);
+}
+
+.login-link {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Additional mobile-specific fixes */
+@media screen and (max-width: 767px) {
+  .signup-page-wrapper {
+      align-items: stretch; /* Stretch to full height */
+      padding: 0;
+  }
+  
+  .signup-container {
+      min-height: 100vh;
+      min-height: 100dvh;
+  }
+  
+  .form-panel {
+      padding: 1.5rem 1rem; /* Reduce padding further on small screens */
+      min-height: 0; /* Allow shrinking */
+  }
+  
+  .info-panel {
+      padding: 1.5rem 1rem; /* Reduce padding further on small screens */
+  }
+  
+  .info-title {
+      font-size: 1.5rem; /* Even smaller on very small screens */
+  }
+}
+
+/* Tablet & Desktop Styles */
+@media (min-width: 768px) {
+  .signup-page-wrapper {
+      padding: 2rem;
+      align-items: center;
+  }
+
+  .signup-container {
+      flex-direction: row;
+      border-radius: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      min-height: auto;
+      margin: auto;
+      border: 1px solid #e5e7eb; /* Add greyish border for desktop */
+  }
+
+  .info-panel {
+      width: 45%;
+      text-align: left;
+      align-items: flex-start;
+      padding: 4rem 2.5rem;
+  }
+
+  .info-title {
+      font-size: 2.5rem;
+  }
+
+  .form-panel {
+      width: 55%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 2.5rem;
+  }
+
+  /* Fix: Keep name fields in single row on desktop */
+  .form-row {
+      flex-direction: row;
+      gap: 1rem;
+  }
+
+  .form-group {
+      flex: 1;
+  }
+  
+  /* Reset mobile-specific input font-size for desktop */
+  .form-group input {
+      font-size: 1rem;
+  }
+}

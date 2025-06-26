@@ -1,0 +1,290 @@
+/* FindWorkers.css */
+
+.find-workers-page {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.find-workers-page .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.search-header h1 {
+  font-size: 2.5rem;
+  color: #123459;
+  margin-bottom: 0.5rem;
+}
+
+.search-header p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.search-container {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-bar input {
+  flex-grow: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.search-btn, .filter-toggle-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-btn {
+  background-color: #007bff;
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+}
+
+.filter-toggle-btn {
+  background-color: #6c757d;
+}
+
+.filters-panel {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #333;
+}
+
+.filter-group select {
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 180px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.apply-filters-btn, .reset-filters-btn {
+   padding: 0.7rem 1.2rem;
+   border-radius: 6px;
+   cursor: pointer;
+   border: 1px solid transparent;
+}
+
+.apply-filters-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.reset-filters-btn {
+  background-color: #f1f1f1;
+  color: #333;
+  border-color: #ccc;
+}
+
+
+.results-container .loader,
+.results-container .error-message,
+.results-container .no-results {
+  text-align: center;
+  padding: 4rem 0;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.error-message {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.error-message h3 {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.retry-btn:hover {
+  background-color: #0056b3;
+}
+
+.workers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.worker-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.worker-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.worker-card-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.worker-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.worker-title h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #123459;
+}
+
+.worker-profession {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.worker-card-body {
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.worker-description {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.worker-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.worker-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.worker-card-footer {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.view-profile-btn, .book-now-btn {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.view-profile-btn {
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.view-profile-btn:hover {
+  background-color: #e2e2e2;
+}
+
+.book-now-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.book-now-btn:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filters-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter-actions {
+    margin-left: 0;
+    justify-content: space-between;
+  }
+} 

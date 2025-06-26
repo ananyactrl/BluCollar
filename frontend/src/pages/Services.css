@@ -1,0 +1,341 @@
+.services-container {
+  padding: 4rem 6rem;
+  background-color: #fff;
+  margin-top: 80px;
+}
+
+.services-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.services-header h1 {
+  color: #123459;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+}
+
+.services-header p {
+  color: #12345999;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 90vw;
+  margin: 0 auto;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.service-card {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #e6e6e6;
+  cursor: pointer;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(18, 52, 89, 0.1);
+}
+
+.service-card:active {
+  transform: translateY(-2px);
+}
+
+.service-icon {
+  width: 48px;
+  height: 48px;
+  background-color: #e6f0fa;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.service-icon i {
+  font-size: 20px;
+  color: #123459;
+}
+
+.service-card h3 {
+  color: #123459;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.service-card p {
+  color: #12345999;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+/* Precise Services Row - Horizontal Grid */
+.precise-services-row {
+  grid-column: 1 / -1; /* Span full width of the parent grid */
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 items per row on desktop */
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.precise-service-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #e6e6e6;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #123459;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.precise-service-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #e6f0fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.precise-service-icon i {
+  font-size: 16px;
+  color: #123459;
+}
+
+.precise-service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(18, 52, 89, 0.1);
+  background-color: #f8fafc;
+}
+
+.precise-service-card:active {
+  transform: translateY(-1px);
+}
+
+.more-services {
+  background-color: #1A4C81;
+  color: white;
+}
+
+.more-services h3,
+.more-services p {
+  color: white;
+}
+
+.call-us-btn {
+  display: inline-block;
+  background-color: white;
+  color: #1A4C81;
+  padding: 0.625rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.call-us-btn:hover {
+  background-color: #e6f0fa;
+  transform: translateY(-2px);
+}
+
+/* Header Styles */
+.header {
+  background-color: #ffffff;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo-dots {
+  display: flex;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.logo-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #123459;
+  border-radius: 50%;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #123459;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  font-size: 16px;
+  color: #123459;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #1A4C81;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.header-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.header-btn-outline {
+  border: 2px solid #123459;
+  color: #123459;
+  background-color: transparent;
+}
+
+.header-btn-outline:hover {
+  background-color: #123459;
+  color: #ffffff;
+}
+
+.header-btn-solid {
+  background-color: #123459;
+  color: #ffffff;
+  border: none;
+}
+
+.header-btn-solid:hover {
+  background-color: #1A4C81;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .services-container {
+    padding: 3rem 2rem;
+  }
+  
+  .precise-services-row {
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row on tablet */
+    gap: 0.8rem;
+  }
+  
+  .precise-service-card {
+    font-size: 0.8rem;
+    padding: 0.8rem;
+    min-height: 75px;
+  }
+  
+  .precise-service-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .precise-service-icon i {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .services-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .precise-services-row {
+    grid-template-columns: repeat(3, 1fr); /* 3 items per row on mobile */
+    gap: 0.75rem;
+  }
+  
+  .precise-service-card {
+    font-size: 0.75rem;
+    padding: 0.7rem;
+    min-height: 70px;
+  }
+  
+  .precise-service-icon {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .precise-service-icon i {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-container {
+    padding: 2rem 1rem;
+  }
+  
+  .precise-services-row {
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row on very small screens */
+    gap: 0.5rem;
+  }
+  
+  .precise-service-card {
+    font-size: 0.7rem;
+    padding: 0.6rem;
+    min-height: 65px;
+  }
+  
+  .precise-service-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .precise-service-icon i {
+    font-size: 12px;
+  }
+}

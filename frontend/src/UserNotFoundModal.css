@@ -1,0 +1,51 @@
+.user-not-found-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(18, 52, 89, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.user-not-found-modal .modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 8px 32px rgba(18, 52, 89, 0.18);
+  text-align: center;
+  max-width: 90vw;
+  min-width: 300px;
+}
+
+.user-not-found-modal h2 {
+  color: #123459;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.user-not-found-modal p {
+  color: #123459bb;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.user-not-found-modal button {
+  background: #123459;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-not-found-modal button:hover {
+  background: #1A4C81;
+} 

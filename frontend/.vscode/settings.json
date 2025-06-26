@@ -1,0 +1,17 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "tailwindCSS.experimental.classRegex": [
+    "tw`([^`]*)",
+    "tw\\('([^']*)",
+    "tw\\('([^']*)",
+    "tw\\(([^)]*)",
+    "tailwind\\('([^']*)",
+    "tw\\.\\w+`([^`]*)",
+    "tw\\(.*?['\"]([^'\"]*)['\"]\\)"
+  ],
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass"],
+  "tailwindCSS.includeLanguages": {
+    "plaintext": "html"
+  }
+}
