@@ -6,7 +6,7 @@ import './WorkerSignup.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-const API = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
 function WorkerLogin() {
   const navigate = useNavigate();

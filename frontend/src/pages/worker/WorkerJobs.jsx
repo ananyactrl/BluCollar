@@ -7,7 +7,7 @@ import './WorkerJobs.css';
 import { jwtDecode } from 'jwt-decode';
 import { getSocket, disconnectSocket } from '../../services/socketService';
 
-const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-fku9.onrender.com';
+const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
 function WorkerJobs() {
   const [ongoingJobs, setOngoingJobs] = useState([]);
