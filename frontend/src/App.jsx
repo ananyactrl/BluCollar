@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useParams, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
@@ -80,7 +80,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
+      <BrowserRouter basename="/">
         <Routes>
           {/* Main routes */}
           <Route path="/" element={<HomePage />} />
@@ -131,12 +131,6 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* Worker portfolio route */}
-          
-
-          {/* Worker profile route */}
-          
-
           {/* Worker job details route */}
           <Route path="/worker/job/:id" element={<JobDetailsWrapper />} />
 
@@ -152,7 +146,7 @@ function App() {
           {/* Account route */}
           <Route path="/account" element={<Account />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
       <ToastContainer />
     </AuthProvider>
   );
