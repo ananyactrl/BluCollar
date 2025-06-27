@@ -202,11 +202,24 @@ router.post('/maid-request', (req, res) => {
 });
 
 // Get all pending jobs for the worker's profession
+const professionToServiceTypes = {
+  plumber: ['plumber', 'plumbing'],
+  maid: ['maid'],
+  electrician: ['electrician', 'electrical'],
+  'deep-cleaner': ['deep-cleaner', 'deep-cleaning'],
+  // Add more mappings as needed
+};
+
 router.get('/jobs/pending', authenticateToken, async (req, res) => {
   const db = req.app.locals.db;
-  const profession = req.worker.profession;
-  const query = 'SELECT * FROM job_requests WHERE service_type = ? AND status = ?';
-  db.query(query, [profession, 'pending'], (err, results) => {
+  const profession = req.worker.profession.toLowerCase();
+  const serviceTypes = professionToServiceTypes[profession] || [profession];
+
+  // Use SQL IN clause for multiple service types
+  const placeholders = serviceTypes.map(() => '?').join(',');
+  const query = `SELECT * FROM job_requests WHERE service_type IN (${placeholders}) AND status = ?`;
+
+  db.query(query, [...serviceTypes, 'pending'], (err, results) => {
     if (err) {
       console.error('Error fetching pending jobs:', err);
       return res.status(500).json({ message: 'Failed to fetch pending jobs' });
