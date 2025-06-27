@@ -182,7 +182,7 @@ function WorkerJobs() {
       <h1 className="page-title">Worker Jobs</h1>
 
       {/* Tabs */}
-      <div className="tab-buttons">
+      <div className="tab-navigation">
         <button className={`tab-button ${activeTab === 'ongoing' ? 'active' : ''}`} onClick={() => setActiveTab('ongoing')}>Ongoing Jobs</button>
         <button className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`} onClick={() => setActiveTab('pending')}>Pending Jobs</button>
         <button className={`tab-button ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}>Past Job History</button>

@@ -269,13 +269,14 @@
 .tab-button {
   padding: 10px 20px;
   border: none;
-  background: none;
+  background: transparent;
   color: #64748b;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   border-bottom: 2px solid transparent;
+  box-shadow: none;
 }
 
 @media (min-width: 768px) {
@@ -287,11 +288,13 @@
 
 .tab-button:hover {
   color: #123459;
+  background: rgba(18, 52, 89, 0.05);
 }
 
 .tab-button.active {
   color: #123459;
   border-bottom-color: #123459;
+  background: transparent;
 }
 
 /* Loading State */

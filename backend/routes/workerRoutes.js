@@ -249,9 +249,11 @@ router.get('/search', async (req, res) => {
 router.post('/accept', authenticateToken, (req, res) => {
   const db = req.app.locals.db;
   const workerId = req.worker.id;
+  const profession = req.worker.profession.toLowerCase();
+  const allowedServiceTypes = professionToServiceTypes[profession] || [profession];
   const { jobId } = req.body;
 
-  // Check profession match
+  // Fetch the job's service_type
   const query = `
     SELECT j.service_type, w.profession
     FROM job_requests j
@@ -267,7 +269,8 @@ router.post('/accept', authenticateToken, (req, res) => {
 
     const { service_type, profession } = results[0];
 
-    if (service_type.toLowerCase() !== profession.toLowerCase()) {
+    // Use mapping for profession-service_type match
+    if (!allowedServiceTypes.includes(service_type.toLowerCase())) {
       return res.status(403).json({
         message: `Profession mismatch: You are a ${profession}, but this is a ${service_type} job.`
       });
