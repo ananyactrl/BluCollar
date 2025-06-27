@@ -5,18 +5,48 @@ const path = require('path');
 const mysql = require('mysql2');
 const http = require('http');
 const { Server } = require('socket.io');
-const db = require('./database'); // adjust path if needed
+const db = require('./database');
 
-// Import routes
 const authRoutes = require('./routes/authRoutes');
 const workerRoutes = require('./routes/workerRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+// Log NODE_ENV
+console.log('🛠️ NODE_ENV:', process.env.NODE_ENV);
+
+// --- CORS Configuration ---
+const devOrigins = ['http://localhost:5173'];
+const prodOrigins = [
+  'http://localhost:5173',
+  'https://blucollar-cu373rm91-ananya-singhs-projects-2388bc61.vercel.app',
+  'https://blucollar.vercel.app'
+];
+
+const allowedOrigins = process.env.NODE_ENV === 'production' ? prodOrigins : devOrigins;
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS: ' + origin));
+    }
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // 🔥 Handle preflight requests
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
 const io = new Server(server, {
   cors: {
     origin: '*',
@@ -38,21 +68,17 @@ io.on('connection', (socket) => {
     console.log('❌ Client disconnected');
   });
 
-  // Join a job room
   socket.on('joinRoom', ({ job_id }) => {
     socket.join(`job_${job_id}`);
   });
 
-  // Handle sending a message
   socket.on('sendMessage', async (data) => {
     const { job_id, sender_id, sender_role, message } = data;
-    // Save to DB
     try {
       await db.query(
         'INSERT INTO messages (job_id, sender_id, sender_role, message) VALUES (?, ?, ?, ?)',
         [job_id, sender_id, sender_role, message]
       );
-      // Broadcast to room
       io.to(`job_${job_id}`).emit('receiveMessage', {
         job_id,
         sender_id,
@@ -66,17 +92,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Middleware
-
-app.use((req, res, next) => {
-  console.log('Request Origin:', req.headers.origin);
-  next();
-});
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-
 console.log('🧪 Render ENV:', {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -84,29 +99,6 @@ console.log('🧪 Render ENV:', {
   database: process.env.DB_NAME
 });
 
-// --- CORS Configuration ---
-const devOrigins = ['http://localhost:5173'];
-const prodOrigins = [
-  'http://localhost:5173',
-  'https://blucollar-cu373rm91-ananya-singhs-projects-2388bc61.vercel.app',
-  'https://blucollar.vercel.app'
-  // Add more production domains as needed
-];
-
-const allowedOrigins = process.env.NODE_ENV === 'production' ? prodOrigins : devOrigins;
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS: ' + origin));
-    }
-  },
-  credentials: true
-}));
-
-// ✅ Create MySQL Connection
 const dbConnection = mysql.createConnection({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -115,7 +107,6 @@ const dbConnection = mysql.createConnection({
   database: process.env.DB_NAME
 });
 
-// ✅ Only start server AFTER DB connects
 dbConnection.connect((err) => {
   if (err) {
     console.error('❌ Central MySQL DB connection error:', err.message);
@@ -123,15 +114,12 @@ dbConnection.connect((err) => {
   } else {
     console.log('✅ Central MySQL DB connected successfully!');
 
-    // Make DB available to routes
     app.locals.db = dbConnection;
 
-    // Routes
     app.use('/api/auth', authRoutes);
     app.use('/api/worker', workerRoutes);
     app.use('/api', aiRoutes);
 
-    // Add a REST endpoint to fetch messages for a job
     app.get('/api/messages/:job_id', async (req, res) => {
       const { job_id } = req.params;
       try {
@@ -145,12 +133,10 @@ dbConnection.connect((err) => {
       }
     });
 
-    // Root route
     app.get('/', (req, res) => {
       res.send('Backend is live 🚀');
     });
 
-    // Error handler
     app.use((err, req, res, next) => {
       console.error(err.stack);
       res.status(500).json({
@@ -165,18 +151,13 @@ dbConnection.connect((err) => {
       console.log(`🚀 Server is live on port ${PORT}`);
     });
 
-    // --- Keep-alive ping for Render.com ---
     if (process.env.NODE_ENV === 'production') {
       const axios = require('axios');
       setInterval(() => {
         axios.get('https://blucollar-fku9.onrender.com/')
-          .then(() => {
-            console.log('✅ Keep-alive ping successful');
-          })
-          .catch((err) => {
-            console.error('❌ Keep-alive ping failed:', err.message);
-          });
-      }, 10 * 60 * 1000); // every 10 minutes
+          .then(() => console.log('✅ Keep-alive ping successful'))
+          .catch((err) => console.error('❌ Keep-alive ping failed:', err.message));
+      }, 10 * 60 * 1000);
     }
   }
 });
