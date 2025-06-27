@@ -282,9 +282,9 @@ function WorkerJobs() {
               <div className="job-info">
                 <div className="info-item"><FaMapMarkerAlt className="info-icon" /><span>{job.address}</span></div>
                 <div className="info-item"><FaCalendarAlt className="info-icon" /><span>{formatDate(job.date)} at {job.time}</span></div>
-                {job.total_amount && (
+                {typeof job.total_amount === 'number' && !isNaN(job.total_amount) ? (
                   <div className="info-item"><span>Earnings: ₹{job.total_amount.toFixed(2)}</span></div>
-                )}
+                ) : null}
               </div>
               <button className="view-details-button" onClick={() => console.log('View details for past job:', job.id)}>View Details</button>
             </div>
