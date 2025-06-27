@@ -191,7 +191,7 @@ router.get('/jobs/history', authenticateToken, async (req, res) => {
 router.post('/maid-request', (req, res) => {
   const { address, workType, date, time, description } = req.body;
   const db = req.app.locals.db; // Access the shared DB connection
-  const query = 'INSERT INTO job_requests (address, serviceType, date, time, description, status) VALUES (?, ?, ?, ?, ?, "pending")';
+  const query = 'INSERT INTO job_requests (address, service_type, date, time, description, status) VALUES (?, ?, ?, ?, ?, "pending")';
   db.query(query, [address, workType, date, time, description], (err, result) => {
     if (err) {
       console.error('Error creating request:', err);
@@ -205,7 +205,7 @@ router.post('/maid-request', (req, res) => {
 router.get('/jobs/pending', authenticateToken, async (req, res) => {
   const db = req.app.locals.db;
   const profession = req.worker.profession;
-  const query = 'SELECT * FROM job_requests WHERE serviceType = ? AND status = ?';
+  const query = 'SELECT * FROM job_requests WHERE service_type = ? AND status = ?';
   db.query(query, [profession, 'pending'], (err, results) => {
     if (err) {
       console.error('Error fetching pending jobs:', err);
@@ -240,7 +240,7 @@ router.post('/accept', authenticateToken, (req, res) => {
 
   // Check profession match
   const query = `
-    SELECT j.serviceType, w.profession
+    SELECT j.service_type, w.profession
     FROM job_requests j
     JOIN workers w ON w.id = ?
     WHERE j.id = ?
@@ -252,11 +252,11 @@ router.post('/accept', authenticateToken, (req, res) => {
       return res.status(500).json({ message: 'Job or worker not found' });
     }
 
-    const { serviceType, profession } = results[0];
+    const { service_type, profession } = results[0];
 
-    if (serviceType.toLowerCase() !== profession.toLowerCase()) {
+    if (service_type.toLowerCase() !== profession.toLowerCase()) {
       return res.status(403).json({
-        message: `Profession mismatch: You are a ${profession}, but this is a ${serviceType} job.`
+        message: `Profession mismatch: You are a ${profession}, but this is a ${service_type} job.`
       });
     }
 
