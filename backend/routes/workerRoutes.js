@@ -164,12 +164,15 @@ router.get('/dashboard-stats', authenticateToken, async (req, res) => {
 // Get Ongoing Jobs for Worker (Protected)
 router.get('/jobs/ongoing', authenticateToken, async (req, res) => {
   const db = req.app.locals.db;
-  try {
-    const ongoingJobs = await getOngoingWorkerJobs(db, req.worker.id);
-    res.json(ongoingJobs);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  const workerId = req.worker.id;
+  const query = 'SELECT * FROM job_requests WHERE worker_id = ? AND (status = ? OR status = ?)';
+  db.query(query, [workerId, 'accepted', 'ongoing'], (err, results) => {
+    if (err) {
+      console.error('Error fetching ongoing jobs:', err);
+      return res.status(500).json({ message: 'Failed to fetch ongoing jobs' });
+    }
+    res.json(results);
+  });
 });
 
 // Get Past Job History for Worker (Protected)
@@ -198,12 +201,44 @@ router.post('/maid-request', (req, res) => {
   });
 });
 
-// Worker accepts a job
+// Get all pending jobs for the worker's profession
+router.get('/jobs/pending', authenticateToken, async (req, res) => {
+  const db = req.app.locals.db;
+  const profession = req.worker.profession;
+  const query = 'SELECT * FROM job_requests WHERE serviceType = ? AND status = ?';
+  db.query(query, [profession, 'pending'], (err, results) => {
+    if (err) {
+      console.error('Error fetching pending jobs:', err);
+      return res.status(500).json({ message: 'Failed to fetch pending jobs' });
+    }
+    res.json(results);
+  });
+});
+
+// GET /api/worker/search - public endpoint to search workers
+router.get('/search', async (req, res) => {
+  const db = req.app.locals.db;
+  let sort = req.query.sort || 'name_asc';
+  let orderBy = 'name ASC';
+  if (sort === 'rating_desc') orderBy = 'rating DESC';
+  if (sort === 'rating_asc') orderBy = 'rating ASC';
+
+  const query = `SELECT id, name, email, phone, address, profession, rating, reviewCount, successRate, isAvailable, profile_photo FROM workers ORDER BY ${orderBy}`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching workers:', err);
+      return res.status(500).json({ message: 'Failed to fetch workers' });
+    }
+    res.json(results);
+  });
+});
+
 router.post('/accept', authenticateToken, (req, res) => {
   const db = req.app.locals.db;
   const workerId = req.worker.id;
   const { jobId } = req.body;
 
+  // Check profession match
   const query = `
     SELECT j.serviceType, w.profession
     FROM job_requests j
@@ -224,24 +259,16 @@ router.post('/accept', authenticateToken, (req, res) => {
         message: `Profession mismatch: You are a ${profession}, but this is a ${serviceType} job.`
       });
     }
-  });
-});
 
-// GET /api/worker/search - public endpoint to search workers
-router.get('/search', async (req, res) => {
-  const db = req.app.locals.db;
-  let sort = req.query.sort || 'name_asc';
-  let orderBy = 'name ASC';
-  if (sort === 'rating_desc') orderBy = 'rating DESC';
-  if (sort === 'rating_asc') orderBy = 'rating ASC';
-
-  const query = `SELECT id, name, email, phone, address, profession, rating, reviewCount, successRate, isAvailable, profile_photo FROM workers ORDER BY ${orderBy}`;
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Error fetching workers:', err);
-      return res.status(500).json({ message: 'Failed to fetch workers' });
-    }
-    res.json(results);
+    // Update the job to assign the worker and set status to 'accepted'
+    const updateQuery = 'UPDATE job_requests SET worker_id = ?, status = ? WHERE id = ?';
+    db.query(updateQuery, [workerId, 'accepted', jobId], (updateErr, updateResult) => {
+      if (updateErr) {
+        console.error('Error updating job:', updateErr);
+        return res.status(500).json({ message: 'Failed to accept job' });
+      }
+      res.json({ message: 'Job accepted successfully!' });
+    });
   });
 });
 

@@ -215,64 +215,58 @@ router.post('/job-request', clientAuthenticateToken, upload.array('documents', 5
     const io = req.app.get('io');
     const clientId = req.user.id;
 
-    // Prevent duplicate active job requests
+    // Check for existing request
+    const [existing] = await db.promise().query(
+      'SELECT id FROM job_requests WHERE client_id = ? AND service_type = ?',
+      [clientId, req.body.serviceType]
+    );
+    if (existing.length > 0) {
+      return res.status(409).json({ message: 'You have already submitted a request for this service.' });
+    }
+
+    // Save the job request to the database
     db.query(
-      'SELECT id FROM job_requests WHERE client_id = ? AND status IN ("pending", "accepted")',
-      [clientId],
-      (err, results) => {
+      'INSERT INTO job_requests (client_id, service_type, description, address, total_amount, status) VALUES (?, ?, ?, ?, ?, ?)',
+      [clientId, req.body.serviceType, req.body.description, req.body.address, req.body.total_amount, 'pending'],
+      (err, result) => {
         if (err) {
-          console.error('Error checking for duplicate job requests:', err);
-          return res.status(500).json({ message: 'Failed to check for duplicate job requests' });
-        }
-        if (results.length > 0) {
-          return res.status(400).json({ message: 'You already have an active job request.' });
+          console.error('Error inserting job request:', err);
+          return res.status(500).json({
+            success: false,
+            message: 'Failed to create job request',
+            error: err.message
+          });
         }
 
-        // Save the job request to the database
+        const jobId = result.insertId;
+
+        // Get the complete job data
         db.query(
-          'INSERT INTO job_requests (client_id, service_type, description, address, total_amount, status) VALUES (?, ?, ?, ?, ?, ?)',
-          [clientId, req.body.serviceType, req.body.description, req.body.address, req.body.total_amount, 'pending'],
-          (err, result) => {
+          'SELECT * FROM job_requests WHERE id = ?',
+          [jobId],
+          (err, jobData) => {
             if (err) {
-              console.error('Error inserting job request:', err);
+              console.error('Error fetching job data after insertion:', err);
               return res.status(500).json({
                 success: false,
-                message: 'Failed to create job request',
+                message: 'Failed to retrieve job data',
                 error: err.message
               });
             }
 
-            const jobId = result.insertId;
+            // Emit the new job to the appropriate room
+            if (io && jobData[0]) {
+              io.to(req.body.serviceType.toLowerCase()).emit('new-job', {
+                job: jobData[0]
+              });
+              console.log(`📢 Emitted new job to room: ${req.body.serviceType.toLowerCase()}`);
+            }
 
-            // Get the complete job data
-            db.query(
-              'SELECT * FROM job_requests WHERE id = ?',
-              [jobId],
-              (err, jobData) => {
-                if (err) {
-                  console.error('Error fetching job data after insertion:', err);
-                  return res.status(500).json({
-                    success: false,
-                    message: 'Failed to retrieve job data',
-                    error: err.message
-                  });
-                }
-
-                // Emit the new job to the appropriate room
-                if (io && jobData[0]) {
-                  io.to(req.body.serviceType.toLowerCase()).emit('new-job', {
-                    job: jobData[0]
-                  });
-                  console.log(`📢 Emitted new job to room: ${req.body.serviceType.toLowerCase()}`);
-                }
-
-                res.json({
-                  success: true,
-                  message: 'Job request created successfully',
-                  jobId: jobId
-                });
-              }
-            );
+            res.json({
+              success: true,
+              message: 'Job request created successfully',
+              jobId: jobId
+            });
           }
         );
       }
