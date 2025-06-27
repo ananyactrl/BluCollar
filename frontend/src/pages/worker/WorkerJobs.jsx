@@ -167,6 +167,20 @@ function WorkerJobs() {
     }
   };
 
+  const handleComplete = async (jobId) => {
+    try {
+      const token = localStorage.getItem('workerToken');
+      const response = await axios.post(`${API}/api/worker/jobs/complete`, { jobId }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Job marked as completed!');
+      fetchOngoingJobs();
+      setActiveTab('history');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to mark job as completed.');
+    }
+  };
+
   const formatDate = (dateStr) => {
     if (!dateStr) return 'N/A';
     try {
@@ -243,7 +257,9 @@ function WorkerJobs() {
                 <div className="map-placeholder">Map not available</div>
               )}
               {job.status === 'accepted' && (
-                <button className="complete-job-button" onClick={() => console.log('Complete job:', job.id)}>Mark as Completed</button>
+                <button className="complete-job-button" onClick={() => handleComplete(job.id)}>
+                  Mark as Completed
+                </button>
               )}
             </div>
           ))}

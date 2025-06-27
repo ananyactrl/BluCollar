@@ -288,4 +288,23 @@ router.post('/accept', authenticateToken, (req, res) => {
   });
 });
 
+router.post('/jobs/complete', authenticateToken, (req, res) => {
+  const db = req.app.locals.db;
+  const workerId = req.worker.id;
+  const { jobId } = req.body;
+
+  // Only allow the assigned worker to complete the job
+  const query = 'UPDATE job_requests SET status = ? WHERE id = ? AND assignedWorkerId = ?';
+  db.query(query, ['completed', jobId, workerId], (err, result) => {
+    if (err) {
+      console.error('Error marking job as completed:', err);
+      return res.status(500).json({ message: 'Failed to mark job as completed' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(403).json({ message: 'Not authorized or job not found' });
+    }
+    res.json({ message: 'Job marked as completed!' });
+  });
+});
+
 module.exports = router;

@@ -297,4 +297,21 @@ router.post('/job-request/:id/cancel', clientAuthenticateToken, (req, res) => {
   );
 });
 
+// Geocode endpoint
+router.get('/geocode', async (req, res) => {
+  const address = req.query.address;
+  if (!address) return res.status(400).json({ error: 'Address is required' });
+
+  try {
+    const coords = await geocode(address);
+    if (!coords) {
+      return res.status(404).json({ error: 'No location found' });
+    }
+    res.json(coords);
+  } catch (err) {
+    console.error('Geocode route error:', err);
+    res.status(500).json({ error: 'Geocoding failed' });
+  }
+});
+
 module.exports = router; 
