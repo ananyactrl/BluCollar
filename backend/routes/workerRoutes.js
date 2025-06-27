@@ -165,7 +165,7 @@ router.get('/dashboard-stats', authenticateToken, async (req, res) => {
 router.get('/jobs/ongoing', authenticateToken, async (req, res) => {
   const db = req.app.locals.db;
   const workerId = req.worker.id;
-  const query = 'SELECT * FROM job_requests WHERE worker_id = ? AND (status = ? OR status = ?)';
+  const query = 'SELECT * FROM job_requests WHERE assignedWorkerId = ? AND (status = ? OR status = ?)';
   db.query(query, [workerId, 'accepted', 'ongoing'], (err, results) => {
     if (err) {
       console.error('Error fetching ongoing jobs:', err);
@@ -261,7 +261,7 @@ router.post('/accept', authenticateToken, (req, res) => {
     }
 
     // Update the job to assign the worker and set status to 'accepted'
-    const updateQuery = 'UPDATE job_requests SET worker_id = ?, status = ? WHERE id = ?';
+    const updateQuery = 'UPDATE job_requests SET assignedWorkerId = ?, status = ? WHERE id = ?';
     db.query(updateQuery, [workerId, 'accepted', jobId], (updateErr, updateResult) => {
       if (updateErr) {
         console.error('Error updating job:', updateErr);
