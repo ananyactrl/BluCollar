@@ -191,7 +191,7 @@ router.get('/jobs/history', authenticateToken, async (req, res) => {
 router.post('/maid-request', (req, res) => {
   const { address, workType, date, time, description } = req.body;
   const db = req.app.locals.db; // Access the shared DB connection
-  const query = 'INSERT INTO job_requests (address, workType, date, time, description, status) VALUES (?, ?, ?, ?, ?, "pending")';
+  const query = 'INSERT INTO job_requests (address, serviceType, date, time, description, status) VALUES (?, ?, ?, ?, ?, "pending")';
   db.query(query, [address, workType, date, time, description], (err, result) => {
     if (err) {
       console.error('Error creating request:', err);
