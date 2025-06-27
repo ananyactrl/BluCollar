@@ -137,6 +137,11 @@ dbConnection.connect((err) => {
       res.send('Backend is live 🚀');
     });
 
+    app.get('/test-cors', (req, res) => {
+      res.json({ message: 'CORS is working!' });
+    });
+    
+
     app.use((err, req, res, next) => {
       console.error(err.stack);
       res.status(500).json({
