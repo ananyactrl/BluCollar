@@ -7,6 +7,7 @@ import './WorkerJobs.css';
 import './WorkerMobile.css';
 import { jwtDecode } from 'jwt-decode';
 import { getSocket, disconnectSocket } from '../../services/socketService';
+import Footer from '../../components/Footer';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
@@ -229,161 +230,164 @@ function WorkerJobs() {
   };
 
   return (
-    <div className="worker-jobs-container">
-      <ToastContainer />
-      <h1 className="page-title">Worker Jobs</h1>
+    <>
+      <div className="worker-jobs-container">
+        <ToastContainer />
+        <h1 className="page-title">Worker Jobs</h1>
 
-      {/* Tabs */}
-      <div className="tab-navigation">
-        <button className={`tab-button ${activeTab === 'ongoing' ? 'active' : ''}`} onClick={() => setActiveTab('ongoing')}>Ongoing Jobs</button>
-        <button className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`} onClick={() => setActiveTab('pending')}>Pending Jobs</button>
-        <button className={`tab-button ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}>Past Job History</button>
-      </div>
-
-      {/* Sort and Filter for History */}
-      {activeTab === 'history' && (
-        <div className="filter-sort-container">
-          <div className="sort-group">
-            <label>Sort By:</label>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              <option value="date">Date</option>
-              <option value="total_amount">Earnings</option>
-            </select>
-            <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
-            </select>
-          </div>
-          <div className="filter-group">
-            <label>Filter Status:</label>
-            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-              <option value="all">All</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-          </div>
+        {/* Tabs */}
+        <div className="tab-navigation">
+          <button className={`tab-button ${activeTab === 'ongoing' ? 'active' : ''}`} onClick={() => setActiveTab('ongoing')}>Ongoing Jobs</button>
+          <button className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`} onClick={() => setActiveTab('pending')}>Pending Jobs</button>
+          <button className={`tab-button ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}>Past Job History</button>
         </div>
-      )}
 
-      {/* Ongoing Jobs */}
-      {activeTab === 'ongoing' && ongoingJobs.length === 0 && (
-        <p className="no-jobs">No ongoing jobs to display.</p>
-      )}
-      {activeTab === 'ongoing' && ongoingJobs.length > 0 && (
-        <div className="jobs-grid">
-          {ongoingJobs.map((job) => (
-            <div key={job.id} className="job-card">
-              <div className="job-card-header">
-                <h3 className="service-type">{job.service_type}</h3>
-                <span className={`job-status ${job.status}`}>{job.status}</span>
-                <div className="urgency-badge">
-                  <FaBolt className="urgency-icon" />
-                  <span>Urgency: {job.urgencyLevel}</span>
+        {/* Sort and Filter for History */}
+        {activeTab === 'history' && (
+          <div className="filter-sort-container">
+            <div className="sort-group">
+              <label>Sort By:</label>
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                <option value="date">Date</option>
+                <option value="total_amount">Earnings</option>
+              </select>
+              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+              </select>
+            </div>
+            <div className="filter-group">
+              <label>Filter Status:</label>
+              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                <option value="all">All</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        )}
+
+        {/* Ongoing Jobs */}
+        {activeTab === 'ongoing' && ongoingJobs.length === 0 && (
+          <p className="no-jobs">No ongoing jobs to display.</p>
+        )}
+        {activeTab === 'ongoing' && ongoingJobs.length > 0 && (
+          <div className="jobs-grid">
+            {ongoingJobs.map((job) => (
+              <div key={job.id} className="job-card">
+                <div className="job-card-header">
+                  <h3 className="service-type">{job.service_type}</h3>
+                  <span className={`job-status ${job.status}`}>{job.status}</span>
+                  <div className="urgency-badge">
+                    <FaBolt className="urgency-icon" />
+                    <span>Urgency: {job.urgencyLevel}</span>
+                  </div>
                 </div>
-              </div>
-              <p className="job-description">{job.description}</p>
-              <div className="job-info">
-                <div className="info-item"><FaMapMarkerAlt className="info-icon" /><span>{job.address}</span></div>
-                <div className="info-item"><FaCalendarAlt className="info-icon" /><span>{formatDate(job.date)} at {job.time}</span></div>
-                {job.distance && (
-                  <div className="info-item"><FaLocationArrow className="info-icon" /><span>{job.distance.toFixed(2)} km away</span></div>
+                <p className="job-description">{job.description}</p>
+                <div className="job-info">
+                  <div className="info-item"><FaMapMarkerAlt className="info-icon" /><span>{job.address}</span></div>
+                  <div className="info-item"><FaCalendarAlt className="info-icon" /><span>{formatDate(job.date)} at {job.time}</span></div>
+                  {job.distance && (
+                    <div className="info-item"><FaLocationArrow className="info-icon" /><span>{job.distance.toFixed(2)} km away</span></div>
+                  )}
+                </div>
+                {job.lat && job.lng ? (
+                  <div className="map-container"><JobLocationMap lat={job.lat} lng={job.lng} name={job.service_type} /></div>
+                ) : (
+                  <div className="map-placeholder">
+                    Map not available<br />
+                    {mapError && <div style={{ color: '#d9534f', fontSize: 13, marginTop: 4 }}>{mapError}</div>}
+                    {!mapError && <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>No coordinates found for this address.</div>}
+                    {/* Fallback map with default location */}
+                    <div style={{ marginTop: 8 }}>
+                      <JobLocationMap lat={28.6139} lng={77.2090} name="Default Location" />
+                    </div>
+                  </div>
+                )}
+                {job.status === 'accepted' && (
+                  <div className="job-actions">
+                    <button className="complete-job-button" onClick={() => handleComplete(job.id)}>
+                      Mark as Completed
+                    </button>
+                    <button className="cancel-job-button" onClick={() => handleCancel(job.id)}>
+                      Cancel Job
+                    </button>
+                  </div>
                 )}
               </div>
-              {job.lat && job.lng ? (
-                <div className="map-container"><JobLocationMap lat={job.lat} lng={job.lng} name={job.service_type} /></div>
-              ) : (
-                <div className="map-placeholder">
-                  Map not available<br />
-                  {mapError && <div style={{ color: '#d9534f', fontSize: 13, marginTop: 4 }}>{mapError}</div>}
-                  {!mapError && <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>No coordinates found for this address.</div>}
-                  {/* Fallback map with default location */}
-                  <div style={{ marginTop: 8 }}>
-                    <JobLocationMap lat={28.6139} lng={77.2090} name="Default Location" />
+            ))}
+          </div>
+        )}
+
+        {/* Past Jobs */}
+        {activeTab === 'history' && pastJobs.length === 0 && (
+          <p className="no-jobs">No past jobs to display in this category.</p>
+        )}
+        {activeTab === 'history' && pastJobs.length > 0 && (
+          <div className="jobs-grid">
+            {pastJobs.map((job) => (
+              <div key={job.id} className="job-card past-job-card">
+                <div className="job-card-header">
+                  <h3 className="service-type">{job.service_type}</h3>
+                  <span className={`job-status ${job.status}`}>{job.status}</span>
+                </div>
+                <p className="job-description">{job.description}</p>
+                <div className="job-info">
+                  <div className="info-item"><FaMapMarkerAlt className="info-icon" /><span>{job.address}</span></div>
+                  <div className="info-item"><FaCalendarAlt className="info-icon" /><span>{formatDate(job.date)} at {job.time}</span></div>
+                  {typeof job.total_amount === 'number' && !isNaN(job.total_amount) ? (
+                    <div className="info-item"><span>Earnings: ₹{job.total_amount.toFixed(2)}</span></div>
+                  ) : null}
+                </div>
+                <button className="view-details-button" onClick={() => console.log('View details for past job:', job.id)}>View Details</button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Pending Jobs */}
+        {activeTab === 'pending' && pendingJobs.length === 0 && (
+          <p className="no-jobs">No pending jobs to display.</p>
+        )}
+        {activeTab === 'pending' && pendingJobs.length > 0 && (
+          <div className="jobs-grid">
+            {pendingJobs.map((job) => (
+              <div key={job.id} className="job-card">
+                <div className="job-card-header">
+                  <h3 className="service-type">{job.service_type}</h3>
+                  <span className={`job-status ${job.status}`}>{job.status}</span>
+                  <div className="urgency-badge">
+                    <FaBolt className="urgency-icon" />
+                    <span>Urgency: {job.urgencyLevel}</span>
                   </div>
                 </div>
-              )}
-              {job.status === 'accepted' && (
-                <div className="job-actions">
-                  <button className="complete-job-button" onClick={() => handleComplete(job.id)}>
-                    Mark as Completed
-                  </button>
-                  <button className="cancel-job-button" onClick={() => handleCancel(job.id)}>
-                    Cancel Job
-                  </button>
+                <p className="job-description">{job.description}</p>
+                <div className="job-info">
+                  <div className="info-item"><FaMapMarkerAlt className="info-icon" /><span>{job.address}</span></div>
+                  <div className="info-item"><FaCalendarAlt className="info-icon" /><span>{formatDate(job.date)} at {job.time}</span></div>
+                  {/* No distance for pending jobs unless explicitly added to schema */}
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Past Jobs */}
-      {activeTab === 'history' && pastJobs.length === 0 && (
-        <p className="no-jobs">No past jobs to display in this category.</p>
-      )}
-      {activeTab === 'history' && pastJobs.length > 0 && (
-        <div className="jobs-grid">
-          {pastJobs.map((job) => (
-            <div key={job.id} className="job-card past-job-card">
-              <div className="job-card-header">
-                <h3 className="service-type">{job.service_type}</h3>
-                <span className={`job-status ${job.status}`}>{job.status}</span>
-              </div>
-              <p className="job-description">{job.description}</p>
-              <div className="job-info">
-                <div className="info-item"><FaMapMarkerAlt className="info-icon" /><span>{job.address}</span></div>
-                <div className="info-item"><FaCalendarAlt className="info-icon" /><span>{formatDate(job.date)} at {job.time}</span></div>
-                {typeof job.total_amount === 'number' && !isNaN(job.total_amount) ? (
-                  <div className="info-item"><span>Earnings: ₹{job.total_amount.toFixed(2)}</span></div>
-                ) : null}
-              </div>
-              <button className="view-details-button" onClick={() => console.log('View details for past job:', job.id)}>View Details</button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Pending Jobs */}
-      {activeTab === 'pending' && pendingJobs.length === 0 && (
-        <p className="no-jobs">No pending jobs to display.</p>
-      )}
-      {activeTab === 'pending' && pendingJobs.length > 0 && (
-        <div className="jobs-grid">
-          {pendingJobs.map((job) => (
-            <div key={job.id} className="job-card">
-              <div className="job-card-header">
-                <h3 className="service-type">{job.service_type}</h3>
-                <span className={`job-status ${job.status}`}>{job.status}</span>
-                <div className="urgency-badge">
-                  <FaBolt className="urgency-icon" />
-                  <span>Urgency: {job.urgencyLevel}</span>
-                </div>
-              </div>
-              <p className="job-description">{job.description}</p>
-              <div className="job-info">
-                <div className="info-item"><FaMapMarkerAlt className="info-icon" /><span>{job.address}</span></div>
-                <div className="info-item"><FaCalendarAlt className="info-icon" /><span>{formatDate(job.date)} at {job.time}</span></div>
-                {/* No distance for pending jobs unless explicitly added to schema */}
-              </div>
-              {job.lat && job.lng ? (
-                <div className="map-container"><JobLocationMap lat={job.lat} lng={job.lng} name={job.service_type} /></div>
-              ) : (
-                <div className="map-placeholder">
-                  Map not available<br />
-                  {mapError && <div style={{ color: '#d9534f', fontSize: 13, marginTop: 4 }}>{mapError}</div>}
-                  {!mapError && <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>No coordinates found for this address.</div>}
-                  {/* Fallback map with default location */}
-                  <div style={{ marginTop: 8 }}>
-                    <JobLocationMap lat={28.6139} lng={77.2090} name="Default Location" />
+                {job.lat && job.lng ? (
+                  <div className="map-container"><JobLocationMap lat={job.lat} lng={job.lng} name={job.service_type} /></div>
+                ) : (
+                  <div className="map-placeholder">
+                    Map not available<br />
+                    {mapError && <div style={{ color: '#d9534f', fontSize: 13, marginTop: 4 }}>{mapError}</div>}
+                    {!mapError && <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>No coordinates found for this address.</div>}
+                    {/* Fallback map with default location */}
+                    <div style={{ marginTop: 8 }}>
+                      <JobLocationMap lat={28.6139} lng={77.2090} name="Default Location" />
+                    </div>
                   </div>
-                </div>
-              )}
-              <button className="accept-button" onClick={() => handleAccept(job.id)}>Accept Job</button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+                )}
+                <button className="accept-button" onClick={() => handleAccept(job.id)}>Accept Job</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <Footer />
+    </>
   );
 }
 

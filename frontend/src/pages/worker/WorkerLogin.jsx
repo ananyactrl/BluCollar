@@ -7,6 +7,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import WorkerHeader from '../../components/WorkerHeader';
+import Footer from '../../components/Footer';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
@@ -116,6 +117,7 @@ function WorkerLogin() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

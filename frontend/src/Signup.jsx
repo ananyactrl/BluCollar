@@ -4,6 +4,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './signup.css';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 // --- SVG Icons ---
 const UserIcon = () => (
@@ -98,113 +100,117 @@ export default function Signup() {
   };
 
   return (
-    <div className="signup-page-wrapper">
-      <div className="signup-container">
-        <div className="info-panel">
-          <div className="info-content">
-            <h2 className="info-title">Create your BluCollar account</h2>
-            <p className="info-text">Join our community of trusted service providers and clients. Get started in just a few minutes.</p>
+    <>
+      <Header />
+      <div className="signup-page-wrapper" style={{ paddingTop: '90px' }}>
+        <div className="signup-container">
+          <div className="info-panel">
+            <div className="info-content">
+              <h2 className="info-title">Create your BluCollar account</h2>
+              <p className="info-text">Join our community of trusted service providers and clients. Get started in just a few minutes.</p>
+            </div>
+          </div>
+
+          <div className="form-panel">
+            <form className="signup-form" onSubmit={handleSubmit}>
+              <div className="form-row">
+                <div className="form-group">
+                  <input 
+                    id="firstName" 
+                    type="text" 
+                    name="firstName" 
+                    value={values.firstName} 
+                    onChange={handleChange} 
+                    placeholder="First name*"
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <input 
+                    id="lastName" 
+                    type="text" 
+                    name="lastName" 
+                    value={values.lastName} 
+                    onChange={handleChange} 
+                    placeholder="Last name*"
+                    required 
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <input 
+                  id="email" 
+                  type="email" 
+                  name="email" 
+                  value={values.email} 
+                  onChange={handleChange} 
+                  placeholder="Email address*"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <input 
+                  id="phone" 
+                  type="tel" 
+                  name="phone" 
+                  value={values.phone} 
+                  onChange={handleChange} 
+                  placeholder="Phone number*"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <input 
+                  id="address" 
+                  type="text" 
+                  name="address" 
+                  value={values.address} 
+                  onChange={handleChange} 
+                  placeholder="Address*"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <input 
+                  id="password" 
+                  type="password"
+                  name="password" 
+                  value={values.password} 
+                  onChange={handleChange} 
+                  placeholder="Password*"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <input 
+                  id="confirmPassword" 
+                  type="password"
+                  name="confirmPassword" 
+                  value={values.confirmPassword} 
+                  onChange={handleChange} 
+                  placeholder="Confirm Password*"
+                  required 
+                />
+              </div>
+
+              <button type="submit" className="submit-btn" disabled={loading}>
+                {loading ? 'Processing...' : 'Create Account'}
+              </button>
+
+              <div className="login-link-container">
+                <span>Already have an account? </span>
+                <Link to="/login" className="login-link">Sign in</Link>
+              </div>
+            </form>
           </div>
         </div>
-
-        <div className="form-panel">
-          <form className="signup-form" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-group">
-                <input 
-                  id="firstName" 
-                  type="text" 
-                  name="firstName" 
-                  value={values.firstName} 
-                  onChange={handleChange} 
-                  placeholder="First name*"
-                  required 
-                />
-              </div>
-              <div className="form-group">
-                <input 
-                  id="lastName" 
-                  type="text" 
-                  name="lastName" 
-                  value={values.lastName} 
-                  onChange={handleChange} 
-                  placeholder="Last name*"
-                  required 
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <input 
-                id="email" 
-                type="email" 
-                name="email" 
-                value={values.email} 
-                onChange={handleChange} 
-                placeholder="Email address*"
-                required 
-              />
-            </div>
-
-            <div className="form-group">
-              <input 
-                id="phone" 
-                type="tel" 
-                name="phone" 
-                value={values.phone} 
-                onChange={handleChange} 
-                placeholder="Phone number*"
-                required 
-              />
-            </div>
-
-            <div className="form-group">
-              <input 
-                id="address" 
-                type="text" 
-                name="address" 
-                value={values.address} 
-                onChange={handleChange} 
-                placeholder="Address*"
-                required 
-              />
-            </div>
-
-            <div className="form-group">
-              <input 
-                id="password" 
-                type="password"
-                name="password" 
-                value={values.password} 
-                onChange={handleChange} 
-                placeholder="Password*"
-                required 
-              />
-            </div>
-
-            <div className="form-group">
-              <input 
-                id="confirmPassword" 
-                type="password"
-                name="confirmPassword" 
-                value={values.confirmPassword} 
-                onChange={handleChange} 
-                placeholder="Confirm Password*"
-                required 
-              />
-            </div>
-
-            <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? 'Processing...' : 'Create Account'}
-            </button>
-
-            <div className="login-link-container">
-              <span>Already have an account? </span>
-              <Link to="/login" className="login-link">Sign in</Link>
-            </div>
-          </form>
-        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }

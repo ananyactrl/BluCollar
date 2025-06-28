@@ -7,6 +7,8 @@ import './Login.css';
 import { useAuth } from './context/AuthContext';
 import './UserNotFoundModal.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 const API_URL = import.meta.env.VITE_BACKEND_URL + '/api/auth';
 
@@ -56,110 +58,114 @@ export default function Login() {
   };
 
   return (
-    <div className="login-page-wrapper">
-      <div className="login-card">
-        <div className="login-card-header">
-          <h1>Welcome Back</h1>
-          <p>Please enter your details to sign in.</p>
-        </div>
-
-        <form onSubmit={handleLogin} className="login-form-container">
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              autoComplete="email"
-            />
+    <>
+      <Header />
+      <div className="login-page-wrapper" style={{ paddingTop: '90px' }}>
+        <div className="login-card">
+          <div className="login-card-header">
+            <h1>Welcome Back</h1>
+            <p>Please enter your details to sign in.</p>
           </div>
 
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <form onSubmit={handleLogin} className="login-form-container">
+            <div className="input-group">
+              <label htmlFor="email">Email</label>
               <input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                id="email"
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
                 required
-                autoComplete="current-password"
-                style={{ 
-                  paddingRight: '3rem',
-                  width: '100%',
-                  boxSizing: 'border-box'
-                }}
+                autoComplete="email"
               />
-              <button
-                type="button"
-                className="eye-icon"
-                onClick={() => setShowPassword((v) => !v)}
-                tabIndex={-1}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                style={{ 
-                  position: 'absolute',
-                  right: '0.75rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
-                  padding: '0.25rem',
-                  cursor: 'pointer',
-                  color: '#64748b',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '1.5rem',
-                  height: '1.5rem',
-                  fontSize: '1rem'
-                }}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
             </div>
-          </div>
 
-          <div className="login-options">
-            <label className="checkbox-container">
-              <input type="checkbox" name="remember" />
-              Remember me
-            </label>
-            <Link to="/forgot-password" className="forgot-password-link">
-              Forgot Password?
+            <div className="input-group">
+              <label htmlFor="password">Password</label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  required
+                  autoComplete="current-password"
+                  style={{ 
+                    paddingRight: '3rem',
+                    width: '100%',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <button
+                  type="button"
+                  className="eye-icon"
+                  onClick={() => setShowPassword((v) => !v)}
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  style={{ 
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    padding: '0.25rem',
+                    cursor: 'pointer',
+                    color: '#64748b',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '1.5rem',
+                    height: '1.5rem',
+                    fontSize: '1rem'
+                  }}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+
+            <div className="login-options">
+              <label className="checkbox-container">
+                <input type="checkbox" name="remember" />
+                Remember me
+              </label>
+              <Link to="/forgot-password" className="forgot-password-link">
+                Forgot Password?
+              </Link>
+            </div>
+
+            <button type="submit" className="signin-button" disabled={loading}>
+              {loading ? 'Signing In...' : 'Sign In'}
+            </button>
+          </form>
+
+          <div className="signup-redirect">
+            <span>Don't have an account? </span>
+            <Link to="/signup" className="signup-redirect-link">
+              Sign up
             </Link>
           </div>
-
-          <button type="submit" className="signin-button" disabled={loading}>
-            {loading ? 'Signing In...' : 'Sign In'}
-          </button>
-        </form>
-
-        <div className="signup-redirect">
-          <span>Don't have an account? </span>
-          <Link to="/signup" className="signup-redirect-link">
-            Sign up
-          </Link>
         </div>
-      </div>
 
-      {showUserNotFound && (
-        <div className="user-not-found-modal">
-          <div className="modal-content">
-            <h2>User Not Found</h2>
-            <p>No account found with that email. Please sign up to book a service.</p>
-            <button onClick={() => navigate('/signup', { state: { returnUrl: location.state?.returnUrl || '/job-request' } })}>
-              Go to Signup
-            </button>
-            <button onClick={() => setShowUserNotFound(false)}>Cancel</button>
+        {showUserNotFound && (
+          <div className="user-not-found-modal">
+            <div className="modal-content">
+              <h2>User Not Found</h2>
+              <p>No account found with that email. Please sign up to book a service.</p>
+              <button onClick={() => navigate('/signup', { state: { returnUrl: location.state?.returnUrl || '/job-request' } })}>
+                Go to Signup
+              </button>
+              <button onClick={() => setShowUserNotFound(false)}>Cancel</button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+      <Footer />
+    </>
   );
 }

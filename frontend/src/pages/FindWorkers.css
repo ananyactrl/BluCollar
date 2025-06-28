@@ -363,6 +363,81 @@
   }
 }
 
+@media (max-width: 600px) {
+  .workers-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+  .worker-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    border-radius: 14px !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 8px rgba(18,52,89,0.07) !important;
+    padding: 0.6rem 0.4rem 0.8rem 0.4rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    height: auto !important;
+    max-height: none !important;
+    justify-content: flex-start !important;
+    overflow: visible !important;
+    position: relative !important;
+  }
+  .worker-card-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.4rem 0 0.4rem 0 !important;
+  }
+  .worker-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1rem !important;
+  }
+  .worker-title h3, .worker-profession {
+    font-size: 1rem !important;
+    word-break: break-word !important;
+    max-width: 80px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  .worker-card-body {
+    padding: 0.2rem 0 !important;
+    font-size: 0.92rem !important;
+  }
+  .worker-meta {
+    flex-direction: column !important;
+    gap: 0.2rem !important;
+    font-size: 0.9rem !important;
+  }
+  .worker-card-footer {
+    flex-direction: column !important;
+    gap: 0.3rem !important;
+    padding: 0.3rem 0 0 0 !important;
+    align-items: stretch !important;
+    overflow: visible !important;
+    min-height: 70px !important;
+    z-index: 2 !important;
+    background: transparent !important;
+  }
+  .view-profile-btn, .book-now-btn {
+    width: 100% !important;
+    margin: 0 !important;
+    font-size: 0.95rem !important;
+    padding: 0.5rem 0 !important;
+    border-radius: 7px !important;
+    text-align: center !important;
+    display: block !important;
+    overflow: visible !important;
+    z-index: 3 !important;
+  }
+}
+
 .worker-profile-modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;

@@ -232,13 +232,40 @@ router.get('/jobs/pending', authenticateToken, async (req, res) => {
 // GET /api/worker/search - public endpoint to search workers
 router.get('/search', async (req, res) => {
   const db = req.app.locals.db;
-  let sort = req.query.sort || 'name_asc';
+  let { service, location, gender, sort } = req.query;
   let orderBy = 'name ASC';
   if (sort === 'rating_desc') orderBy = 'rating DESC';
   if (sort === 'rating_asc') orderBy = 'rating ASC';
 
-  const query = `SELECT id, name, email, phone, address, profession, rating, reviewCount, successRate, isAvailable, profile_photo FROM workers ORDER BY ${orderBy}`;
-  db.query(query, (err, results) => {
+  // Build WHERE clause dynamically
+  let whereClauses = [];
+  let params = [];
+
+  if (service) {
+    // Match either profession or skills (skills is a JSON string)
+    whereClauses.push('(LOWER(profession) LIKE ? OR LOWER(skills) LIKE ?)');
+    params.push(`%${service.toLowerCase()}%`);
+    params.push(`%${service.toLowerCase()}%`);
+  }
+  if (location) {
+    whereClauses.push('LOWER(address) LIKE ?');
+    params.push(`%${location.toLowerCase()}%`);
+  }
+  if (gender) {
+    whereClauses.push('LOWER(gender) = ?');
+    params.push(gender.toLowerCase());
+  }
+
+  let where = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+  const query = `
+    SELECT id, name, email, phone, address, profession, rating, reviewCount, successRate, isAvailable, profile_photo
+    FROM workers
+    ${where}
+    ORDER BY ${orderBy}
+  `;
+
+  db.query(query, params, (err, results) => {
     if (err) {
       console.error('Error fetching workers:', err);
       return res.status(500).json({ message: 'Failed to fetch workers' });
