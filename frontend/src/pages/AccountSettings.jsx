@@ -144,7 +144,7 @@ const AccountSettings = () => {
                   <div className="footer-bottom">
                     <div className="footer-credit">
                       <span>
-                        Project by <span className="footer-credit-name">Ananya Singh</span>
+                        Developed by <span className="footer-credit-name">Ananya Singh</span>
                       </span>
                       <div className="footer-credit-icons">
                         <a href="https://github.com/ananyactrl/BluCollar" target="_blank" rel="noopener noreferrer" aria-label="GitHub">

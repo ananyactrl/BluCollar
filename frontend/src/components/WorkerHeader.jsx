@@ -1,59 +1,63 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaBars, FaChevronDown } from 'react-icons/fa';
+import { useLanguage } from './LanguageContext';
 
 // MobileHeader component for mobile view
-const MobileHeader = ({ language, setLanguage, onHamburgerClick, showProfileDropdown, workerUser, workerToken, profileDropdownRef }) => (
-  <header className="worker-header mobile-header">
-    <div className="mobile-header-bar" style={{ position: 'relative' }}>
-      <Link to="/" className="logo">BluCollar</Link>
-      <div className="language-selector">
-        <select
-          value={language}
-          onChange={e => setLanguage(e.target.value)}
-          className="language-dropdown"
-        >
-          <option value="english">English</option>
-          <option value="hindi">हिंदी</option>
-          <option value="marathi">मराठी</option>
-        </select>
-      </div>
-      <button className="hamburger" onClick={onHamburgerClick} aria-label="Open menu" style={{ position: 'relative', zIndex: 102 }}>
-        <FaBars />
-      </button>
-      {/* Profile dropdown below hamburger */}
-      {showProfileDropdown && workerToken && workerUser && (
-        <div ref={profileDropdownRef} style={{
-          position: 'absolute',
-          top: '56px',
-          right: '0',
-          background: '#fff',
-          border: '1px solid #e2e8f0',
-          borderRadius: '12px',
-          boxShadow: '0 8px 24px rgba(18,52,89,0.12)',
-          minWidth: '200px',
-          zIndex: 101,
-          padding: '1rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}>
-          <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#e6f0fa', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', fontSize: 22, fontWeight: 700, color: '#123459', marginBottom: 8 }}>
-            {workerUser?.profilePhoto
-              ? <img src={workerUser.profilePhoto} alt="Account" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : (workerUser?.name ? workerUser.name[0].toUpperCase() : <FaUser />)
-            }
-          </div>
-          <div style={{ fontWeight: 700, color: '#123459', fontSize: 16 }}>{workerUser.name}</div>
-          <div style={{ fontSize: 13, color: '#64748b', marginBottom: 2 }}>Worker Account</div>
+const MobileHeader = ({ onHamburgerClick, showProfileDropdown, workerUser, workerToken, profileDropdownRef }) => {
+  const { language, setLanguage } = useLanguage();
+  return (
+    <header className="worker-header mobile-header">
+      <div className="mobile-header-bar" style={{ position: 'relative' }}>
+        <Link to="/" className="logo">BluCollar</Link>
+        <div className="language-selector">
+          <select
+            value={language}
+            onChange={e => setLanguage(e.target.value)}
+            className="language-dropdown"
+          >
+            <option value="english">English</option>
+            <option value="hindi">हिंदी</option>
+            <option value="marathi">मराठी</option>
+          </select>
         </div>
-      )}
-    </div>
-  </header>
-);
+        <button className="hamburger" onClick={onHamburgerClick} aria-label="Open menu" style={{ position: 'relative', zIndex: 102 }}>
+          <FaBars />
+        </button>
+        {/* Profile dropdown below hamburger */}
+        {showProfileDropdown && workerToken && workerUser && (
+          <div ref={profileDropdownRef} style={{
+            position: 'absolute',
+            top: '56px',
+            right: '0',
+            background: '#fff',
+            border: '1px solid #e2e8f0',
+            borderRadius: '12px',
+            boxShadow: '0 8px 24px rgba(18,52,89,0.12)',
+            minWidth: '200px',
+            zIndex: 101,
+            padding: '1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#e6f0fa', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', fontSize: 22, fontWeight: 700, color: '#123459', marginBottom: 8 }}>
+              {workerUser?.profilePhoto
+                ? <img src={workerUser.profilePhoto} alt="Account" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : (workerUser?.name ? workerUser.name[0].toUpperCase() : <FaUser />)
+              }
+            </div>
+            <div style={{ fontWeight: 700, color: '#123459', fontSize: 16 }}>{workerUser.name}</div>
+            <div style={{ fontSize: 13, color: '#64748b', marginBottom: 2 }}>Worker Account</div>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+};
 
 const WorkerHeader = () => {
-  const [language, setLanguage] = useState('english');
+  const { language, setLanguage } = useLanguage();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const profileDropdownRef = useRef(null);
@@ -91,8 +95,6 @@ const WorkerHeader = () => {
     <>
       {isMobile && (
         <MobileHeader
-          language={language}
-          setLanguage={setLanguage}
           onHamburgerClick={handleHamburgerClick}
           showProfileDropdown={showProfileDropdown}
           workerUser={workerUser}

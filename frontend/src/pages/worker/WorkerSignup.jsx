@@ -9,6 +9,8 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import WorkerHeader from '../../components/WorkerHeader';
+import Footer from '../../components/Footer';
+import { useLanguage } from '../../components/LanguageContext';
 
 const PROFESSIONS = {
   plumber: {
@@ -72,9 +74,9 @@ const EXPERIENCE_LEVELS = [
 function WorkerSignup() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [step, setStep] = useState(1);
-  const [language, setLanguage] = useState('english');
+  const { language } = useLanguage();
   const t = translations[language] || {}; // Fallback to empty object
+  const [step, setStep] = useState(1);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [worker, setWorker] = useState({
@@ -432,21 +434,17 @@ function WorkerSignup() {
   return (
     <>
       <WorkerHeader />
-      <div className="worker-signup-container" style={{ paddingTop: '60px' }}>
-        <div className="language-toggle">
-          <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-            <option value="english">English</option>
-            <option value="hindi">Hindi</option>
-            <option value="marathi">Marathi</option>
-          </select>
+      <div className="worker-signup-wrapper" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', paddingTop: '90px' }}>
+        <div className="worker-signup-container" style={{ width: '100%', maxWidth: 600, margin: '0 auto', background: '#fff', borderRadius: 16, boxShadow: '0 2px 12px rgba(18,52,89,0.07)', padding: 24 }}>
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
+            {step === 1 && renderProfessionSelection()}
+            {step === 2 && renderSignupForm()}
+            {step === 3 && renderSkillsSelection()}
+            {step === 4 && renderConfirmation()}
+          </form>
         </div>
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-          {step === 1 && renderProfessionSelection()}
-          {step === 2 && renderSignupForm()}
-          {step === 3 && renderSkillsSelection()}
-          {step === 4 && renderConfirmation()}
-        </form>
       </div>
+      <Footer />
     </>
   );
 }

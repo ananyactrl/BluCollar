@@ -8,12 +8,13 @@ import 'aos/dist/aos.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import WorkerHeader from '../../components/WorkerHeader';
 import Footer from '../../components/Footer';
+import { useLanguage } from '../../components/LanguageContext';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
 function WorkerLogin() {
   const navigate = useNavigate();
-  const [language, setLanguage] = useState('english');
+  const { language, setLanguage } = useLanguage();
   const t = translations[language];
   const [credentials, setCredentials] = useState({
     emailOrPhone: '',
@@ -57,14 +58,6 @@ function WorkerLogin() {
       <div className="worker-login-container" style={{ paddingTop: '60px' }}>
         <div className="worker-signup-wrapper">
           <div className="worker-signup-container">
-            <div className="language-toggle">
-              <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-                <option value="english">English</option>
-                <option value="hindi">Hindi</option>
-                <option value="marathi">Marathi</option>
-              </select>
-            </div>
-
             <div className="signup-form-section" data-aos="fade-up">
               <div className="signup-header">
                 <h1>{t?.login_title || "Login"}</h1>

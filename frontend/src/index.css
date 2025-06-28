@@ -3608,7 +3608,7 @@ html {
 }
 .footer-credit span {
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: #fff;
   margin-bottom: 4px;
   text-align: center;
@@ -3649,5 +3649,12 @@ html {
   .footer-credit .footer-credit-icons a {
     font-size: 1.1rem;
   }
+}
+
+.footer-credit span, .footer-copyright {
+  font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+}
+.footer-credit .footer-credit-icons a {
+  font-size: 1rem;
 }
 
