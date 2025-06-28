@@ -3,6 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import './FindWorkers.css';
 import { FaStar, FaMapMarkerAlt, FaBriefcase, FaFilter } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 // Better API URL handling with fallback
 const getApiUrl = () => {
@@ -26,7 +27,6 @@ const FindWorkers = () => {
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [modalWorker, setModalWorker] = useState(null);
 
   // Search and filter states
   const [service, setService] = useState(query.get('service') || '');
@@ -81,6 +81,17 @@ const FindWorkers = () => {
     setSort('rating_desc');
     // Re-fetch with default filters
     fetchWorkers();
+  };
+
+  // Book Now handler: send notification to worker
+  const handleBookNow = async (worker) => {
+    try {
+      // You may want to collect job details here, for now just send notification
+      await axios.post(`${API}/worker/notify`, { workerId: worker.id });
+      toast.success(`Notification sent to ${worker.name}!`);
+    } catch (err) {
+      toast.error('Failed to notify worker.');
+    }
   };
 
   return (
@@ -177,8 +188,7 @@ const FindWorkers = () => {
                       </div>
                     </div>
                     <div className="worker-card-footer">
-                      <button className="view-profile-btn" onClick={() => setModalWorker(worker)}>View Profile</button>
-                      <Link to={`/job-request?service=${worker.profession === 'cook' ? 'cooking' : worker.profession}&workerId=${worker.id}`} className="book-now-btn">Book Now</Link>
+                      <button className="book-now-btn" onClick={() => handleBookNow(worker)}>Book Now</button>
                     </div>
                   </div>
                 ))
@@ -192,48 +202,6 @@ const FindWorkers = () => {
           )}
         </main>
       </div>
-      {/* Worker Profile Modal */}
-      {modalWorker && (
-        <div className="worker-profile-modal-overlay" onClick={() => setModalWorker(null)}>
-          <div className="worker-profile-modal" onClick={e => e.stopPropagation()}>
-            <button className="close-modal-btn" onClick={() => setModalWorker(null)}>&times;</button>
-            <div className="modal-header">
-              {modalWorker.profile_photo ? (
-                <img 
-                  src={modalWorker.profile_photo.startsWith('http') ? modalWorker.profile_photo : `${API.replace('/api', '')}/${modalWorker.profile_photo.replace(/\\/g, '/')}`}
-                  alt={modalWorker.name}
-                  className="worker-avatar"
-                  style={{width: 64, height: 64, borderRadius: '50%'}}
-                />
-              ) : (
-                <div className="worker-avatar worker-avatar-initial" style={{width: 64, height: 64, borderRadius: '50%', background: '#e6f0fa', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#123459'}}>
-                  {modalWorker.name ? modalWorker.name[0].toUpperCase() : '?'}
-                </div>
-              )}
-              <div className="modal-title-info">
-                <h2>{modalWorker.name}</h2>
-                <div className="modal-profession">{modalWorker.profession}</div>
-                <div className="modal-rating"><FaStar /> {modalWorker.rating || 'N/A'}</div>
-                <div className="modal-address"><FaMapMarkerAlt /> {modalWorker.address}</div>
-              </div>
-            </div>
-            <div className="modal-body">
-              <div className="modal-description">{modalWorker.description}</div>
-              {/* Portfolio images if available */}
-              {modalWorker.portfolio_files && Array.isArray(modalWorker.portfolio_files) && modalWorker.portfolio_files.length > 0 && (
-                <div className="modal-portfolio">
-                  <h4>Portfolio</h4>
-                  <div className="portfolio-images">
-                    {modalWorker.portfolio_files.map((file, idx) => (
-                      <img key={idx} src={file.startsWith('http') ? file : `${API.replace('/api', '')}/${file.replace(/\\/g, '/')}`} alt={`Portfolio ${idx+1}`} className="portfolio-image" style={{maxWidth: 100, maxHeight: 100, borderRadius: 8, margin: 4}} />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

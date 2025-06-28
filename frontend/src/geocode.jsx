@@ -1,14 +1,14 @@
 // src/utils/geocode.js
 import axios from 'axios';
 
-const GEOCODE_API_KEY = 'a3c56f158ba84f20a06b693d285e3df5'; // Replace with your actual API key
+const OPENCAGE_API_KEY = import.meta.env.VITE_OPENCAGE_API_KEY;
 
 export const geocodeAddress = async (address) => {
   try {
-    const response = await axios.get(`${API}/geocode/v1/json`, { 
+    const response = await axios.get('https://api.opencagedata.com/geocode/v1/json', { 
       params: {
         q: address,
-        key: GEOCODE_API_KEY,
+        key: OPENCAGE_API_KEY,
         limit: 1,
         no_annotations: 1,
       },

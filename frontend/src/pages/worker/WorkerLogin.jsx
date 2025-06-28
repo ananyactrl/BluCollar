@@ -5,6 +5,7 @@ import { translations } from '../../locales/workerLogin';
 import './WorkerSignup.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
@@ -18,6 +19,7 @@ function WorkerLogin() {
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // ✅ Move AOS.init() here
   useEffect(() => {
@@ -76,16 +78,26 @@ function WorkerLogin() {
                 required
               />
             </div>
-            <div className="form-group full-width">
+            <div className="form-group full-width" style={{ position: 'relative' }}>
               <label className="required">{t.password_label}</label>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={credentials.password}
                 onChange={handleChange}
                 placeholder={t.password_placeholder}
                 required
               />
+              <button
+                type="button"
+                className="eye-icon"
+                onClick={() => setShowPassword((v) => !v)}
+                tabIndex={-1}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
             <div className="button-group">
               <button type="submit" className="submit-btn" disabled={isSubmitting}>

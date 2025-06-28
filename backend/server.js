@@ -27,14 +27,18 @@ const prodOrigins = [
   'https://blucollar.vercel.app'
 ];
 
-const allowedOrigins = process.env.NODE_ENV === 'production' ? prodOrigins : devOrigins;
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://blucollar.vercel.app',
+];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS: ' + origin));
+      return callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true

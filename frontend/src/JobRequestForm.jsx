@@ -11,6 +11,7 @@ import { FaCheckCircle, FaClock, FaCalendarAlt, FaBroom } from "react-icons/fa";
 import './JobRequestForm.css';
 
 const API = import.meta.env.VITE_BACKEND_URL + '/api';
+const OPENCAGE_API_KEY = import.meta.env.VITE_OPENCAGE_API_KEY;
 
 const containerStyle = {
   width: '100%',
@@ -86,6 +87,30 @@ export default function JobRequestForm() {
       longitude: event.latLng.lng()
     }));
   }, []);
+
+  const handleAddressChange = async (e) => {
+    const address = e.target.value;
+    setFormData(prev => ({ ...prev, address }));
+    if (address && OPENCAGE_API_KEY) {
+      try {
+        const response = await axios.get('https://api.opencagedata.com/geocode/v1/json', {
+          params: {
+            q: address,
+            key: OPENCAGE_API_KEY,
+            limit: 1,
+            no_annotations: 1,
+          },
+        });
+        const result = response.data.results[0];
+        if (result) {
+          setMarker({ lat: result.geometry.lat, lng: result.geometry.lng });
+          setFormData(prev => ({ ...prev, latitude: result.geometry.lat, longitude: result.geometry.lng }));
+        }
+      } catch (err) {
+        // Optionally show error
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -387,12 +412,9 @@ export default function JobRequestForm() {
                     <input
                       type="text"
                       name="address"
-                      placeholder="Enter your complete address"
                       value={formData.address}
-                      onChange={e => setFormData(prev => ({
-                        ...prev,
-                        address: e.target.value
-                      }))}
+                      onChange={handleAddressChange}
+                      placeholder="Enter your address"
                       required
                     />
                   </div>

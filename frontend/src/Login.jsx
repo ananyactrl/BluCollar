@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 import { useAuth } from './context/AuthContext';
 import './UserNotFoundModal.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const API_URL = import.meta.env.VITE_BACKEND_URL + '/api/auth';
 
@@ -14,6 +15,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showUserNotFound, setShowUserNotFound] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
@@ -76,18 +78,51 @@ export default function Login() {
             />
           </div>
 
-          <div className="input-group" style={{ position: 'relative' }}>
+          <div className="input-group">
             <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              autoComplete="current-password"
-            />
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                autoComplete="current-password"
+                style={{ 
+                  paddingRight: '3rem',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <button
+                type="button"
+                className="eye-icon"
+                onClick={() => setShowPassword((v) => !v)}
+                tabIndex={-1}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                style={{ 
+                  position: 'absolute',
+                  right: '0.75rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  padding: '0.25rem',
+                  cursor: 'pointer',
+                  color: '#64748b',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '1.5rem',
+                  height: '1.5rem',
+                  fontSize: '1rem'
+                }}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
 
           <div className="login-options">

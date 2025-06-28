@@ -20,6 +20,7 @@ function WorkerJobs() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [activeTab, setActiveTab] = useState("ongoing");
   const [workerId, setWorkerId] = useState(null);
+  const [mapError, setMapError] = useState('');
 
   const WORKER_LAT = 30.7333;
   const WORKER_LNG = 76.7794;
@@ -96,8 +97,14 @@ function WorkerJobs() {
       const response = await axios.get(`${API}/api/worker/jobs/pending`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log("📦 Pending jobs response:", response.data);
-      setPendingJobs(response.data);
+      const jobsWithData = await Promise.all(
+        response.data.map(async (job) => {
+          const { lat, lng } = await getCoordinates(job.address) ?? {};
+          const urgencyLevel = Math.floor(Math.random() * 5) + 1;
+          return { ...job, lat, lng, urgencyLevel };
+        })
+      );
+      setPendingJobs(jobsWithData);
     } catch (error) {
       console.error('Error fetching pending jobs:', error);
       toast.error('Failed to load pending jobs.');
@@ -122,16 +129,29 @@ function WorkerJobs() {
   };
 
   const getCoordinates = async (address) => {
-    try {
-      const encodedAddress = encodeURIComponent(address);
-      const response = await axios.get(`${API}/geocode?address=${encodedAddress}`);
-      if (response.data.lat && response.data.lng) {
-        return { lat: parseFloat(response.data.lat), lng: parseFloat(response.data.lng) };
+    return new Promise((resolve) => {
+      if (!address || address === 'N/A') {
+        setMapError('No valid address provided for this job.');
+        resolve(null);
+        return;
       }
-    } catch (error) {
-      console.error('Error getting coordinates:', error);
-      return null;
-    }
+      if (!window.google || !window.google.maps) {
+        setMapError('Google Maps library not loaded. Check your API key and internet connection.');
+        resolve(null);
+        return;
+      }
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
+          setMapError('');
+          const location = results[0].geometry.location;
+          resolve({ lat: location.lat(), lng: location.lng() });
+        } else {
+          setMapError(`Geocoding failed: ${status}. Address: ${address}`);
+          resolve(null);
+        }
+      });
+    });
   };
 
   const haversineDistance = (lat1, lon1, lat2, lon2) => {
@@ -272,7 +292,15 @@ function WorkerJobs() {
               {job.lat && job.lng ? (
                 <div className="map-container"><JobLocationMap lat={job.lat} lng={job.lng} name={job.service_type} /></div>
               ) : (
-                <div className="map-placeholder">Map not available</div>
+                <div className="map-placeholder">
+                  Map not available<br />
+                  {mapError && <div style={{ color: '#d9534f', fontSize: 13, marginTop: 4 }}>{mapError}</div>}
+                  {!mapError && <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>No coordinates found for this address.</div>}
+                  {/* Fallback map with default location */}
+                  <div style={{ marginTop: 8 }}>
+                    <JobLocationMap lat={28.6139} lng={77.2090} name="Default Location" />
+                  </div>
+                </div>
               )}
               {job.status === 'accepted' && (
                 <div className="job-actions">
@@ -340,7 +368,15 @@ function WorkerJobs() {
               {job.lat && job.lng ? (
                 <div className="map-container"><JobLocationMap lat={job.lat} lng={job.lng} name={job.service_type} /></div>
               ) : (
-                <div className="map-placeholder">Map not available</div>
+                <div className="map-placeholder">
+                  Map not available<br />
+                  {mapError && <div style={{ color: '#d9534f', fontSize: 13, marginTop: 4 }}>{mapError}</div>}
+                  {!mapError && <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>No coordinates found for this address.</div>}
+                  {/* Fallback map with default location */}
+                  <div style={{ marginTop: 8 }}>
+                    <JobLocationMap lat={28.6139} lng={77.2090} name="Default Location" />
+                  </div>
+                </div>
               )}
               <button className="accept-button" onClick={() => handleAccept(job.id)}>Accept Job</button>
             </div>

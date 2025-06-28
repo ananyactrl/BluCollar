@@ -7,6 +7,7 @@ import './WorkerMobile.css';
 import cookingImage from '../../assets/wmremove-transformed (1).jpeg';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const PROFESSIONS = {
   plumber: {
@@ -91,6 +92,8 @@ function WorkerSignup() {
     facePhoto: null,
     portfolioFiles: []
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     AOS.init({ once: true });
@@ -313,27 +316,47 @@ function WorkerSignup() {
         </div>
       </div>
       <div className="form-row signup-form-row">
-        <div className="form-group">
+        <div className="form-group" style={{ position: 'relative' }}>
           <label className="required">{t.password_label || 'Password'}</label>
-          <input 
-            type="password" 
-            name="password" 
-            value={worker.password} 
-            onChange={handleChange} 
-            placeholder={t.password_placeholder || 'Create a password'} 
-            required 
+          <input
+            type={showPassword ? 'text' : 'password'}
+            name="password"
+            value={worker.password}
+            onChange={handleChange}
+            placeholder={t.password_placeholder || 'Create a password'}
+            required
           />
+          <button
+            type="button"
+            className="eye-icon"
+            onClick={() => setShowPassword((v) => !v)}
+            tabIndex={-1}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
         </div>
-        <div className="form-group">
+        <div className="form-group" style={{ position: 'relative' }}>
           <label className="required">{t.confirm_password_label || 'Confirm Password'}</label>
-          <input 
-            type="password" 
-            name="confirmPassword" 
-            value={worker.confirmPassword} 
-            onChange={handleChange} 
-            placeholder={t.confirm_password_placeholder || 'Confirm your password'} 
-            required 
+          <input
+            type={showConfirmPassword ? 'text' : 'password'}
+            name="confirmPassword"
+            value={worker.confirmPassword}
+            onChange={handleChange}
+            placeholder={t.confirm_password_placeholder || 'Confirm your password'}
+            required
           />
+          <button
+            type="button"
+            className="eye-icon"
+            onClick={() => setShowConfirmPassword((v) => !v)}
+            tabIndex={-1}
+            aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+            style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+          >
+            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
         </div>
       </div>
 

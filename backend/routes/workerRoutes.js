@@ -43,6 +43,7 @@ const upload = multer({
 
 // Import aiService for face verification and login logic
 const { simulateFaceVerification, authenticateWorker, getWorkerProfile, getWorkerDashboardStats, getOngoingWorkerJobs, getPastWorkerJobs } = require('../services/aiService');
+const { sendJobAcceptedEmail } = require('../utils/emailService'); // <-- Add this import
 
 // Middleware to protect routes
 
@@ -320,6 +321,29 @@ router.post('/jobs/complete', authenticateToken, (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(403).json({ message: 'Not authorized or job not found' });
     }
+    // Fetch job and customer details for email
+    db.query('SELECT j.*, c.email AS customerEmail, c.name AS customerName, w.name AS workerName FROM job_requests j JOIN clients c ON j.client_id = c.id JOIN workers w ON j.assignedWorkerId = w.id WHERE j.id = ?', [jobId], async (fetchErr, jobResults) => {
+      if (!fetchErr && jobResults.length > 0) {
+        const job = jobResults[0];
+        // Generate invoice/summary details (placeholder)
+        const summaryHtml = `
+          <div>
+            <strong>Service:</strong> ${job.service_type}<br>
+            <strong>Date:</strong> ${job.date}<br>
+            <strong>Worker:</strong> ${job.workerName}<br>
+            <strong>Address:</strong> ${job.address}<br>
+            <strong>Total:</strong> ₹${job.total_amount || 'N/A'}<br>
+            <strong>Tax:</strong> ₹${job.tax_amount || 'N/A'}<br>
+          </div>
+        `;
+        await sendJobAcceptedEmail({
+          toEmail: job.customerEmail,
+          customerName: job.customerName,
+          workerName: job.workerName,
+          jobDetails: summaryHtml
+        });
+      }
+    });
     // Notify the client (customer) via Socket.IO
     const io = req.app.get('io');
     db.query('SELECT client_id FROM job_requests WHERE id = ?', [jobId], (clientErr, clientResult) => {
@@ -370,6 +394,31 @@ router.post('/jobs/cancel', authenticateToken, (req, res) => {
       }
     });
     res.json({ message: 'Job cancelled successfully!' });
+  });
+});
+
+// Add this endpoint for direct notification from Find Workers page
+router.post('/notify', async (req, res) => {
+  const db = req.app.locals.db;
+  const { workerId } = req.body;
+  if (!workerId) return res.status(400).json({ message: 'workerId required' });
+
+  db.query('SELECT * FROM workers WHERE id = ?', [workerId], (err, results) => {
+    if (err) {
+      console.error('Error finding worker:', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+    if (!results || results.length === 0) {
+      return res.status(404).json({ message: 'Worker not found' });
+    }
+    const worker = results[0];
+    // Emit notification via Socket.IO
+    const io = req.app.get('io');
+    io.to(`worker_${workerId}`).emit('direct-booking', {
+      workerId,
+      message: `You have a new booking request!`
+    });
+    return res.json({ message: 'Notification sent to worker.' });
   });
 });
 

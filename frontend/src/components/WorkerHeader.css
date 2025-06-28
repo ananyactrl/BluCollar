@@ -3,9 +3,15 @@
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #e2e8f0;
-    z-index: 100;
+    z-index: 4000;
     position: sticky;
     top: 0;
+    position: relative;
+  }
+  
+  .desktop-header {
+    z-index: 4000;
+    position: relative;
   }
   
   .navbar-container {
@@ -15,6 +21,7 @@
     padding: 0.6rem 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
   }
   
   .logo {
@@ -129,7 +136,7 @@
     position: absolute;
     right: 0;
     top: 110%;
-    z-index: 1000;
+    z-index: 3000;
     overflow: hidden;
     animation: dropdownFadeIn 0.2s ease-out;
   }
@@ -423,16 +430,4 @@
     }
   }
 
-  @media (max-width: 600px) {
-    .worker-header.mobile-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: #fff;
-      width: 100%;
-      box-shadow: 0 2px 8px rgba(18,52,89,0.04);
-    }
-    .worker-hero {
-      margin-top: 56px; /* Adjust this value to match your header height */
-    }
-  }
+  
