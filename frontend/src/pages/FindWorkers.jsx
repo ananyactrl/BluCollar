@@ -26,6 +26,7 @@ const FindWorkers = () => {
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalWorker, setModalWorker] = useState(null);
 
   // Search and filter states
   const [service, setService] = useState(query.get('service') || '');
@@ -151,11 +152,17 @@ const FindWorkers = () => {
                 workers.map(worker => (
                   <div key={worker.id} className="worker-card">
                     <div className="worker-card-header">
-                      <img 
-                        src={worker.profile_photo ? `${API.replace('/api', '')}/${worker.profile_photo.replace(/\\/g, '/')}` : 'https://via.placeholder.com/150'} 
-                        alt={worker.name} 
-                        className="worker-avatar"
-                      />
+                      {worker.profile_photo ? (
+                        <img 
+                          src={worker.profile_photo.startsWith('http') ? worker.profile_photo : `${API.replace('/api', '')}/${worker.profile_photo.replace(/\\/g, '/')}`}
+                          alt={worker.name}
+                          className="worker-avatar"
+                        />
+                      ) : (
+                        <div className="worker-avatar worker-avatar-initial" style={{width: 48, height: 48, borderRadius: '50%', background: '#e6f0fa', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#123459'}}>
+                          {worker.name ? worker.name[0].toUpperCase() : '?'}
+                        </div>
+                      )}
                       <div className="worker-title">
                         <h3>{worker.name}</h3>
                         <span className="worker-profession">{worker.profession}</span>
@@ -170,8 +177,8 @@ const FindWorkers = () => {
                       </div>
                     </div>
                     <div className="worker-card-footer">
-                      <Link to={`/worker-profile/${worker.id}`} className="view-profile-btn">View Profile</Link>
-                      <Link to={`/job-request?service=${worker.profession}&workerId=${worker.id}`} className="book-now-btn">Book Now</Link>
+                      <button className="view-profile-btn" onClick={() => setModalWorker(worker)}>View Profile</button>
+                      <Link to={`/job-request?service=${worker.profession === 'cook' ? 'cooking' : worker.profession}&workerId=${worker.id}`} className="book-now-btn">Book Now</Link>
                     </div>
                   </div>
                 ))
@@ -185,6 +192,48 @@ const FindWorkers = () => {
           )}
         </main>
       </div>
+      {/* Worker Profile Modal */}
+      {modalWorker && (
+        <div className="worker-profile-modal-overlay" onClick={() => setModalWorker(null)}>
+          <div className="worker-profile-modal" onClick={e => e.stopPropagation()}>
+            <button className="close-modal-btn" onClick={() => setModalWorker(null)}>&times;</button>
+            <div className="modal-header">
+              {modalWorker.profile_photo ? (
+                <img 
+                  src={modalWorker.profile_photo.startsWith('http') ? modalWorker.profile_photo : `${API.replace('/api', '')}/${modalWorker.profile_photo.replace(/\\/g, '/')}`}
+                  alt={modalWorker.name}
+                  className="worker-avatar"
+                  style={{width: 64, height: 64, borderRadius: '50%'}}
+                />
+              ) : (
+                <div className="worker-avatar worker-avatar-initial" style={{width: 64, height: 64, borderRadius: '50%', background: '#e6f0fa', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#123459'}}>
+                  {modalWorker.name ? modalWorker.name[0].toUpperCase() : '?'}
+                </div>
+              )}
+              <div className="modal-title-info">
+                <h2>{modalWorker.name}</h2>
+                <div className="modal-profession">{modalWorker.profession}</div>
+                <div className="modal-rating"><FaStar /> {modalWorker.rating || 'N/A'}</div>
+                <div className="modal-address"><FaMapMarkerAlt /> {modalWorker.address}</div>
+              </div>
+            </div>
+            <div className="modal-body">
+              <div className="modal-description">{modalWorker.description}</div>
+              {/* Portfolio images if available */}
+              {modalWorker.portfolio_files && Array.isArray(modalWorker.portfolio_files) && modalWorker.portfolio_files.length > 0 && (
+                <div className="modal-portfolio">
+                  <h4>Portfolio</h4>
+                  <div className="portfolio-images">
+                    {modalWorker.portfolio_files.map((file, idx) => (
+                      <img key={idx} src={file.startsWith('http') ? file : `${API.replace('/api', '')}/${file.replace(/\\/g, '/')}`} alt={`Portfolio ${idx+1}`} className="portfolio-image" style={{maxWidth: 100, maxHeight: 100, borderRadius: 8, margin: 4}} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

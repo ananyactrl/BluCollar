@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { translations } from '../../locales/workerSignup';
 import './WorkerLanding.css';
+import './WorkerMobile.css';
 import maidService from '../../assets/wmremove-transformed.jpeg';
 import plumberImage from '../../assets/wmremove-transformed (5).jpeg';
 import electricianImage from '../../assets/wmremove-transformed (2).jpeg';
 import heroImage1 from '../../assets/AdobeStock_431135906_Preview.jpeg';
 import heroImage2 from '../../assets/AdobeStock_458508034_Preview.jpeg';
 import heroImage3 from '../../assets/AdobeStock_845208776_Preview.jpeg';
+import cookingImage from '../../assets/wmremove-transformed (1).jpeg';
 import WorkerHeader from '../../components/WorkerHeader';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-fku9.onrender.com';
@@ -101,12 +103,12 @@ const WorkerLanding = () => {
           <div className="service-cards">
             <div className="service-card">
               <div className="image-container">
-                <img src={maidService} alt="Housekeeping" />
+                <img src={maidService} alt="Maid" />
               </div>
-              <h3>{t.services.housekeeping.title}</h3>
-              <p>{t.services.housekeeping.description}</p>
+              <h3>{t.services.maid.title}</h3>
+              <p>{t.services.maid.description}</p>
               <Link 
-                to="/worker/signup?service=housekeeping" 
+                to="/worker/signup?service=maid" 
                 className="service-button primary-button"
               >
                 {t.services.registerNow}
@@ -135,6 +137,21 @@ const WorkerLanding = () => {
               <p>{t.services.electrical.description}</p>
               <Link 
                 to="/worker/signup?service=electrical" 
+                className="service-button primary-button"
+              >
+                {t.services.registerNow}
+              </Link>
+            </div>
+
+            {/* Cook card */}
+            <div className="service-card">
+              <div className="image-container">
+                <img src={cookingImage} alt="Cook" className="service-image" />
+              </div>
+              <h3>{t.services.cooking?.title || 'Cook'}</h3>
+              <p>{t.services.cooking?.description || 'Register as a professional cook.'}</p>
+              <Link 
+                to="/worker/signup?service=cooking" 
                 className="service-button primary-button"
               >
                 {t.services.registerNow}

@@ -283,6 +283,23 @@ router.post('/accept', authenticateToken, (req, res) => {
         console.error('Error updating job:', updateErr);
         return res.status(500).json({ message: 'Failed to accept job' });
       }
+      // Notify the client (customer) via Socket.IO
+      const io = req.app.get('io');
+      // Get client_id and worker name for notification
+      db.query('SELECT client_id FROM job_requests WHERE id = ?', [jobId], (clientErr, clientResult) => {
+        if (!clientErr && clientResult.length > 0) {
+          const clientId = clientResult[0].client_id;
+          // Get worker name
+          db.query('SELECT name FROM workers WHERE id = ?', [workerId], (workerErr, workerResult) => {
+            const workerName = (!workerErr && workerResult.length > 0) ? workerResult[0].name : 'A worker';
+            io.to(`client_${clientId}`).emit('job-accepted', {
+              jobId,
+              workerName,
+              message: `Your job has been accepted by ${workerName} and they are on their way!`
+            });
+          });
+        }
+      });
       res.json({ message: 'Job accepted successfully!' });
     });
   });
@@ -303,7 +320,56 @@ router.post('/jobs/complete', authenticateToken, (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(403).json({ message: 'Not authorized or job not found' });
     }
+    // Notify the client (customer) via Socket.IO
+    const io = req.app.get('io');
+    db.query('SELECT client_id FROM job_requests WHERE id = ?', [jobId], (clientErr, clientResult) => {
+      if (!clientErr && clientResult.length > 0) {
+        const clientId = clientResult[0].client_id;
+        io.to(`client_${clientId}`).emit('job-completed', {
+          jobId,
+          message: 'Your job has been marked as completed by the worker. Please confirm and leave a review.'
+        });
+      }
+    });
     res.json({ message: 'Job marked as completed!' });
+  });
+});
+
+// Cancel job route - allows workers to cancel jobs they've accepted
+router.post('/jobs/cancel', authenticateToken, (req, res) => {
+  const db = req.app.locals.db;
+  const workerId = req.worker.id;
+  const { jobId, reason } = req.body;
+
+  // Only allow the assigned worker to cancel the job
+  const query = 'UPDATE job_requests SET status = ?, assignedWorkerId = NULL WHERE id = ? AND assignedWorkerId = ?';
+  db.query(query, ['pending', jobId, workerId], (err, result) => {
+    if (err) {
+      console.error('Error cancelling job:', err);
+      return res.status(500).json({ message: 'Failed to cancel job' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(403).json({ message: 'Not authorized or job not found' });
+    }
+    
+    // Notify the client (customer) via Socket.IO
+    const io = req.app.get('io');
+    db.query('SELECT client_id FROM job_requests WHERE id = ?', [jobId], (clientErr, clientResult) => {
+      if (!clientErr && clientResult.length > 0) {
+        const clientId = clientResult[0].client_id;
+        // Get worker name for notification
+        db.query('SELECT name FROM workers WHERE id = ?', [workerId], (workerErr, workerResult) => {
+          const workerName = (!workerErr && workerResult.length > 0) ? workerResult[0].name : 'A worker';
+          io.to(`client_${clientId}`).emit('job-cancelled', {
+            jobId,
+            workerName,
+            reason: reason || 'No reason provided',
+            message: `Your job has been cancelled by ${workerName}. The job is now available for other workers.`
+          });
+        });
+      }
+    });
+    res.json({ message: 'Job cancelled successfully!' });
   });
 });
 

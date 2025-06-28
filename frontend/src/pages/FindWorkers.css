@@ -287,4 +287,130 @@
     margin-left: 0;
     justify-content: space-between;
   }
+}
+
+.worker-profile-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(18,34,60,0.18);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+.worker-profile-modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(18,52,89,0.18);
+  max-width: 95vw;
+  width: 370px;
+  padding: 2rem 1.2rem 1.2rem 1.2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: modalFadeIn 0.2s;
+}
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.close-modal-btn {
+  position: absolute;
+  top: 0.7rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #64748b;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0.2rem 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.close-modal-btn:hover {
+  background: #f1f8ff;
+}
+.modal-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.worker-avatar-initial {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #e6f0fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #123459;
+}
+.modal-title-info h2 {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #123459;
+}
+.modal-profession {
+  font-size: 1rem;
+  color: #2563eb;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.modal-rating, .modal-address {
+  font-size: 0.98rem;
+  color: #64748b;
+  margin-bottom: 0.1rem;
+}
+.modal-body {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.modal-description {
+  font-size: 1.05rem;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+.modal-portfolio {
+  margin-top: 1rem;
+}
+.portfolio-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.portfolio-image {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(18,52,89,0.07);
+}
+@media (max-width: 600px) {
+  .worker-profile-modal {
+    width: 98vw;
+    min-width: unset;
+    padding: 1.2rem 0.5rem 0.7rem 0.5rem;
+  }
+  .modal-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .modal-title-info h2 {
+    font-size: 1.1rem;
+  }
+  .portfolio-image {
+    max-width: 80px;
+    max-height: 80px;
+  }
 } 

@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ApplicationSummary.css';
+import './WorkerMobile.css';
 import { FaUserCheck } from 'react-icons/fa';
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';

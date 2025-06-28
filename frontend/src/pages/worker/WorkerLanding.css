@@ -14,110 +14,7 @@
   font-family: 'Roboto', sans-serif;
 }
 
-/* Header Styles */
-.worker-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 2rem;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.logo {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #123459;
-  text-decoration: none;
-}
-
-.worker-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.language-selector {
-  display: flex;
-  gap: 0.5rem;
-  margin-right: 1.5rem;
-}
-
-.language-selector button,
-.nav-button {
-  min-width: 100px;
-  height: 40px;
-  padding: 0 1.5rem;
-  border-radius: 8px;
-  border: 2px solid #1e3a8a;
-  background: #fff;
-  color: #1e3a8a;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.language-selector button.active,
-.nav-button.primary-button {
-  background: #1e3a8a;
-  color: #fff;
-  border: 2px solid #1e3a8a;
-}
-
-.language-selector button:hover,
-.nav-button:hover {
-  background: #1e4299;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(30,58,138,0.08);
-}
-
-.nav-button {
-  margin-left: 0.5rem;
-}
-
-@media (max-width: 900px) {
-  .worker-header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1rem;
-  }
-  .worker-nav {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-  .language-selector {
-    margin-right: 0.5rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .worker-header {
-    padding: 0.5rem;
-  }
-  .logo {
-    font-size: 1.3rem;
-  }
-  .worker-nav {
-    gap: 0.3rem;
-  }
-  .language-selector button,
-  .nav-button {
-    min-width: 80px;
-    height: 36px;
-    font-size: 0.95rem;
-    padding: 0 0.7rem;
-  }
-}
-
 /* Button Styles */
-
-/* Base styles for all buttons that share common sizing and display */
 .nav-button,
 .service-button,
 .hero-button {
@@ -127,18 +24,17 @@
   font-weight: 500;
   font-size: 0.875rem;
   transition: all 0.2s ease;
-  box-sizing: border-box; /* Ensure consistent sizing model */
-  height: 44px; /* Fixed height for vertical consistency */
-  display: flex; /* For internal centering */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  box-sizing: border-box;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Primary Button general style - for all buttons with class .primary-button */
 .primary-button {
   background-color: var(--primary-color);
   color: var(--white);
-  border: 1px solid transparent; /* To match secondary button's border width */
+  border: 1px solid transparent;
 }
 
 .primary-button:hover {
@@ -146,7 +42,6 @@
   transform: translateY(-1px);
 }
 
-/* Outline Button general style - for all buttons with class .outline-button */
 .outline-button {
   background-color: transparent;
   color: var(--primary-color);
@@ -157,7 +52,6 @@
   background-color: rgba(18, 52, 89, 0.04);
 }
 
-/* Specific styles for secondary hero button in JSX: className="hero-button secondary-button" */
 .hero-button.secondary-button {
   background-color: transparent;
   color: var(--white);
@@ -170,19 +64,16 @@
   border-color: var(--primary-hover);
 }
 
-/* Hero Buttons Container - handles layout of the two hero buttons */
 .hero-buttons {
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap; /* Allows buttons to wrap on smaller screens */
+  flex-wrap: wrap;
 }
 
-/* Force equal width for buttons within the hero-buttons container */
 .hero-buttons .hero-button {
-  width: calc(50% - 0.5rem); /* Explicitly set width to exactly half minus half the gap */
-  flex-grow: 0; /* Do not allow growing beyond this width */
-  flex-shrink: 0; /* Do not allow shrinking below this width */
-  /* min-width and max-width are handled by the general .hero-button rule if needed */
+  width: calc(50% - 0.5rem);
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 /* Hero Section */
@@ -192,7 +83,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 500px; /* Adjust as needed */
+  min-height: 500px;
   display: flex;
   align-items: center;
   color: var(--white);
@@ -204,7 +95,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
 
@@ -228,19 +119,19 @@
 
 .title-container h1 {
   font-size: 3.5rem;
-  color: var(--white); /* Changed to white for better contrast */
+  color: var(--white);
   margin: 0;
   line-height: 1.2;
   font-weight: 600;
 }
 
 .service-title {
-  color: var(--primary-color) !important; /* Keep primary color for highlight */
+  color: var(--primary-color) !important;
 }
 
 .hero-description {
   font-size: 1.25rem;
-  color: var(--white); /* Changed to white for better contrast */
+  color: var(--white);
   line-height: 1.6;
   margin-bottom: 2rem;
   max-width: 540px;

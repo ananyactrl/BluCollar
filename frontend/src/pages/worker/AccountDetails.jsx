@@ -1,5 +1,6 @@
 import React from 'react';
 import './AccountDetails.css';
+import './WorkerMobile.css';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-fku9.onrender.com';
 

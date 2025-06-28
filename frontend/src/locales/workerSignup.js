@@ -65,9 +65,9 @@ export const translations = {
     },
     services: {
       title: "Choose Your Service Category",
-      housekeeping: {
-        title: "Housekeeping Services",
-        description: "Join as a professional housekeeper"
+      maid: {
+        title: "Maid Services",
+        description: "Join as a professional maid"
       },
       plumbing: {
         title: "Plumbing Services",
@@ -146,9 +146,9 @@ export const translations = {
     },
     services: {
       title: "अपनी सेवा श्रेणी चुनें",
-      housekeeping: {
-        title: "हाऊसकीपिंग सेवाएं",
-        description: "पेशेवर हाऊसकीपर के रूप में जुड़ें"
+      maid: {
+        title: "मेड सेवाएं",
+        description: "पेशेवर मेड के रूप में जुड़ें"
       },
       plumbing: {
         title: "प्लंबिंग सेवाएं",
@@ -227,9 +227,9 @@ export const translations = {
     },
     services: {
       title: "तुमची सेवा श्रेणी निवडा",
-      housekeeping: {
-        title: "हाऊसकीपिंग सेवा",
-        description: "व्यावसायिक हाऊसकीपर म्हणून सामील व्हा"
+      maid: {
+        title: "मेड सेवा",
+        description: "व्यावसायिक मेड म्हणून सामील व्हा"
       },
       plumbing: {
         title: "प्लंबिंग सेवा",

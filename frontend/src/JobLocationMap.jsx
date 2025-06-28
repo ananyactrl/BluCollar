@@ -1,42 +1,57 @@
-// JobLocationMap.jsx
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
-// Fix leaflet marker icon issue
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-});
+const containerStyle = { width: '100%', height: '200px' };
+const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
+const DEFAULT_CENTER = { lat: 28.6139, lng: 77.2090 }; // New Delhi as fallback
 
 const JobLocationMap = ({ lat, lng, name }) => {
-    // Guard clause: don't render if coords are missing
-    if (!lat || !lng) {
-      return <div>📍 Map not available for this job</div>;
-    }
-  
-    return (
-      <MapContainer
-        center={[lat, lng]}
-        zoom={13}
-        style={{ height: '200px', width: '100%' }}
-        scrollWheelZoom={false}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; OpenStreetMap contributors'
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: ['places']
+  });
+
+  // Validate coordinates
+  const validLat = typeof lat === 'number' ? lat : parseFloat(lat);
+  const validLng = typeof lng === 'number' ? lng : parseFloat(lng);
+  const hasValidCoords =
+    isLoaded &&
+    validLat &&
+    validLng &&
+    !isNaN(validLat) &&
+    !isNaN(validLng) &&
+    Math.abs(validLat) <= 90 &&
+    Math.abs(validLng) <= 180;
+
+  if (!isLoaded) return <div style={containerStyle} className="map-loading">Loading map...</div>;
+
+  return (
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={hasValidCoords ? { lat: validLat, lng: validLng } : DEFAULT_CENTER}
+      zoom={hasValidCoords ? 15 : 5}
+      options={{
+        zoomControl: true,
+        streetViewControl: false,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        styles: [
+          {
+            featureType: 'poi',
+            elementType: 'labels',
+            stylers: [{ visibility: 'off' }]
+          }
+        ]
+      }}
+    >
+      {hasValidCoords && (
+        <Marker
+          position={{ lat: validLat, lng: validLng }}
+          title={name ? `${name}'s location` : 'Job location'}
         />
-        <Marker position={[lat, lng]}>
-          <Popup>{name}'s location</Popup>
-        </Marker>
-      </MapContainer>
-    );
-  };
-  
+      )}
+    </GoogleMap>
+  );
+};
 
-  
-
-export default JobLocationMap;
+export default JobLocationMap; 

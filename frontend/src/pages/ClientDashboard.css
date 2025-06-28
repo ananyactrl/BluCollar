@@ -108,6 +108,11 @@
     color: var(--success-color);
 }
 
+.status.cancelled {
+    background-color: #fed7d7;
+    color: var(--danger-color);
+}
+
 .booking-rating {
     margin-top: 0.75rem;
 }

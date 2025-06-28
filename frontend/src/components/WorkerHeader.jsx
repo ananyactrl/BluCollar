@@ -1,60 +1,105 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FaUser, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaUser, FaBars, FaChevronDown } from 'react-icons/fa';
+
+// MobileHeader component for mobile view
+const MobileHeader = ({ language, setLanguage, onHamburgerClick, showProfileDropdown, workerUser, workerToken, profileDropdownRef }) => (
+  <header className="worker-header mobile-header">
+    <div className="mobile-header-bar" style={{ position: 'relative' }}>
+      <Link to="/" className="logo">BluCollar</Link>
+      <div className="language-selector">
+        <select
+          value={language}
+          onChange={e => setLanguage(e.target.value)}
+          className="language-dropdown"
+        >
+          <option value="english">English</option>
+          <option value="hindi">हिंदी</option>
+          <option value="marathi">मराठी</option>
+        </select>
+      </div>
+      <button className="hamburger" onClick={onHamburgerClick} aria-label="Open menu" style={{ position: 'relative', zIndex: 102 }}>
+        <FaBars />
+      </button>
+      {/* Profile dropdown below hamburger */}
+      {showProfileDropdown && workerToken && workerUser && (
+        <div ref={profileDropdownRef} style={{
+          position: 'absolute',
+          top: '56px',
+          right: '0',
+          background: '#fff',
+          border: '1px solid #e2e8f0',
+          borderRadius: '12px',
+          boxShadow: '0 8px 24px rgba(18,52,89,0.12)',
+          minWidth: '200px',
+          zIndex: 101,
+          padding: '1rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
+          <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#e6f0fa', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', fontSize: 22, fontWeight: 700, color: '#123459', marginBottom: 8 }}>
+            {workerUser?.profilePhoto
+              ? <img src={workerUser.profilePhoto} alt="Account" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              : (workerUser?.name ? workerUser.name[0].toUpperCase() : <FaUser />)
+            }
+          </div>
+          <div style={{ fontWeight: 700, color: '#123459', fontSize: 16 }}>{workerUser.name}</div>
+          <div style={{ fontSize: 13, color: '#64748b', marginBottom: 2 }}>Worker Account</div>
+        </div>
+      )}
+    </div>
+  </header>
+);
 
 const WorkerHeader = () => {
   const [language, setLanguage] = useState('english');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const profileDropdownRef = useRef(null);
   const navigate = useNavigate();
 
   // Worker login state
   const workerUser = JSON.parse(localStorage.getItem('workerUser'));
   const workerToken = localStorage.getItem('workerToken');
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-    // Toggle body scroll lock
-    if (!isMobileMenuOpen) {
-      document.body.classList.add('mobile-menu-open');
-    } else {
-      document.body.classList.remove('mobile-menu-open');
-    }
+  // Hamburger click handler (mobile)
+  const handleHamburgerClick = () => {
+    setShowProfileDropdown((prev) => !prev);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('workerUser');
-    localStorage.removeItem('workerToken');
-    setDropdownOpen(false);
-    setIsMobileMenuOpen(false);
-    document.body.classList.remove('mobile-menu-open');
-    navigate('/worker/login');
-  };
-
-  const handleMobileMenuClose = () => {
-    setIsMobileMenuOpen(false);
-    document.body.classList.remove('mobile-menu-open');
-  };
-
-  // Close dropdown on outside click (for desktop avatar)
-  React.useEffect(() => {
-    if (!dropdownOpen) return;
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!showProfileDropdown) return;
     const handleClick = (e) => {
-      if (!e.target.closest('.worker-avatar-link')) setDropdownOpen(false);
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(e.target) &&
+        !e.target.closest('.hamburger')
+      ) {
+        setShowProfileDropdown(false);
+      }
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
-  }, [dropdownOpen]);
+  }, [showProfileDropdown]);
 
-  // Clean up body class on unmount
-  React.useEffect(() => {
-    return () => {
-      document.body.classList.remove('mobile-menu-open');
-    };
-  }, []);
+  // Only show MobileHeader on mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 700;
 
   return (
     <>
+      {isMobile && (
+        <MobileHeader
+          language={language}
+          setLanguage={setLanguage}
+          onHamburgerClick={handleHamburgerClick}
+          showProfileDropdown={showProfileDropdown}
+          workerUser={workerUser}
+          workerToken={workerToken}
+          profileDropdownRef={profileDropdownRef}
+        />
+      )}
       {/* Desktop Header */}
       <header className="worker-header desktop-header">
         <div className="navbar-container">
@@ -128,7 +173,12 @@ const WorkerHeader = () => {
                       Dashboard
                     </Link>
                     <button 
-                      onClick={handleLogout} 
+                      onClick={() => {
+                        localStorage.removeItem('workerUser');
+                        localStorage.removeItem('workerToken');
+                        setDropdownOpen(false);
+                        navigate('/worker/login');
+                      }} 
                       className="dropdown-link"
                       style={{ 
                         display: 'block', 
@@ -161,130 +211,6 @@ const WorkerHeader = () => {
           </div>
         </div>
       </header>
-
-      {/* Mobile Header */}
-      <header className="worker-header mobile-header">
-        <div className="mobile-header-bar">
-          <Link to="/" className="logo">BluCollar</Link>
-          <button 
-            className="hamburger" 
-            onClick={toggleMobileMenu}
-            aria-label="Toggle menu"
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile Menu Overlay and Menu */}
-      {isMobileMenuOpen && (
-        <>
-          <div className="mobile-menu-overlay" onClick={handleMobileMenuClose}></div>
-          <div className="mobile-menu">
-            {/* Close button at top of menu */}
-            <button 
-              className="mobile-menu-close"
-              onClick={handleMobileMenuClose}
-              aria-label="Close menu"
-            >
-              <FaTimes />
-            </button>
-
-            {/* User info section for logged in workers */}
-            {workerToken && workerUser && (
-              <div style={{
-                padding: '1rem',
-                borderBottom: '1px solid #f0f4f8',
-                marginBottom: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px'
-              }}>
-                <div style={{ 
-                  width: '40px', 
-                  height: '40px', 
-                  borderRadius: '50%', 
-                  background: '#e6f0fa',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden'
-                }}>
-                  {workerUser?.profilePhoto
-                    ? <img src={workerUser.profilePhoto} alt="Account" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : (workerUser?.name ? workerUser.name[0].toUpperCase() : <FaUser />)
-                  }
-                </div>
-                <div>
-                  <div style={{ fontWeight: 600, color: '#123459' }}>{workerUser.name}</div>
-                  <div style={{ fontSize: '14px', color: '#64748b' }}>Worker Account</div>
-                </div>
-              </div>
-            )}
-
-            {/* Navigation Links */}
-            <Link to="/worker" className="nav-link" onClick={handleMobileMenuClose}>
-              Home
-            </Link>
-            <Link to="/worker/jobs" className="nav-link" onClick={handleMobileMenuClose}>
-              See Job Requests
-            </Link>
-            
-            {workerToken && (
-              <>
-                <Link to="/worker/account" className="nav-link" onClick={handleMobileMenuClose}>
-                  Account Settings
-                </Link>
-                <Link to="/worker/dashboard" className="nav-link" onClick={handleMobileMenuClose}>
-                  Dashboard
-                </Link>
-                <button 
-                  onClick={handleLogout}
-                  className="nav-link"
-                  style={{
-                    color: '#dc2626',
-                    background: 'none',
-                    border: 'none',
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '1rem',
-                    cursor: 'pointer',
-                    fontSize: '1.1rem',
-                    fontWeight: 600
-                  }}
-                >
-                  Log Out
-                </button>
-              </>
-            )}
-
-            {!workerToken && (
-              <>
-                <Link to="/worker/login" className="header-btn header-btn-outline" onClick={handleMobileMenuClose}>
-                  Login
-                </Link>
-                <Link to="/worker/signup" className="header-btn header-btn-solid" onClick={handleMobileMenuClose}>
-                  Join Us
-                </Link>
-              </>
-            )}
-
-            {/* Language Selector at Bottom */}
-            <div className="language-selector">
-              <select
-                value={language}
-                onChange={e => setLanguage(e.target.value)}
-                className="language-dropdown"
-              >
-                <option value="english">English</option>
-                <option value="hindi">हिंदी</option>
-                <option value="marathi">मराठी</option>
-              </select>
-            </div>
-          </div>
-        </>
-      )}
     </>
   );
 };

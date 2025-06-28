@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FaMapMarkerAlt, FaCalendarAlt, FaBolt, FaLocationArrow } from "react-icons/fa";
 import JobLocationMap from '../../JobLocationMap';
 import './WorkerJobs.css';
+import './WorkerMobile.css';
 import { jwtDecode } from 'jwt-decode';
 import { getSocket, disconnectSocket } from '../../services/socketService';
 
@@ -181,6 +182,23 @@ function WorkerJobs() {
     }
   };
 
+  const handleCancel = async (jobId) => {
+    const confirmed = window.confirm('Are you sure you want to cancel this job? This action cannot be undone.');
+    if (!confirmed) return;
+    
+    try {
+      const token = localStorage.getItem('workerToken');
+      const response = await axios.post(`${API}/api/worker/jobs/cancel`, { jobId }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Job cancelled successfully!');
+      fetchOngoingJobs();
+      setActiveTab('history');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to cancel job.');
+    }
+  };
+
   const formatDate = (dateStr) => {
     if (!dateStr) return 'N/A';
     try {
@@ -257,9 +275,14 @@ function WorkerJobs() {
                 <div className="map-placeholder">Map not available</div>
               )}
               {job.status === 'accepted' && (
-                <button className="complete-job-button" onClick={() => handleComplete(job.id)}>
-                  Mark as Completed
-                </button>
+                <div className="job-actions">
+                  <button className="complete-job-button" onClick={() => handleComplete(job.id)}>
+                    Mark as Completed
+                  </button>
+                  <button className="cancel-job-button" onClick={() => handleCancel(job.id)}>
+                    Cancel Job
+                  </button>
+                </div>
               )}
             </div>
           ))}

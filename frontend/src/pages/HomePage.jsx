@@ -22,43 +22,51 @@ const workerCards = [
   {
     title: "Cook",
     img: cookingImg,
-    stats: { label1: "300+ Jobs", label2: "4.8★" }
+    stats: { label1: "300+ Jobs", label2: "4.8★" },
+    service: "cooking"
   },
   {
     title: "Maid",
     img: maidImg,
-    stats: { label1: "500+ Jobs", label2: "4.9★" }
+    stats: { label1: "500+ Jobs", label2: "4.9★" },
+    service: "maid"
   },
   {
     title: "Electrician",
     img: electricianImg,
-    stats: { label1: "200+ Jobs", label2: "4.7★" }
+    stats: { label1: "200+ Jobs", label2: "4.7★" },
+    service: "electrical"
   },
   {
     title: "Plumber",
     img: plumberImg,
-    stats: { label1: "250+ Jobs", label2: "4.8★" }
+    stats: { label1: "250+ Jobs", label2: "4.8★" },
+    service: "plumbing"
   },
   // Duplicate for seamless loop
   {
     title: "Cook",
     img: cookingImg,
-    stats: { label1: "300+ Jobs", label2: "4.8★" }
+    stats: { label1: "300+ Jobs", label2: "4.8★" },
+    service: "cooking"
   },
   {
     title: "Maid",
     img: maidImg,
-    stats: { label1: "500+ Jobs", label2: "4.9★" }
+    stats: { label1: "500+ Jobs", label2: "4.9★" },
+    service: "maid"
   },
   {
     title: "Electrician",
     img: electricianImg,
-    stats: { label1: "200+ Jobs", label2: "4.7★" }
+    stats: { label1: "200+ Jobs", label2: "4.7★" },
+    service: "electrical"
   },
   {
     title: "Plumber",
     img: plumberImg,
-    stats: { label1: "250+ Jobs", label2: "4.8★" }
+    stats: { label1: "250+ Jobs", label2: "4.8★" },
+    service: "plumbing"
   }
 ];
 
@@ -270,14 +278,14 @@ const HomePage = () => {
             <div className="worker-cards-grid">
               {workerCards.map((card, index) => (
                 <div
-                  key={card.title}
+                  key={card.title + index}
                   className="worker-card"
                   ref={el => workerCardRefs.current[index] = el}
                 >
                   <div className="worker-card-image">
                     <img src={card.img} alt={card.title} />
                     <div className="worker-card-overlay">
-                      <button className="book-now-btn">Book Now</button>
+                      <Link to={`/job-request?service=${card.service}`} className="book-now-btn">Book Now</Link>
                     </div>
                   </div>
                   <div className="worker-card-content">
@@ -451,7 +459,7 @@ const HomePage = () => {
               <p>Join BluCollar today and connect with thousands of service providers or find the perfect job for your skills!</p>
               <div className="cta-buttons">
                 <Link to="/job-request" className="blue-button">Post a Job</Link>
-                <Link to="/worker-signup" className="white-button">Become a Worker</Link>
+                <Link to="/worker" className="white-button">Become a Worker</Link>
               </div>
             </div>
           </div>

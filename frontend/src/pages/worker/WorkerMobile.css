@@ -1,0 +1,323 @@
+@import '../../components/WorkerHeaderMobile.css';
+
+/* WorkerMobile.css: Modern mobile styles for all worker pages */
+@media (max-width: 600px) {
+  /* General container */
+  .worker-dashboard-container,
+  .worker-dashboard-wrapper,
+  .worker-landing,
+  .worker-jobs-container,
+  .worker-signup-container {
+    padding: 0 8px !important;
+    background: #f7fafc;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+  /* Sticky header */
+  
+
+  /* Section titles */
+  .section-title,
+  .dashboard-header h1,
+  .worker-dashboard-container h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 1.2rem 0 0.7rem 0;
+    color: #123459;
+    text-align: left;
+  }
+
+  /* Cards */
+  .job-card,
+  .stat-card,
+  .service-card,
+  .booking-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(18,52,89,0.07);
+    background: #fff;
+    margin-bottom: 1.2rem;
+    padding: 1rem 1rem 0.7rem 1rem;
+    font-size: 1rem;
+  }
+
+  /* Job info and stats */
+  .job-info,
+  .stats-grid {
+    font-size: 0.98rem;
+    gap: 0.7rem;
+    flex-direction: column;
+  }
+
+  /* Buttons */
+  .primary-button,
+  .submit-btn,
+  .accept-button,
+  .complete-job-button,
+  .cancel-job-button {
+    width: 100%;
+    padding: 1rem 0;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    font-weight: 600;
+    background: #123459;
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(18,52,89,0.07);
+    transition: background 0.2s;
+  }
+  .primary-button:active,
+  .submit-btn:active,
+  .accept-button:active,
+  .complete-job-button:active,
+  .cancel-job-button:active {
+    background: #0d223a;
+  }
+
+  /* Inputs and selects */
+  input, select, textarea {
+    width: 100%;
+    font-size: 1.05rem;
+    padding: 0.9rem 0.7rem;
+    border-radius: 7px;
+    border: 1px solid #cbd5e1;
+    margin-bottom: 1rem;
+    background: #f9fbfd;
+    box-sizing: border-box;
+  }
+
+  /* Service cards grid */
+  .service-cards,
+  .services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  /* Images */
+  .image-container img,
+  .service-image,
+  .profile-photo {
+    width: 100%;
+    max-width: 120px;
+    height: auto;
+    border-radius: 10px;
+    margin: 0 auto 0.7rem auto;
+    display: block;
+  }
+
+  /* Hide desktop-only elements */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* Footer */
+  .worker-footer {
+    font-size: 0.95rem;
+    padding: 1.2rem 0.5rem;
+    background: #123459;
+    color: #fff;
+    text-align: center;
+  }
+
+  /* Fix overflow and scrolling */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .worker-hero {
+    position: relative;
+    min-height: 320px;
+    height: 45vh;
+    background-size: cover !important;
+    background-position: center center !important;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 64px; /* Extra space for sticky header */
+  }
+  .worker-hero .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(18,34,60,0.7) 0%, rgba(18,34,60,0.3) 60%, rgba(18,34,60,0.85) 100%);
+    z-index: 1;
+  }
+  .worker-hero .hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 2.2rem 1.2rem 1.2rem 1.2rem;
+    width: 100%;
+    text-align: center;
+  }
+  .worker-hero .hero-text {
+    color: #fff;
+    width: 100%;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .worker-hero .title-container h1,
+  .worker-hero .service-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .worker-hero .hero-description {
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    color: #e0e7ef;
+    line-height: 1.5;
+  }
+  .worker-hero .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .worker-hero .hero-button {
+    width: 60%;
+    max-width: 200px;
+    min-width: 100px;
+    margin: 0 auto;
+    padding: 0.7rem 0;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    font-weight: 700;
+    background: #123459;
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(18,52,89,0.07);
+    transition: background 0.2s;
+    text-align: center;
+    display: block;
+  }
+  .worker-hero .hero-button.secondary-button {
+    background: #fff;
+    color: #123459;
+    border: 2px solid #123459;
+  }
+  .worker-hero .hero-button:active {
+    background: #0d223a;
+    color: #fff;
+  }
+  /* === IMPORTANT: Mobile Header Design (always visible) === */
+  .worker-header.mobile-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    background: #fff !important;
+    width: 100% !important;
+    box-shadow: 0 2px 8px rgba(18,52,89,0.12) !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 56px !important;
+    height: 56px !important;
+    padding: 0 !important;
+  }
+  .mobile-header-bar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    min-height: 56px !important;
+    padding: 0.7rem 1rem !important;
+    background: #fff !important;
+  }
+  .logo {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: #123459 !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
+    margin-right: 0.5rem !important;
+  }
+  .language-selector {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 0.5rem !important;
+    min-width: 0 !important;
+  }
+  .language-selector select {
+    width: 100% !important;
+    min-width: 90px !important;
+    font-size: 1rem !important;
+    padding: 0.4rem 0.7rem !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #f8fbff !important;
+    color: #123459 !important;
+    margin: 0 !important;
+  }
+  .hamburger {
+    background: none !important;
+    border: none !important;
+    font-size: 1.6rem !important;
+    color: #123459 !important;
+    cursor: pointer !important;
+    padding: 0.5rem !important;
+    border-radius: 8px !important;
+    margin-left: 0.5rem !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 1002 !important;
+  }
+  .hamburger:active, .hamburger:focus {
+    background: #f1f8ff !important;
+    outline: none !important;
+  }
+
+  /* Horizontally scrollable benefit cards for Why Join BluCollar */
+  .why-join-section .benefits-cards {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    gap: 1rem !important;
+    padding: 0 1rem 1.5rem 1rem !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important; /* Added for smoother scrolling */
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+  
+  .why-join-section .benefit-card {
+    min-width: 75vw !important; /* Slightly reduced from 80vw for better spacing */
+    max-width: 300px !important; /* Slightly reduced from 320px */
+    flex: 0 0 auto !important;
+    scroll-snap-align: start !important;
+    margin-bottom: 0 !important;
+    margin-right: 0.5rem !important; /* Added small right margin for last card */
+  }
+  
+  /* Hide scrollbar for horizontal scroll */
+  .why-join-section .benefits-cards::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  /* Add padding to the last card for better spacing */
+  .why-join-section .benefit-card:last-child {
+    margin-right: 1rem !important;
+  }
+}

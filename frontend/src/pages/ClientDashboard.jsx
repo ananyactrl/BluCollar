@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './ClientDashboard.css'; // We will create this file next
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getSocket } from '../services/socketService';
 
 // Placeholder data - in a real app, this would come from an API
 const upcomingBookingsData = [
@@ -103,6 +106,23 @@ export default function ClientDashboard() {
         fetchBookings();
     }, [navigate]);
 
+    useEffect(() => {
+        const socket = getSocket();
+        if (user?.id) {
+            socket.emit('join-room', `client_${user.id}`);
+        }
+        socket.on('job-accepted', (data) => {
+            toast.info(data.message || 'A worker has accepted your job!');
+        });
+        socket.on('job-cancelled', (data) => {
+            toast.warning(data.message || 'A worker has cancelled your job!');
+        });
+        return () => {
+            socket.off('job-accepted');
+            socket.off('job-cancelled');
+        };
+    }, [user]);
+
     if (loading) {
         return <div className="loading-screen">Loading your bookings...</div>;
     }
@@ -113,6 +133,7 @@ export default function ClientDashboard() {
 
     return (
         <div className="client-dashboard-container">
+            <ToastContainer />
             <div className="dashboard-account-bar">
                 {user ? (
                     <>

@@ -422,3 +422,17 @@
       gap: 1.2rem;
     }
   }
+
+  @media (max-width: 600px) {
+    .worker-header.mobile-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(18,52,89,0.04);
+    }
+    .worker-hero {
+      margin-top: 56px; /* Adjust this value to match your header height */
+    }
+  }

@@ -479,15 +479,32 @@ export default function JobRequestForm() {
 
               <div>
                 <label>Pick your location on the map</label>
-                {isLoaded && (
+                {isLoaded ? (
                   <GoogleMap
                     mapContainerStyle={containerStyle}
-                    center={marker}
-                    zoom={15}
+                    center={marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 ? marker : { lat: 28.6139, lng: 77.2090 }}
+                    zoom={marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 ? 15 : 5}
                     onClick={onMapClick}
+                    options={{
+                      zoomControl: true,
+                      streetViewControl: false,
+                      mapTypeControl: false,
+                      fullscreenControl: false,
+                      styles: [
+                        {
+                          featureType: 'poi',
+                          elementType: 'labels',
+                          stylers: [{ visibility: 'off' }]
+                        }
+                      ]
+                    }}
                   >
-                    <Marker position={marker} />
+                    {marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 && (
+                      <Marker position={marker} title="Selected Location" />
+                    )}
                   </GoogleMap>
+                ) : (
+                  <div style={containerStyle} className="map-loading">Loading map...</div>
                 )}
                 <div>
                   <small>Selected Lat: {formData.latitude}, Lng: {formData.longitude}</small>

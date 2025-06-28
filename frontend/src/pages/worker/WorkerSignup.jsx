@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { translations } from '../../locales/workerSignup';
 import './WorkerSignup.css';
+import './WorkerMobile.css';
 import cookingImage from '../../assets/wmremove-transformed (1).jpeg';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -33,7 +34,7 @@ const PROFESSIONS = {
     certifications: ['Electrical License', 'Safety Certification', 'Trade Certification']
   },
   maid: {
-    title: 'Housekeeping',
+    title: 'Maid',
     skills: [
       'House Cleaning',
       'Laundry',
@@ -43,7 +44,7 @@ const PROFESSIONS = {
       'Pet Care',
       'Gardening'
     ],
-    certifications: ['Housekeeping Certification', 'First Aid Training', 'Food Safety']
+    certifications: ['Maid Certification', 'First Aid Training', 'Food Safety']
   },
   cooking: {
     title: 'Cook',

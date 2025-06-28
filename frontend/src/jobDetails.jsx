@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './jobDetails.css';
-import { GoogleMap, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, DirectionsRenderer, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 const containerStyle = { width: '100%', height: '350px' };
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
@@ -13,9 +13,19 @@ function WorkerJobMap({ destinationAddress }) {
   });
   const [directions, setDirections] = useState(null);
   const [mapCenter, setMapCenter] = useState({ lat: 18.5204, lng: 73.8567 });
+  const [destinationCoords, setDestinationCoords] = useState(null);
 
   useEffect(() => {
     if (isLoaded && destinationAddress && window.google) {
+      // Geocode the destination address
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ address: destinationAddress }, (results, status) => {
+        if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
+          const destination = results[0].geometry.location;
+          setDestinationCoords({ lat: destination.lat(), lng: destination.lng() });
+        }
+      });
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           const origin = {
@@ -41,18 +51,42 @@ function WorkerJobMap({ destinationAddress }) {
     }
   }, [isLoaded, destinationAddress]);
 
+  const hasValidCoords = destinationCoords && !isNaN(destinationCoords.lat) && !isNaN(destinationCoords.lng) && Math.abs(destinationCoords.lat) <= 90 && Math.abs(destinationCoords.lng) <= 180;
+  const DEFAULT_CENTER = { lat: 28.6139, lng: 77.2090 };
+
   return (
     <div className="job-details-map-section">
       <h3 className="map-section-title">Route to Customer</h3>
       <div className="job-details-map-container">
-        {isLoaded && (
+        {isLoaded ? (
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={mapCenter}
-            zoom={13}
+            center={hasValidCoords ? destinationCoords : DEFAULT_CENTER}
+            zoom={hasValidCoords ? 13 : 5}
+            options={{
+              zoomControl: true,
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
+              styles: [
+                {
+                  featureType: 'poi',
+                  elementType: 'labels',
+                  stylers: [{ visibility: 'off' }]
+                }
+              ]
+            }}
           >
             {directions && <DirectionsRenderer directions={directions} />}
+            {hasValidCoords && (
+              <Marker 
+                position={destinationCoords}
+                title="Customer Location"
+              />
+            )}
           </GoogleMap>
+        ) : (
+          <div style={containerStyle} className="map-loading">Loading map...</div>
         )}
       </div>
     </div>

@@ -192,9 +192,24 @@
   font-size: 14px;
 }
 
+.map-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 @media (min-width: 768px) {
   .map-placeholder {
     height: 200px;
+    font-size: 16px;
+  }
+  
+  .map-loading {
     font-size: 16px;
   }
 }
@@ -229,6 +244,60 @@
 
 .accept-button:active {
   transform: translateY(0);
+}
+
+.job-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.complete-job-button {
+  flex: 1;
+  padding: 10px 15px;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.complete-job-button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.cancel-job-button {
+  flex: 1;
+  padding: 10px 15px;
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-job-button:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}
+
+@media (min-width: 768px) {
+  .complete-job-button,
+  .cancel-job-button {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
 }
 
 .no-jobs {
@@ -318,4 +387,45 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Job Status Styles */
+.job-status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.job-status.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.job-status.accepted {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.job-status.ongoing {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.job-status.completed {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.job-status.cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+@media (min-width: 768px) {
+  .job-status {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
 }
