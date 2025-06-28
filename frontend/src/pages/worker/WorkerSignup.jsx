@@ -8,6 +8,7 @@ import cookingImage from '../../assets/wmremove-transformed (1).jpeg';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import WorkerHeader from '../../components/WorkerHeader';
 
 const PROFESSIONS = {
   plumber: {
@@ -429,8 +430,9 @@ function WorkerSignup() {
   );
 
   return (
-    <div className="worker-signup-wrapper">
-      <div className="worker-signup-container">
+    <>
+      <WorkerHeader />
+      <div className="worker-signup-container" style={{ paddingTop: '60px' }}>
         <div className="language-toggle">
           <select value={language} onChange={(e) => setLanguage(e.target.value)}>
             <option value="english">English</option>
@@ -445,7 +447,7 @@ function WorkerSignup() {
           {step === 4 && renderConfirmation()}
         </form>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './AccountSettings.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import CalendarView from './CalendarView';
+import Header from '../components/Header';
 
 // --- SVG Icons ---
 const BookingsIcon = () => (
@@ -54,88 +55,110 @@ const AccountSettings = () => {
     const address = user?.address || {};
 
     return (
-        <div className="account-settings-wrapper">
-            <aside className="sidebar">
-                <div className="sidebar-header">
-                    <div className="team-info">
-                        <span className="team-avatar">{initials}</span>
-                        <div className="team-details">
-                            <span className="team-name">{user.name}'s Team</span>
-                            <span className="team-email">{user.email}</span>
+        <>
+            <Header />
+            <div className="account-settings-container" style={{ paddingTop: '60px' }}>
+                <div className="account-settings-wrapper">
+                    <aside className="sidebar">
+                        <div className="sidebar-header">
+                            <div className="team-info">
+                                <span className="team-avatar">{initials}</span>
+                                <div className="team-details">
+                                    <span className="team-name">{user.name}'s Team</span>
+                                    <span className="team-email">{user.email}</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <nav className="sidebar-nav">
-                    <p className="menu-title">MENU</p>
-                    <NavLink to="/my-bookings" className="nav-item"><BookingsIcon />Upcoming Bookings</NavLink>
-                    <NavLink to="/past-bookings" className="nav-item"><BookingsIcon />Past Bookings</NavLink>
-                    <NavLink to="/favorites" className="nav-item"><HeartIcon />Favorite Workers</NavLink>
-                    <button className="nav-item" style={{ background: 'none', border: 'none', padding: 0, margin: 0, textAlign: 'left', width: '100%', cursor: 'pointer' }} onClick={() => setShowCalendar(true)}>📅 View My Calendar</button>
-                    <p className="menu-title">ORGANISATION</p>
-                    <NavLink to="/account-settings" className="nav-item active"><UserIcon />Account Settings</NavLink>
-                    <NavLink to="/payment-methods" className="nav-item"><PaymentIcon />Payment</NavLink>
-                </nav>
-            </aside>
-            <main className="main-content">
-                <header className="main-header-bar">
-                    {/* You can add a search bar or notification icons here */}
-                </header>
-                <div className="content-body">
-                    <h1 className="page-title">Account Settings</h1>
-                    <div className="settings-container">
-                        <nav className="settings-nav">
-                            <a href="#my-profile" className="settings-nav-item active">My Profile</a>
-                            <a href="#security" className="settings-nav-item">Security</a>
-                            <a href="#notifications" className="settings-nav-item">Notifications</a>
-                            <a href="#delete-account" className="settings-nav-item danger">Delete Account</a>
+                        <nav className="sidebar-nav">
+                            <p className="menu-title">MENU</p>
+                            <NavLink to="/my-bookings" className="nav-item"><BookingsIcon />Upcoming Bookings</NavLink>
+                            <NavLink to="/past-bookings" className="nav-item"><BookingsIcon />Past Bookings</NavLink>
+                            <NavLink to="/favorites" className="nav-item"><HeartIcon />Favorite Workers</NavLink>
+                            <button className="nav-item" style={{ background: 'none', border: 'none', padding: 0, margin: 0, textAlign: 'left', width: '100%', cursor: 'pointer' }} onClick={() => setShowCalendar(true)}>📅 View My Calendar</button>
+                            <p className="menu-title">ORGANISATION</p>
+                            <NavLink to="/account-settings" className="nav-item active"><UserIcon />Account Settings</NavLink>
+                            <NavLink to="/payment-methods" className="nav-item"><PaymentIcon />Payment</NavLink>
                         </nav>
-                        <div className="settings-details">
-                            <div className="profile-card card">
-                                <div className="card-header">
-                                    <h2>My Profile</h2>
-                                    <button className="edit-btn">Edit</button>
-                                </div>
-                                <div className="profile-summary">
-                                    <div className="profile-avatar-large">{initials}</div>
-                                    <div className="profile-info">
-                                        <p className="profile-name">{user.name}</p>
-                                        <p className="profile-role">Client</p>
-                                        <p className="profile-location">Pune, India</p>
+                    </aside>
+                    <main className="main-content">
+                        <header className="main-header-bar">
+                            {/* You can add a search bar or notification icons here */}
+                        </header>
+                        <div className="content-body">
+                            <h1 className="page-title">Account Settings</h1>
+                            <div className="settings-container">
+                                <nav className="settings-nav">
+                                    <a href="#my-profile" className="settings-nav-item active">My Profile</a>
+                                    <a href="#security" className="settings-nav-item">Security</a>
+                                    <a href="#notifications" className="settings-nav-item">Notifications</a>
+                                    <a href="#delete-account" className="settings-nav-item danger">Delete Account</a>
+                                </nav>
+                                <div className="settings-details">
+                                    <div className="profile-card card">
+                                        <div className="card-header">
+                                            <h2>My Profile</h2>
+                                            <button className="edit-btn">Edit</button>
+                                        </div>
+                                        <div className="profile-summary">
+                                            <div className="profile-avatar-large">{initials}</div>
+                                            <div className="profile-info">
+                                                <p className="profile-name">{user.name}</p>
+                                                <p className="profile-role">Client</p>
+                                                <p className="profile-location">Pune, India</p>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div className="personal-info-card card">
+                                        <div className="card-header">
+                                            <h2>Personal Information</h2>
+                                            <button className="edit-btn">Edit</button>
+                                        </div>
+                                        <div className="info-grid">
+                                            <div className="info-item"><span>Full Name</span><p>{user.name}</p></div>
+                                            <div className="info-item"><span>Email address</span><p>{user.email}</p></div>
+                                        </div>
+                                    </div>
+                                    <div className="address-card card">
+                                        <div className="card-header">
+                                            <h2>Address</h2>
+                                            <button className="edit-btn">Edit</button>
+                                        </div>
+                                        <div className="info-grid">
+                                            <div className="info-item"><span>City/State</span><p>{address?.cityState || '-'}</p></div>
+                                            <div className="info-item"><span>Postal Code</span><p>{address?.postalCode || '-'}</p></div>
+                                            <div className="info-item"><span>TAX ID</span><p>{address?.taxId || '-'}</p></div>
+                                        </div>
+                                    </div>
+                                    {showCalendar && (
+                                        <div className="calendar-inline-card">
+                                            <button className="close-calendar-btn" onClick={() => setShowCalendar(false)} title="Close">×</button>
+                                            <CalendarView />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                            <div className="personal-info-card card">
-                                <div className="card-header">
-                                    <h2>Personal Information</h2>
-                                    <button className="edit-btn">Edit</button>
-                                </div>
-                                <div className="info-grid">
-                                    <div className="info-item"><span>Full Name</span><p>{user.name}</p></div>
-                                    <div className="info-item"><span>Email address</span><p>{user.email}</p></div>
-                                </div>
-                            </div>
-                            <div className="address-card card">
-                                <div className="card-header">
-                                    <h2>Address</h2>
-                                    <button className="edit-btn">Edit</button>
-                                </div>
-                                <div className="info-grid">
-                                    <div className="info-item"><span>City/State</span><p>{address?.cityState || '-'}</p></div>
-                                    <div className="info-item"><span>Postal Code</span><p>{address?.postalCode || '-'}</p></div>
-                                    <div className="info-item"><span>TAX ID</span><p>{address?.taxId || '-'}</p></div>
-                                </div>
-                            </div>
-                            {showCalendar && (
-                                <div className="calendar-inline-card">
-                                    <button className="close-calendar-btn" onClick={() => setShowCalendar(false)} title="Close">×</button>
-                                    <CalendarView />
-                                </div>
-                            )}
                         </div>
-                    </div>
+                    </main>
                 </div>
-            </main>
-        </div>
+                <footer className="footer">
+                  <div className="footer-bottom">
+                    <div className="footer-credit">
+                      <span>
+                        Project by <span className="footer-credit-name">Ananya Singh</span>
+                      </span>
+                      <div className="footer-credit-icons">
+                        <a href="https://github.com/ananyactrl/BluCollar" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.339-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.748-1.025 2.748-1.025.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.338 4.695-4.566 4.944.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.749 0 .267.18.579.688.481C19.138 20.203 22 16.447 22 12.021 22 6.484 17.523 2 12 2z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ananya-singh-028571371/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/></svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </footer>
+            </div>
+        </>
     );
 };
 

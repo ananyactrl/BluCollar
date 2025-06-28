@@ -3597,3 +3597,57 @@ html {
   }
 }
 
+/* Footer Credit Section */
+.footer-credit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+.footer-credit span {
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 4px;
+  text-align: center;
+}
+.footer-credit .footer-credit-name {
+  font-weight: 700;
+}
+.footer-credit .footer-credit-icons {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 2px;
+}
+.footer-credit .footer-credit-icons a {
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.5rem;
+  transition: color 0.2s;
+}
+.footer-credit .footer-credit-icons a:hover {
+  color: #b3cdfa;
+}
+
+@media (max-width: 480px) {
+  .footer-credit {
+    gap: 4px;
+    margin-top: 10px;
+  }
+  .footer-credit span {
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+  }
+  .footer-credit .footer-credit-icons {
+    gap: 10px;
+    margin-top: 0;
+  }
+  .footer-credit .footer-credit-icons a {
+    font-size: 1.1rem;
+  }
+}
+

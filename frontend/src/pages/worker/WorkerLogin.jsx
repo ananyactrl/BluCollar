@@ -6,6 +6,7 @@ import './WorkerSignup.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import WorkerHeader from '../../components/WorkerHeader';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
@@ -50,67 +51,72 @@ function WorkerLogin() {
   };
 
   return (
-    <div className="worker-signup-wrapper">
-      <div className="worker-signup-container">
-        <div className="language-toggle">
-          <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-            <option value="english">English</option>
-            <option value="hindi">Hindi</option>
-            <option value="marathi">Marathi</option>
-          </select>
-        </div>
+    <>
+      <WorkerHeader />
+      <div className="worker-login-container" style={{ paddingTop: '60px' }}>
+        <div className="worker-signup-wrapper">
+          <div className="worker-signup-container">
+            <div className="language-toggle">
+              <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+                <option value="marathi">Marathi</option>
+              </select>
+            </div>
 
-        <div className="signup-form-section" data-aos="fade-up">
-          <div className="signup-header">
-            <h1>{t?.login_title || "Login"}</h1>
-            <p>{t?.login_description || "Please login below"}</p>
+            <div className="signup-form-section" data-aos="fade-up">
+              <div className="signup-header">
+                <h1>{t?.login_title || "Login"}</h1>
+                <p>{t?.login_description || "Please login below"}</p>
+              </div>
+              <form onSubmit={handleSubmit}>
+                {error && <p className="error-message">{error}</p>}
+                <div className="form-group full-width">
+                  <label className="required">{t.email_or_phone_label}</label>
+                  <input
+                    type="text"
+                    name="emailOrPhone"
+                    value={credentials.emailOrPhone}
+                    onChange={handleChange}
+                    placeholder={t.email_or_phone_placeholder}
+                    required
+                  />
+                </div>
+                <div className="form-group full-width" style={{ position: 'relative' }}>
+                  <label className="required">{t.password_label}</label>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    placeholder={t.password_placeholder}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="eye-icon"
+                    onClick={() => setShowPassword((v) => !v)}
+                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+                <div className="button-group">
+                  <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                    {isSubmitting ? t.logging_in_button : t.login_button}
+                  </button>
+                </div>
+                <p className="redirect-text">
+                  {t.no_account_text} <a href="/worker/signup">{t.signup_here_link}</a>
+                </p>
+              </form>
+            </div>
           </div>
-          <form onSubmit={handleSubmit}>
-            {error && <p className="error-message">{error}</p>}
-            <div className="form-group full-width">
-              <label className="required">{t.email_or_phone_label}</label>
-              <input
-                type="text"
-                name="emailOrPhone"
-                value={credentials.emailOrPhone}
-                onChange={handleChange}
-                placeholder={t.email_or_phone_placeholder}
-                required
-              />
-            </div>
-            <div className="form-group full-width" style={{ position: 'relative' }}>
-              <label className="required">{t.password_label}</label>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={credentials.password}
-                onChange={handleChange}
-                placeholder={t.password_placeholder}
-                required
-              />
-              <button
-                type="button"
-                className="eye-icon"
-                onClick={() => setShowPassword((v) => !v)}
-                tabIndex={-1}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </div>
-            <div className="button-group">
-              <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                {isSubmitting ? t.logging_in_button : t.login_button}
-              </button>
-            </div>
-            <p className="redirect-text">
-              {t.no_account_text} <a href="/worker/signup">{t.signup_here_link}</a>
-            </p>
-          </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -1304,232 +1304,45 @@
   .form-row.two-column {
     flex-direction: column;
   }
-  /* Mobile Signup Page Styles - Add to bottom of mobile.css */
-
-/* Mobile Signup Container */
-@media (max-width: 768px) {
-  .signup-page-container {
-    min-height: 100vh;
-    background-color: #f0efeb;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Remove bottom icons/features section on mobile */
-  .features-section {
-    display: none;
-  }
-
-  /* Mobile Signup Content */
-  .signup-content {
-    display: flex;
-    flex-direction: row; /* Keep side by side layout */
-    padding: 1rem;
-    gap: 1rem;
-    align-items: stretch;
-    min-height: calc(100vh - 80px); /* Account for header */
-    margin: 0;
-  }
-
-  /* Left Content */
-  .signup-left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem;
-    max-width: none;
-  }
-
-  .signup-title {
-    color: #123459;
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 0.75rem;
-    text-align: left;
-  }
-
-  .signup-description {
-    color: #12345999;
-    font-size: 0.8rem;
-    line-height: 1.4;
-    margin-bottom: 1rem;
-    text-align: left;
-  }
-
-  /* Features List */
-  .features-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .feature-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0;
-    padding: 0;
-  }
-
-  .tick-circle {
-    width: 12px;
-    height: 12px;
-    background-color: #123459;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tick-circle::after {
-    content: "✓";
-    color: white;
-    font-size: 8px;
-    font-weight: bold;
-  }
-
-  .feature-item span {
-    font-size: 0.75rem;
-    color: #123459;
-    font-weight: 500;
-    line-height: 1.2;
-  }
-
-  /* Right Form Container */
-  .signup-form-container {
-    flex: 1;
-    background-color: #123459;
-    border-radius: 16px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    max-width: none;
-    width: auto;
-    height: fit-content;
-    max-height: 400px; /* Control maximum height */
-    aspect-ratio: 1 / 1; /* Make it square */
-  }
-
-  /* Form Heading */
-  .signup-form h2 {
-    color: white;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    text-align: center;
-  }
-
-  /* Form Rows */
-  .form-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .form-row.two-column {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-
-  .form-group {
-    flex: 1;
-  }
-
-  .form-group label {
-    display: block;
-    color: white;
-    margin-bottom: 0.15rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-  }
-
-  .form-group input {
-    width: 100%;
-    padding: 0.6rem;
-    border-radius: 8px;
-    border: none;
-    font-size: 0.75rem;
-    background-color: white;
-    color: #333;
-    box-sizing: border-box;
-  }
-
-  /* Submit Button */
-  .get-started-btn {
-    width: 100%;
-    padding: 0.6rem;
-    background-color: #1A4C81;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 0.25rem;
-  }
-
-  .get-started-btn:hover {
-    background-color: #1e5da0;
-  }
-
-  /* Header adjustments for mobile */
-  .navbar-container {
-    padding: 0 1rem;
-  }
-
-  .nav-links {
-    display: none; /* Hide navigation links on mobile */
-  }
-
-  .nav-buttons {
-    gap: 0.5rem;
-  }
-
-  .login-btn,
-  .signup-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-  }
 }
 
-/* Extra small screens */
 @media (max-width: 480px) {
-  .signup-content {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0.75rem;
+  .footer-credit {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin-top: 10px !important;
+    margin-bottom: 0 !important;
+    z-index: 10 !important;
+    position: relative !important;
   }
-
-  .signup-left {
-    order: 1;
-    padding: 0.75rem;
+  .footer-credit span {
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    color: #123459 !important;
+    margin-bottom: 2px !important;
+    text-align: center !important;
   }
-
-  .signup-form-container {
-    order: 2;
-    padding: 1.25rem;
+  .footer-credit .footer-credit-name {
+    font-weight: 700 !important;
+    color: #123459 !important;
   }
-
-  .signup-title {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
+  .footer-credit .footer-credit-icons {
+    display: flex !important;
+    gap: 10px !important;
+    justify-content: center !important;
+    margin-top: 0 !important;
   }
-
-  .signup-description {
-    font-size: 0.75rem;
-    margin-bottom: 0.75rem;
+  .footer-credit .footer-credit-icons a {
+    color: #123459 !important;
+    font-size: 1.1rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    transition: color 0.2s !important;
   }
-
-  .form-row.two-column {
-    flex-direction: column;
+  .footer-credit .footer-credit-icons a:hover {
+    color: #1e5da0 !important;
   }
 }
-}
-
 }
