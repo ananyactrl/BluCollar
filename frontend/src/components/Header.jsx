@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaUser, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+import logoImg from '../assets/triallogo.png';
 
 const Header = () => {
   // Detect both customer and worker
@@ -49,13 +50,9 @@ const Header = () => {
       {/* Desktop Header (visible on desktop only) */}
       <header className="header desktop-header">
         <div className="navbar-container">
-          <a href="/" className="logo">
-            <div className="logo-dots">
-              <span className="logo-dot"></span>
-              <span className="logo-dot"></span>
-              <span className="logo-dot"></span>
-            </div>
-            <span className="brand-name">BluCollar</span>
+          <a href="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+            <img src={logoImg} alt="BluCollar Logo" style={{ height: 28, marginRight: 0, verticalAlign: 'middle', display: 'inline-block', position: 'relative', top: '-2px' }} />
+            <span className="brand-name" style={{ display: 'inline-block', verticalAlign: 'middle' }}>BluCollar</span>
           </a>
           <nav className="nav-links">
             <Link to="/" className="nav-link">Home</Link>
@@ -129,13 +126,9 @@ const Header = () => {
 
       {/* Mobile Header (visible on mobile only) */}
       <header className="mobile-header">
-        <a href="/" className="logo">
-          <div className="logo-dots">
-            <span className="logo-dot"></span>
-            <span className="logo-dot"></span>
-            <span className="logo-dot"></span>
-          </div>
-          <span className="logo-text">BluCollar</span>
+        <a href="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+          <img src={logoImg} alt="BluCollar Logo" style={{ height: 28, marginRight: 0, verticalAlign: 'middle', display: 'inline-block', position: 'relative', top: '-2px' }} />
+          <span className="brand-name" style={{ display: 'inline-block', verticalAlign: 'middle' }}>BluCollar</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {(isCustomer || isWorker) && (

@@ -78,11 +78,16 @@ export default function MessageChat({ job_id }) {
             key={idx}
             className={`chat-message ${msg.sender_id === sender_id ? 'self' : 'other'}`}
           >
-            <div className="chat-meta">
-              <span className="chat-sender">{msg.sender_role}</span>
-              <span className="chat-time">{msg.created_at ? new Date(msg.created_at).toLocaleTimeString() : ''}</span>
+            {msg.sender_id !== sender_id && (
+              <span className="chat-avatar" role="img" aria-label="avatar">😊</span>
+            )}
+            <div style={{ flex: 1 }}>
+              <div className="chat-meta">
+                <span className="chat-sender">{msg.sender_role}</span>
+                <span className="chat-time">{msg.created_at ? new Date(msg.created_at).toLocaleTimeString() : ''}</span>
+              </div>
+              <div className="chat-bubble">{msg.message}</div>
             </div>
-            <div className="chat-bubble">{msg.message}</div>
           </div>
         ))}
       </div>

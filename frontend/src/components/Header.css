@@ -24,7 +24,7 @@
         .logo {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 2px;
           text-decoration: none;
         }
 
@@ -42,10 +42,11 @@
 
         .brand-name,
         .logo-text {
-          font-size: 1.5rem;
+          font-size: 0.95rem !important;
           font-weight: 700;
           color: #123459;
           letter-spacing: 0.5px;
+          margin-left: 0 !important;
         }
 
         .nav-links {
