@@ -93,7 +93,12 @@ export default function Signup() {
         toast.error("❌ Signup failed: " + (response.data?.message || "An unknown error occurred."));
       }
     } catch (error) {
-      toast.error("❌ Signup failed: " + (error.response?.data?.message || error.message));
+      const msg = error.response?.data?.message || error.message;
+      if (msg === 'You already have an account with this email.') {
+        toast.error('❌ You already have an account with this email.');
+      } else {
+        toast.error('❌ Signup failed: ' + msg);
+      }
     } finally {
       setLoading(false);
     }

@@ -20,6 +20,9 @@ router.post('/signup', (req, res) => {
     db.query(query, [name, email, phone, address, hashedPassword], (err, result) => {
       if (err) {
         console.error('Error inserting user:', err);
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(409).json({ message: 'You already have an account with this email.' });
+        }
         return res.status(500).json({ message: 'Signup failed' });
       }
       res.json({ message: 'Signup successful' });
@@ -46,7 +49,7 @@ router.post('/login', (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Incorrect password' });
     }
 
     // Create JWT Payload

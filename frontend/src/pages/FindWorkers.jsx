@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 import Header from '../components/Header';
 import WorkerHeader from '../components/WorkerHeader';
 import Footer from '../components/Footer';
+import { getReviewSummary } from '../services/reviewService';
+import { getToken } from '../context/AuthContext';
 
 // Better API URL handling with fallback
 const getApiUrl = () => {
@@ -30,6 +32,7 @@ const FindWorkers = () => {
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [workerRatings, setWorkerRatings] = useState({});
 
   // Search and filter states
   const [service, setService] = useState(query.get('service') || '');
@@ -71,6 +74,24 @@ const FindWorkers = () => {
   useEffect(() => {
     fetchWorkers();
   }, []); // Fetch on initial render
+
+  useEffect(() => {
+    if (workers.length === 0) return;
+    const token = getToken();
+    const fetchRatings = async () => {
+      const ratingsObj = {};
+      await Promise.all(workers.map(async (worker) => {
+        try {
+          const summary = await getReviewSummary(worker.id, token);
+          ratingsObj[worker.id] = summary;
+        } catch {
+          ratingsObj[worker.id] = { averageRating: null, reviewCount: 0 };
+        }
+      }));
+      setWorkerRatings(ratingsObj);
+    };
+    fetchRatings();
+  }, [workers]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -187,7 +208,12 @@ const FindWorkers = () => {
                       <div className="worker-card-body">
                         <p className="worker-description">{worker.description?.substring(0, 100)}...</p>
                         <div className="worker-meta">
-                          <span className="worker-rating"><FaStar /> {worker.rating || 'N/A'}</span>
+                          <span className="worker-rating">
+                            <FaStar />{' '}
+                            {workerRatings[worker.id]?.averageRating
+                              ? `${workerRatings[worker.id].averageRating} (${workerRatings[worker.id].reviewCount} reviews)`
+                              : 'N/A'}
+                          </span>
                           <span className="worker-location"><FaMapMarkerAlt /> {worker.address}</span>
                           <span className="worker-experience"><FaBriefcase /> {worker.experience}</span>
                         </div>

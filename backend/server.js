@@ -123,6 +123,8 @@ dbConnection.connect((err) => {
     app.use('/api/auth', authRoutes);
     app.use('/api/worker', workerRoutes);
     app.use('/api', aiRoutes);
+    const reviewRoutes = require('./routes/reviewRoutes');
+    app.use('/api/reviews', reviewRoutes);
 
     app.get('/api/messages/:job_id', async (req, res) => {
       const { job_id } = req.params;
