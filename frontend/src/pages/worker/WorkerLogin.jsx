@@ -41,6 +41,12 @@ function WorkerLogin() {
 
     try {
       const response = await axios.post(`${API}/api/worker/login`, credentials);
+      // Save email/phone for suggestions
+      let suggestions = JSON.parse(localStorage.getItem('workerEmailSuggestions') || '[]');
+      if (!suggestions.includes(credentials.emailOrPhone)) {
+        suggestions.push(credentials.emailOrPhone);
+        localStorage.setItem('workerEmailSuggestions', JSON.stringify(suggestions));
+      }
       localStorage.setItem('workerToken', response.data.token);
       localStorage.setItem('workerUser', JSON.stringify(response.data.worker));
       alert('Login successful!');
@@ -74,8 +80,15 @@ function WorkerLogin() {
                     onChange={handleChange}
                     placeholder={t.email_or_phone_placeholder}
                     required
+                    autoComplete="username"
+                    list="worker-email-suggestions"
                   />
                 </div>
+                <datalist id="worker-email-suggestions">
+                  {JSON.parse(localStorage.getItem('workerEmailSuggestions') || '[]').map((suggestion, idx) => (
+                    <option value={suggestion} key={idx} />
+                  ))}
+                </datalist>
                 <div className="form-group full-width" style={{ position: 'relative' }}>
                   <label className="required">{t.password_label}</label>
                   <input
@@ -85,6 +98,7 @@ function WorkerLogin() {
                     onChange={handleChange}
                     placeholder={t.password_placeholder}
                     required
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"

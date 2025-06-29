@@ -48,4 +48,29 @@
 
 .user-not-found-modal button:hover {
   background: #1A4C81;
+}
+
+.user-not-found-modal .modal-content .modal-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.user-not-found-modal .modal-content button {
+  min-width: 120px;
+  flex: 0 1 auto;
+}
+
+@media (max-width: 600px) {
+  .user-not-found-modal .modal-content .modal-buttons {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .user-not-found-modal .modal-content button {
+    width: 100%;
+    min-width: 0;
+  }
 } 

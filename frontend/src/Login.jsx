@@ -34,6 +34,12 @@ export default function Login() {
       console.log('Login response received:', response);
       if (response.data.token && response.data.user) {
         login(response.data.user, response.data.token);
+        // Save email for suggestions
+        let suggestions = JSON.parse(localStorage.getItem('emailSuggestions') || '[]');
+        if (!suggestions.includes(email)) {
+          suggestions.push(email);
+          localStorage.setItem('emailSuggestions', JSON.stringify(suggestions));
+        }
         toast.success('✅ Login Successful!');
         
         // Redirect to the page the user was trying to access, or default to the dashboard.
@@ -78,9 +84,15 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                autoComplete="email"
+                autoComplete="username"
+                list="email-suggestions"
               />
             </div>
+            <datalist id="email-suggestions">
+              {JSON.parse(localStorage.getItem('emailSuggestions') || '[]').map((suggestion, idx) => (
+                <option value={suggestion} key={idx} />
+              ))}
+            </datalist>
 
             <div className="input-group">
               <label htmlFor="password">Password</label>
@@ -157,10 +169,12 @@ export default function Login() {
             <div className="modal-content">
               <h2>User Not Found</h2>
               <p>No account found with that email. Please sign up to book a service.</p>
-              <button onClick={() => navigate('/signup', { state: { returnUrl: location.state?.returnUrl || '/job-request' } })}>
-                Go to Signup
-              </button>
-              <button onClick={() => setShowUserNotFound(false)}>Cancel</button>
+              <div className="modal-buttons">
+                <button onClick={() => navigate('/signup', { state: { returnUrl: location.state?.returnUrl || '/job-request' } })}>
+                  Go to Signup
+                </button>
+                <button onClick={() => setShowUserNotFound(false)}>Cancel</button>
+              </div>
             </div>
           </div>
         )}

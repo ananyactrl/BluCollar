@@ -364,28 +364,16 @@
 }
 
 @media (max-width: 600px) {
+  .find-workers-page {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
   .workers-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 1rem !important;
-    width: 100% !important;
+    row-gap: 1.2rem !important;
+    gap: 1.2rem !important;
   }
   .worker-card {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    border-radius: 14px !important;
-    margin: 0 !important;
-    box-shadow: 0 2px 8px rgba(18,52,89,0.07) !important;
-    padding: 0.6rem 0.4rem 0.8rem 0.4rem !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    height: auto !important;
-    max-height: none !important;
-    justify-content: flex-start !important;
-    overflow: visible !important;
-    position: relative !important;
+    margin-bottom: 1.2rem !important;
   }
   .worker-card-header {
     flex-direction: row !important;

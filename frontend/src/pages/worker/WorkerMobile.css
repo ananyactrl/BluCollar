@@ -406,4 +406,15 @@
   .why-join-section .benefit-card:last-child {
     margin-right: 1rem !important;
   }
+
+  .image-container img,
+  .service-image {
+    max-width: 120px !important;
+    max-height: 100px !important;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 0.7rem auto;
+    border-radius: 10px;
+  }
 }

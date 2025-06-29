@@ -53,7 +53,7 @@ const WorkerLanding = () => {
               <p className="hero-description">
                 {t.hero.description}
               </p>
-              <div className="hero-buttons">
+              <div className="worker-landing-buttons">
                 <Link to="/worker/signup" className="hero-button primary-button">
                   {t.hero.getStarted}
                 </Link>

@@ -3655,6 +3655,32 @@ html {
   font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
 }
 .footer-credit .footer-credit-icons a {
-  font-size: 1rem;
+  font-size: 1.2rem;
+}
+
+@media (min-width: 769px) {
+  .footer {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+  .footer-container {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 80px !important;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+  .footer-column {
+    flex: 1 1 0;
+    min-width: 180px;
+    max-width: 300px;
+    text-align: left;
+  }
+
+  
+
+  
 }
 

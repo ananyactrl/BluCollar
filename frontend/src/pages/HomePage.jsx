@@ -280,16 +280,17 @@ const HomePage = () => {
                   key={card.title + index}
                   className="worker-card"
                   ref={el => workerCardRefs.current[index] = el}
+                  style={{ width: '220px', minWidth: '220px', maxWidth: '220px', padding: '0 0 12px 0' }}
                 >
-                  <div className="worker-card-image">
-                    <img src={card.img} alt={card.title} />
+                  <div className="worker-card-image" style={{ height: '160px', minHeight: '160px', maxHeight: '160px' }}>
+                    <img src={card.img} alt={card.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     <div className="worker-card-overlay">
                       <Link to={`/job-request?service=${card.service}`} className="book-now-btn">Book Now</Link>
                     </div>
                   </div>
-                  <div className="worker-card-content">
-                    <h3 className="worker-card-title">{card.title}</h3>
-                    <div className="worker-card-stats">
+                  <div className="worker-card-content" style={{ padding: '10px 12px 0 12px' }}>
+                    <h3 className="worker-card-title" style={{ fontSize: '1.05rem', margin: '6px 0 2px 0', fontWeight: 600 }}>{card.title}</h3>
+                    <div className="worker-card-stats" style={{ marginTop: 0 }}>
                       <span className="stat-item">{card.stats.label1}</span>
                       <span className="stat-item rating">{card.stats.label2}</span>
                     </div>
@@ -509,7 +510,7 @@ const HomePage = () => {
             <p>&copy; {new Date().getFullYear()} BluCollar. All rights reserved.</p>
             <div className="footer-credit">
               <span>
-                Developed by <span className="footer-credit-name">Ananya Singh</span>
+                Project by <span className="footer-credit-name">Ananya Singh</span>
               </span>
               <div className="footer-credit-icons">
                 <a href="https://github.com/ananyactrl/BluCollar" target="_blank" rel="noopener noreferrer" aria-label="GitHub">

@@ -46,6 +46,7 @@ const Header = () => {
   // --- Desktop Header ---
   return (
     <>
+      {/* Desktop Header (visible on desktop only) */}
       <header className="header desktop-header">
         <div className="navbar-container">
           <a href="/" className="logo">
@@ -64,47 +65,13 @@ const Header = () => {
             <Link to="/contact" className="nav-link">Contact</Link>
           </nav>
           <div className="nav-buttons">
-            {!(isCustomer || isWorker) && (
-              <>
-                <Link to="/login" className="header-btn header-btn-outline">Login</Link>
-                <Link to="/signup" className="header-btn header-btn-solid">Get started</Link>
-              </>
-            )}
-            {(isCustomer || isWorker) && (
-              <div className="header-avatar-link" style={{ position: 'relative' }}>
-                <div className="header-avatar" onClick={() => setDropdownOpen(v => !v)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  {user?.profilePhoto
-                    ? <img src={user.profilePhoto} alt="Account" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
-                    : (user?.name ? user.name[0].toUpperCase() : <FaUser />)
-                  }
-                  <FaChevronDown style={{ fontSize: 14, marginLeft: 2 }} />
-                </div>
-                {dropdownOpen && (
-                  <div className="header-dropdown" style={{ position: 'absolute', right: 0, top: '110%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.08)', minWidth: 180, zIndex: 100 }}>
-                    <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', fontWeight: 600 }}>{user?.name}</div>
-                    {isCustomer && (
-                      <>
-                        <Link to="/my-bookings" className="dropdown-link" onClick={() => setDropdownOpen(false)} style={{ display: 'block', padding: '10px 16px', color: '#123459', textDecoration: 'none' }}>My Bookings</Link>
-                        <Link to="/account-settings" className="dropdown-link" onClick={() => setDropdownOpen(false)} style={{ display: 'block', padding: '10px 16px', color: '#123459', textDecoration: 'none' }}>Account Settings</Link>
-                      </>
-                    )}
-                    {isWorker && (
-                      <>
-                        <Link to="/worker/dashboard" className="dropdown-link" onClick={() => setDropdownOpen(false)} style={{ display: 'block', padding: '10px 16px', color: '#123459', textDecoration: 'none' }}>Worker Dashboard</Link>
-                        <Link to="/worker/account" className="dropdown-link" onClick={() => setDropdownOpen(false)} style={{ display: 'block', padding: '10px 16px', color: '#123459', textDecoration: 'none' }}>Account</Link>
-                      </>
-                    )}
-                    <button onClick={handleLogout} style={{ display: 'block', width: '100%', padding: '10px 16px', background: 'none', border: 'none', color: '#dc2626', textAlign: 'left', cursor: 'pointer' }}>Log Out</button>
-                  </div>
-                )}
-              </div>
-            )}
+            {/* Add login/signup or other buttons here if needed */}
           </div>
         </div>
         <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: 0 }} />
       </header>
 
-      {/* Mobile Header */}
+      {/* Mobile Header (visible on mobile only) */}
       <header className="mobile-header">
         <a href="/" className="logo">
           <div className="logo-dots">
@@ -114,9 +81,62 @@ const Header = () => {
           </div>
           <span className="logo-text">BluCollar</span>
         </a>
-        <button className="hamburger" onClick={toggleMobileMenu}>
-          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {(isCustomer || isWorker) && (
+            <div className="header-avatar-link" style={{ position: 'relative', marginRight: 4 }}>
+              <div className="header-avatar" onClick={() => setDropdownOpen(v => !v)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, width: 28, height: 28, borderRadius: '50%', background: '#e7f5ff', color: '#1a2a4c', fontSize: '1rem', fontWeight: 700, overflow: 'hidden' }}>
+                {user?.profilePhoto
+                  ? <img src={user.profilePhoto} alt="Account" style={{ width: 28, height: 28, borderRadius: '50%' }} />
+                  : (user?.name ? user.name[0].toUpperCase() : <FaUser />)
+                }
+                <FaChevronDown style={{ fontSize: 12, marginLeft: 2 }} />
+              </div>
+              {dropdownOpen && (
+                <div className="header-dropdown" style={{ position: 'absolute', right: 0, top: '110%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.08)', minWidth: 160, zIndex: 100 }}>
+                  <div style={{ padding: '10px 14px', borderBottom: '1px solid #e2e8f0', fontWeight: 600 }}>{user?.name}</div>
+                  {isCustomer && (
+                    <>
+                      <Link
+                        to="/my-bookings"
+                        className="dropdown-link"
+                        onClick={e => {
+                          setDropdownOpen(false);
+                          setIsMobileMenuOpen(false);
+                          setTimeout(() => navigate('/my-bookings'), 100);
+                        }}
+                        style={{ display: 'block', padding: '8px 14px', color: '#123459', textDecoration: 'none' }}
+                      >
+                        My Bookings
+                      </Link>
+                      <Link
+                        to="/account-settings"
+                        className="dropdown-link"
+                        onClick={e => {
+                          setDropdownOpen(false);
+                          setIsMobileMenuOpen(false);
+                          setTimeout(() => navigate('/account-settings'), 100);
+                        }}
+                        style={{ display: 'block', padding: '8px 14px', color: '#123459', textDecoration: 'none' }}
+                      >
+                        Account Settings
+                      </Link>
+                    </>
+                  )}
+                  {isWorker && (
+                    <>
+                      <Link to="/worker/dashboard" className="dropdown-link" onClick={() => { setDropdownOpen(false); setIsMobileMenuOpen(false); }} style={{ display: 'block', padding: '8px 14px', color: '#123459', textDecoration: 'none' }}>Worker Dashboard</Link>
+                      <Link to="/worker/account" className="dropdown-link" onClick={() => { setDropdownOpen(false); setIsMobileMenuOpen(false); }} style={{ display: 'block', padding: '8px 14px', color: '#123459', textDecoration: 'none' }}>Account</Link>
+                    </>
+                  )}
+                  <button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} style={{ display: 'block', width: '100%', padding: '8px 14px', background: 'none', border: 'none', color: '#dc2626', textAlign: 'left', cursor: 'pointer' }}>Log Out</button>
+                </div>
+              )}
+            </div>
+          )}
+          <button className="hamburger" onClick={toggleMobileMenu}>
+            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
         {isMobileMenuOpen && (
           <div className="mobile-menu">
             <Link to="/" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
@@ -124,41 +144,6 @@ const Header = () => {
             <Link to="/services" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Services</Link>
             <Link to="/find-workers" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Find a Worker</Link>
             <Link to="/contact" className="mobile-link" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
-            {!(isCustomer || isWorker) && (
-              <>
-                <Link to="/login" className="header-btn header-btn-outline" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
-                <Link to="/signup" className="header-btn header-btn-solid" onClick={() => setIsMobileMenuOpen(false)}>Get started</Link>
-              </>
-            )}
-            {(isCustomer || isWorker) && (
-              <div className="mobile-avatar-link" style={{ position: 'relative', marginTop: 12 }}>
-                <div className="header-avatar" onClick={() => setDropdownOpen(v => !v)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-                  {user?.profilePhoto
-                    ? <img src={user.profilePhoto} alt="Account" style={{ width: 32, height: 32, borderRadius: '50%' }} />
-                    : (user?.name ? user.name[0].toUpperCase() : <FaUser />)
-                  }
-                  <FaChevronDown style={{ fontSize: 14, marginLeft: 2 }} />
-                </div>
-                {dropdownOpen && (
-                  <div className="header-dropdown" style={{ position: 'absolute', right: 0, top: '110%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.08)', minWidth: 180, zIndex: 100 }}>
-                    <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', fontWeight: 600 }}>{user?.name}</div>
-                    {isCustomer && (
-                      <>
-                        <Link to="/my-bookings" className="dropdown-link" onClick={() => { setDropdownOpen(false); setIsMobileMenuOpen(false); }} style={{ display: 'block', padding: '10px 16px', color: '#123459', textDecoration: 'none' }}>My Bookings</Link>
-                        <Link to="/account-settings" className="dropdown-link" onClick={() => { setDropdownOpen(false); setIsMobileMenuOpen(false); }} style={{ display: 'block', padding: '10px 16px', color: '#123459', textDecoration: 'none' }}>Account Settings</Link>
-                      </>
-                    )}
-                    {isWorker && (
-                      <>
-                        <Link to="/worker/dashboard" className="dropdown-link" onClick={() => { setDropdownOpen(false); setIsMobileMenuOpen(false); }} style={{ display: 'block', padding: '10px 16px', color: '#123459', textDecoration: 'none' }}>Worker Dashboard</Link>
-                        <Link to="/worker/account" className="dropdown-link" onClick={() => { setDropdownOpen(false); setIsMobileMenuOpen(false); }} style={{ display: 'block', padding: '10px 16px', color: '#123459', textDecoration: 'none' }}>Account</Link>
-                      </>
-                    )}
-                    <button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} style={{ display: 'block', width: '100%', padding: '10px 16px', background: 'none', border: 'none', color: '#dc2626', textAlign: 'left', cursor: 'pointer' }}>Log Out</button>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         )}
       </header>

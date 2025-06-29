@@ -145,8 +145,8 @@ export default function JobRequestForm() {
       }
 
       if (response.ok) {
-        // Success logic here
         alert('Job request submitted!');
+        navigate('/');
       }
     } catch (err) {
       alert('An error occurred. Please try again.');
@@ -243,23 +243,21 @@ export default function JobRequestForm() {
                 <div className="active-job-row">
                   <FaBroom className="active-job-detail-icon" />
                   <span>Service:</span>
-                  <span className="active-job-value">{activeRequest?.serviceType || "—"}</span>
+                  <span className="active-job-value">{activeRequest?.serviceType || activeRequest?.service_type || "—"}</span>
                 </div>
                 <div className="active-job-row">
                   <FaCalendarAlt className="active-job-detail-icon" />
                   <span>Date:</span>
-                  <span className="active-job-value">{activeRequest?.date ? activeRequest.date : "—"}</span>
+                  <span className="active-job-value">{activeRequest?.date || activeRequest?.service_date || "—"}</span>
                 </div>
                 <div className="active-job-row">
                   <FaClock className="active-job-detail-icon" />
                   <span>Time:</span>
-                  <span className="active-job-value">{activeRequest?.timeSlot ? activeRequest.timeSlot : "—"}</span>
+                  <span className="active-job-value">{activeRequest?.timeSlot || activeRequest?.time_slot || activeRequest?.time || "—"}</span>
                 </div>
                 <div className="active-job-row">
                   <span>Status:</span>
-                  <span className={`active-job-status ${activeRequest?.status}`}>
-                    {activeRequest?.status || "—"}
-                  </span>
+                  <span className={`active-job-status ${activeRequest?.status}`}>{activeRequest?.status || "—"}</span>
                 </div>
               </div>
               <div className="active-job-actions">
