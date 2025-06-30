@@ -122,7 +122,7 @@ dbConnection.connect((err) => {
 
     app.use('/api/auth', authRoutes);
     app.use('/api/worker', workerRoutes);
-    app.use('/api', aiRoutes);
+    app.use('/api/ai', aiRoutes);
     const reviewRoutes = require('./routes/reviewRoutes');
     app.use('/api/reviews', reviewRoutes);
 
