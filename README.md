@@ -7,7 +7,7 @@ A full-stack web platform connecting users with skilled blue-collar workers (lik
 
 ## 🚀 Live Demo
 
-> https://bluecollarhub.vercel.app (#)
+> https://blucollar.vercel.app/
 
 ---
 
