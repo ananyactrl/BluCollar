@@ -357,6 +357,9 @@ const HomePage = () => {
               <h2>What Our Customers Say</h2>
               <p>Real experiences from our satisfied customers</p>
             </div>
+            <span className="testimonials-scroll-hint" style={{display: 'block', fontSize: '0.95rem', color: '#567c8d', marginBottom: 8, opacity: 0.85, letterSpacing: '0.01em'}}>
+              <span className="mobile-only">Swipe to see more &rarr;</span>
+            </span>
             <div className="testimonials-grid">
               <div className="testimonial-card" data-aos="fade-up">
                 <div className="testimonial-content">

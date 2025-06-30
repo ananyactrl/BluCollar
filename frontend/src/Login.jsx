@@ -38,7 +38,7 @@ export default function Login() {
           suggestions.push(email);
           localStorage.setItem('emailSuggestions', JSON.stringify(suggestions));
         }
-        toast.success('✅ Login Successful!');
+        toast.success(' Login Successful!');
         
         // Redirect to the page the user was trying to access, or default to the dashboard.
         const returnUrl = location.state?.returnUrl || '/my-bookings';

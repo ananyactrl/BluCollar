@@ -87,7 +87,7 @@ export default function Signup() {
       });
 
       if (response.status === 200) {
-        toast.success("✅ Account created successfully! Please log in.");
+        toast.success("Account created successfully! Please log in.");
         navigate('/login', { state: { returnUrl } });
       } else {
         toast.error("❌ Signup failed: " + (response.data?.message || "An unknown error occurred."));

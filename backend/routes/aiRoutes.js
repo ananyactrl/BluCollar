@@ -313,4 +313,35 @@ router.get('/geocode', async (req, res) => {
   }
 });
 
+// AI-powered worker recommendation route
+router.post('/recommend-workers', async (req, res) => {
+  const { jobDetails, availableWorkers } = req.body;
+  const prompt = `
+    Job request: "${jobDetails}"
+    Available workers: ${JSON.stringify(availableWorkers)}
+    Recommend the top 3 workers for this job and explain your reasoning in simple language.
+  `;
+
+  try {
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 200,
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    res.json({ recommendations: response.data.choices[0].message.content });
+  } catch (error) {
+    console.error('AI recommendation error:', error.response?.data || error.message);
+    res.status(500).json({ error: 'AI recommendation failed.' });
+  }
+});
+
 module.exports = router; 

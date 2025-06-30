@@ -15,12 +15,17 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
 .sidebar-header {
+    padding-top: 72px;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid #e9ecef;
     margin-bottom: 1.5rem;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
 .team-info {
@@ -258,4 +263,9 @@
     .info-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.account-settings-container {
+    padding-top: 60px !important;
+    margin-top: 0 !important;
 } 
