@@ -68,9 +68,6 @@ export default function JobRequestForm() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [activeRequest, setActiveRequest] = useState(null);
   const [loadingActive, setLoadingActive] = useState(true);
-  const [aiRecommendations, setAIRecommendations] = useState('');
-  const [aiLoading, setAILoading] = useState(false);
-  const [availableWorkers, setAvailableWorkers] = useState([]);
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -216,38 +213,6 @@ export default function JobRequestForm() {
       setActiveRequest(null);
     } catch (err) {
       toast.error('Failed to cancel job request.');
-    }
-  };
-
-  // Fetch real available workers from backend
-  useEffect(() => {
-    const fetchWorkers = async () => {
-      try {
-        const res = await axios.get(`${API.replace('/api', '')}/worker/search`, {
-          params: { service: formData.serviceType }
-        });
-        setAvailableWorkers(res.data || []);
-      } catch (err) {
-        setAvailableWorkers([]);
-      }
-    };
-    fetchWorkers();
-  }, [formData.serviceType]);
-
-  const getAIRecommendations = async () => {
-    setAILoading(true);
-    setAIRecommendations('');
-    try {
-      const jobDetails = `Service: ${formData.serviceType}, Address: ${formData.address}, Description: ${formData.problem_description || formData.special_instructions}`;
-      const res = await axios.post(`${API}/ai/recommend-workers`, {
-        jobDetails,
-        availableWorkers,
-      });
-      setAIRecommendations(res.data.recommendations);
-    } catch (err) {
-      setAIRecommendations('Could not get AI recommendations.');
-    } finally {
-      setAILoading(false);
     }
   };
 
@@ -565,16 +530,6 @@ export default function JobRequestForm() {
                   <small>Selected Lat: {formData.latitude}, Lng: {formData.longitude}</small>
                 </div>
               </div>
-
-              <button type="button" onClick={getAIRecommendations} style={{ margin: '16px 0', background: '#123459', color: '#fff', borderRadius: 8, padding: '10px 18px', fontWeight: 600 }}>
-                {aiLoading ? 'Getting AI Recommendations...' : 'Get AI Worker Recommendations'}
-              </button>
-              {aiRecommendations && (
-                <div style={{ background: '#f4f8ff', border: '1px solid #c3dafe', borderRadius: 8, padding: 16, margin: '12px 0', color: '#123459' }}>
-                  <strong>AI Recommendations:</strong>
-                  <div style={{ whiteSpace: 'pre-line', marginTop: 8 }}>{aiRecommendations}</div>
-                </div>
-              )}
 
               <button type="submit" className="submit-btn">
                 Book a Service

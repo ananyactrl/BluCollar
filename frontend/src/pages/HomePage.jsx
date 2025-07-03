@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../index.css';
-import { FaUserShield, FaBolt, FaTag, FaCheckCircle, FaTools, FaHandshake, FaChartLine, FaUsers, FaCalendarCheck, FaUserCog, FaTruckMoving, FaCommentDots, FaUser, FaCamera, FaRobot, FaExclamationTriangle } from 'react-icons/fa';
+import { FaUserShield, FaBolt, FaTag, FaCheckCircle, FaTools, FaHandshake, FaChartLine, FaUsers, FaCalendarCheck, FaUserCog, FaTruckMoving, FaCommentDots, FaUser, FaCamera, FaRobot, FaExclamationTriangle, FaTruck, FaRegCommentDots } from 'react-icons/fa';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { gsap } from 'gsap';
@@ -14,6 +14,7 @@ import maidImg from '../assets/wmremove-transformed.jpeg';
 import electricianImg from '../assets/wmremove-transformed (2).jpeg';
 import plumberImg from '../assets/wmremove-transformed (5).jpeg';
 import WorkerMatching from '../components/WorkerMatching';
+import JobLocationMap from '../JobLocationMap';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -301,155 +302,55 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* How It Works Section */}
+        {/* How BluCollar Works Section */}
         <section className="how-it-works-section">
           <div className="section-container">
             <div className="section-header">
               <h2>How It Works</h2>
               <p>Simple steps to get your service done</p>
             </div>
-            <div className="steps-container">
-              {[
-                {
-                  number: 1,
-                  title: "AI Service Detection",
-                  description: "Upload a photo or describe your need - our AI instantly identifies the required service.",
-                  icon: <FaCamera size={40} color="#123459" />
-                },
-                {
-                  number: 2,
-                  title: "Smart Worker Matching",
-                  description: "Our AI matches you with the best-suited professional based on skills and ratings.",
-                  icon: <FaRobot size={40} color="#123459" />
-                },
-                {
-                  number: 3,
-                  title: "Confirm & Track",
-                  description: "Approve service and track progress in real-time.",
-                  icon: <FaTruckMoving size={40} color="#123459" />
-                },
-                {
-                  number: 4,
-                  title: "Rate & Review",
-                  description: "Share your experience and help improve our AI matching.",
-                  icon: <FaCommentDots size={40} color="#123459" />
-                }
-              ].map((step, index) => (
-                <div className="step-card" key={index} data-aos="fade-up" data-aos-delay={index * 100}>
-                  <div className="step-number">{step.number}</div>
-                  <div className="step-content">
-                    <div className="step-icon">
-                      {step.icon}
-                    </div>
-                    <h3>{step.title}</h3>
-                    <p>{step.description}</p>
-                  </div>
+            <div className="how-it-works-steps">
+              <div className="how-step">
+                <div className="how-step-icon">
+                  <FaCamera size={40} color="#123459" />
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials Section */}
-        <section className="testimonials-section">
-          <div className="section-container">
-            <div className="section-header">
-              <h2>What Our Customers Say</h2>
-              <p>Real experiences from our satisfied customers</p>
-            </div>
-            <span className="testimonials-scroll-hint" style={{display: 'block', fontSize: '0.95rem', color: '#567c8d', marginBottom: 8, opacity: 0.85, letterSpacing: '0.01em'}}>
-              <span className="mobile-only">Swipe to see more &rarr;</span>
-            </span>
-            <div className="testimonials-grid">
-              <div className="testimonial-card" data-aos="fade-up">
-                <div className="testimonial-content">
-                  <p>"BluCollar made finding a reliable electrician so easy! The service was prompt and professional. Highly recommend their platform."</p>
-                </div>
-                <div className="testimonial-author">
-                  <div className="author-avatar">
-                    <FaUser size={24} color="#123459" />
-                  </div>
-                  <div className="author-info">
-                    <h4>Priya Sharma</h4>
-                    <p>Homeowner, Delhi</p>
-                    <span className="trust-badge">Verified User</span>
-                  </div>
-                </div>
+                <h4>1. Signup & Post a Job</h4>
+                <p>Create an account and post your service need with details and location.</p>
               </div>
-              <div className="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-                <div className="testimonial-content">
-                  <p>"I needed a maid urgently, and BluCollar connected me with someone within minutes. Fantastic service and very trustworthy!"</p>
+              <div className="how-step">
+                <div className="how-step-icon">
+                  <FaRobot size={40} color="#123459" />
                 </div>
-                <div className="testimonial-author">
-                  <div className="author-avatar">
-                    <FaUser size={24} color="#123459" />
-                  </div>
-                  <div className="author-info">
-                    <h4>Rajesh Kumar</h4>
-                    <p>Apartment Manager, Mumbai</p>
-                    <span className="trust-badge">Verified User</span>
-                  </div>
-                </div>
+                <h4>2. Get Matched Instantly</h4>
+                <p>Our system matches you with available, verified workers in your area.</p>
               </div>
-              <div className="testimonial-card" data-aos="fade-up" data-aos-delay="200">
-                <div className="testimonial-content">
-                  <p>"As a cook, BluCollar has provided me with consistent work opportunities and a great way to connect with clients. It's a game-changer!"</p>
+              <div className="how-step">
+                <div className="how-step-icon">
+                  <FaTruck size={40} color="#123459" />
                 </div>
-                <div className="testimonial-author">
-                  <div className="author-avatar">
-                    <FaUser size={24} color="#123459" />
-                  </div>
-                  <div className="author-info">
-                    <h4>Anjali Singh</h4>
-                    <p>Professional Cook, Bangalore</p>
-                    <span className="trust-badge">Verified User</span>
-                  </div>
+                <h4>3. Confirm & Track</h4>
+                <p>Approve service and track progress in real-time.</p>
+              </div>
+              <div className="how-step">
+                <div className="how-step-icon">
+                  <FaRegCommentDots size={40} color="#123459" />
                 </div>
+                <h4>4. Rate & Review</h4>
+                <p>Share your experience and help improve our matching.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Pricing Section */}
-        <section className="pricing-section">
+        {/* Find Reliable Workers Map Section */}
+        <section className="find-workers-map-section">
           <div className="section-container">
             <div className="section-header">
-              <h2>Our Pricing Plans</h2>
-              <p>Simple and transparent pricing for your needs</p>
+              <h2>Find reliable workers near you—at your doorstep in minutes</h2>
+              <p>See available professionals in your area and book instantly.</p>
             </div>
-            <div className="pricing-slider">
-              <div className="pricing-slider-inner">
-                <div className="pricing-card small-card">
-                  <h3>Hourly Rate</h3>
-                  <p className="price">Rs. 25<span>/hour</span></p>
-                  <ul>
-                    <li>Flexible booking</li>
-                    <li>Basic service coverage</li>
-                    <li>Pay as you go</li>
-                  </ul>
-                  <button className="blue-button" onClick={() => window.location.href='/pricing'}>Choose Plan</button>
-                </div>
-                <div className="pricing-card small-card">
-                  <h3>Daily Rate</h3>
-                  <p className="price">Rs. 180<span>/day</span></p>
-                  <ul>
-                    <li>Full-day service</li>
-                    <li>Standard service coverage</li>
-                    <li>Ideal for larger tasks</li>
-                  </ul>
-                  <button className="blue-button" onClick={() => window.location.href='/pricing'}>Choose Plan</button>
-                </div>
-                <div className="pricing-card small-card">
-                  <h3>Subscription</h3>
-                  <p className="price">Rs. 450<span>/month</span></p>
-                  <ul>
-                    <li>Recurring services</li>
-                    <li>Premium service coverage</li>
-                    <li>Dedicated support</li>
-                  </ul>
-                  <button className="blue-button" onClick={() => window.location.href='/pricing'}>Choose Plan</button>
-                </div>
-              </div>
+            <div className="map-wrapper">
+              <JobLocationMap height="320px" />
             </div>
           </div>
         </section>

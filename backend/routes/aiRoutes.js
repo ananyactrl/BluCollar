@@ -8,6 +8,7 @@ const axios = require('axios');
 const { findMatchingWorkers, simulateEmergencyResponse } = require('../services/aiService');
 const authMiddleware = require('./authMiddleware');
 const clientAuthenticateToken = require('./clientAuthMiddleware');
+const db = require('../firebase'); // Firestore
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -129,20 +130,10 @@ const geocode = async (address) => {
 // Route for worker matching (uses aiImageUpload)
 router.post('/match-workers', aiImageUpload.single('image'), async (req, res) => {
   try {
-    const db = req.app.locals.db; // Access the central db connection
     const { service } = req.body;
-    
-    if (!service) {
-      return res.status(400).json({ error: 'Service type is required' });
-    }
-
-    // Pass the db connection to findMatchingWorkers
+    if (!service) return res.status(400).json({ error: 'Service type is required' });
     const matchingWorkers = await findMatchingWorkers(db, service);
-    
-    if (!matchingWorkers.length) {
-      return res.status(404).json({ error: 'No matching workers found' });
-    }
-
+    if (!matchingWorkers.length) return res.status(404).json({ error: 'No matching workers found' });
     res.json({
       workers: matchingWorkers.map(worker => ({
         id: worker.id,
@@ -181,120 +172,48 @@ router.post('/emergency/trigger', async (req, res) => {
 });
 
 // NEW: GET bookings for the logged-in client
-router.get('/my-bookings', clientAuthenticateToken, (req, res) => {
-    const clientId = req.user.id; // Now req.user is set by your middleware
-    const db = req.app.locals.db;
-
-    const query = `
-        SELECT 
-            jr.id, 
-            jr.service_type AS service,
-            jr.date,
-            jr.timeSlot AS time,
-            jr.status,
-            w.name AS workerName
-        FROM job_requests jr
-        LEFT JOIN workers w ON jr.assignedWorkerId = w.id
-        WHERE jr.client_id = ?
-        ORDER BY jr.date DESC
-    `;
-
-    db.query(query, [clientId], (err, results) => {
-        if (err) {
-            console.error('Error fetching client bookings:', err);
-            return res.status(500).json({ message: 'Failed to retrieve bookings.' });
-        }
-        res.json(results);
-    });
+router.get('/my-bookings', clientAuthenticateToken, async (req, res) => {
+  try {
+    const clientId = req.user.id;
+    const snapshot = await db.collection('job_requests').where('client_id', '==', clientId).get();
+    const bookings = [];
+    snapshot.forEach(doc => bookings.push({ id: doc.id, ...doc.data() }));
+    res.json(bookings);
+  } catch (err) {
+    console.error('Error fetching client bookings:', err);
+    res.status(500).json({ message: 'Failed to retrieve bookings.' });
+  }
 });
 
 // NEW: POST: Create new job request (copied from jobRequest.js)
-router.post('/job-request', clientAuthenticateToken, upload.array('documents', 5), async (req, res) => {
+router.post('/job-request', clientAuthenticateToken, jobRequestUpload.array('documents', 5), async (req, res) => {
+  const jobData = req.body;
   try {
-    const db = req.app.locals.db;
-    const io = req.app.get('io');
-    const clientId = req.user.id;
-
-    // Check for existing request
-    const [existing] = await db.promise().query(
-      'SELECT id FROM job_requests WHERE client_id = ? AND service_type = ?',
-      [clientId, req.body.serviceType]
-    );
-    if (existing.length > 0) {
-      return res.status(409).json({ message: 'You have already submitted a request for this service.' });
-    }
-
-    // Save the job request to the database
-    db.query(
-      'INSERT INTO job_requests (client_id, service_type, description, address, total_amount, status) VALUES (?, ?, ?, ?, ?, ?)',
-      [clientId, req.body.serviceType, req.body.description, req.body.address, req.body.total_amount, 'pending'],
-      (err, result) => {
-        if (err) {
-          console.error('Error inserting job request:', err);
-          return res.status(500).json({
-            success: false,
-            message: 'Failed to create job request',
-            error: err.message
-          });
-        }
-
-        const jobId = result.insertId;
-
-        // Get the complete job data
-        db.query(
-          'SELECT * FROM job_requests WHERE id = ?',
-          [jobId],
-          (err, jobData) => {
-            if (err) {
-              console.error('Error fetching job data after insertion:', err);
-              return res.status(500).json({
-                success: false,
-                message: 'Failed to retrieve job data',
-                error: err.message
-              });
-            }
-
-            // Emit the new job to the appropriate room
-            if (io && jobData[0]) {
-              io.to(req.body.serviceType.toLowerCase()).emit('new-job', {
-                job: jobData[0]
-              });
-              console.log(`📢 Emitted new job to room: ${req.body.serviceType.toLowerCase()}`);
-            }
-
-            res.json({
-              success: true,
-              message: 'Job request created successfully',
-              jobId: jobId
-            });
-          }
-        );
-      }
-    );
-  } catch (error) {
-    console.error('Error creating job request (outer catch):', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create job request (general error)',
-      error: error.message
+    await db.collection('job_requests').add({
+      ...jobData,
+      createdAt: new Date()
     });
+    res.status(201).json({ message: 'Job request submitted!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
 // NEW: Cancel job request endpoint
-router.post('/job-request/:id/cancel', clientAuthenticateToken, (req, res) => {
-  const db = req.app.locals.db;
-  const jobId = req.params.id;
-  const clientId = req.user.id;
-  db.query(
-    'UPDATE job_requests SET status = "cancelled" WHERE id = ? AND client_id = ? AND status IN ("pending", "accepted")',
-    [jobId, clientId],
-    (err, result) => {
-      if (err) return res.status(500).json({ message: 'Failed to cancel job request.' });
-      if (result.affectedRows === 0) return res.status(404).json({ message: 'Job not found or cannot be cancelled.' });
-      res.json({ message: 'Job request cancelled.' });
+router.post('/job-request/:id/cancel', clientAuthenticateToken, async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const clientId = req.user.id;
+    const jobRef = db.collection('job_requests').doc(jobId);
+    const jobDoc = await jobRef.get();
+    if (!jobDoc.exists || jobDoc.data().client_id !== clientId) {
+      return res.status(404).json({ message: 'Job not found or cannot be cancelled.' });
     }
-  );
+    await jobRef.update({ status: 'cancelled' });
+    res.json({ message: 'Job request cancelled.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to cancel job request.' });
+  }
 });
 
 // Geocode API endpoint for address lookup
@@ -313,34 +232,65 @@ router.get('/geocode', async (req, res) => {
   }
 });
 
-// AI-powered worker recommendation route
-router.post('/recommend-workers', async (req, res) => {
-  const { jobDetails, availableWorkers } = req.body;
-  const prompt = `
-    Job request: "${jobDetails}"
-    Available workers: ${JSON.stringify(availableWorkers)}
-    Recommend the top 3 workers for this job and explain your reasoning in simple language.
-  `;
-
+// In your signup route file
+router.post('/signup', async (req, res) => {
+  const { name, email, phone, address, password } = req.body;
   try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 200,
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    res.json({ recommendations: response.data.choices[0].message.content });
+    // Hash password as before!
+    await db.collection('signup').add({
+      name, email, phone, address, password, createdAt: new Date()
+    });
+    res.status(201).json({ message: 'Signup successful!' });
   } catch (error) {
-    console.error('AI recommendation error:', error.response?.data || error.message);
-    res.status(500).json({ error: 'AI recommendation failed.' });
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.post('/users', async (req, res) => {
+  const { name, email, phone, location, password } = req.body;
+  try {
+    await db.collection('users').add({
+      name, email, phone, location, password, createdAt: new Date()
+    });
+    res.status(201).json({ message: 'User created!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.post('/worker/signup', async (req, res) => {
+  const { name, email, phone, address, password, profession, skills, experience, description, certifications } = req.body;
+  try {
+    await db.collection('workers').add({
+      name, email, phone, address, password, profession, skills, experience, description, certifications, createdAt: new Date()
+    });
+    res.status(201).json({ message: 'Worker registered!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.post('/worker/portfolio', async (req, res) => {
+  const { worker_id, skills, experience, description, files, profile_photo } = req.body;
+  try {
+    await db.collection('worker_portfolios').add({
+      worker_id, skills, experience, description, files, profile_photo, createdAt: new Date()
+    });
+    res.status(201).json({ message: 'Portfolio created!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.post('/services', async (req, res) => {
+  const { name, category, description, keywords, averagePrice, imageUrl, isActive } = req.body;
+  try {
+    await db.collection('services').add({
+      name, category, description, keywords, averagePrice, imageUrl, isActive, createdAt: new Date()
+    });
+    res.status(201).json({ message: 'Service added!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

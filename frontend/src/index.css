@@ -3688,3 +3688,283 @@ html {
   
 }
 
+/* How BluCollar Works Section */
+.how-it-works-section {
+  background: #f4f8ff;
+  padding: 48px 0 32px 0;
+  margin: 0 0 32px 0;
+}
+.how-scroll-hint {
+  display: none;
+  text-align: left;
+  color: #567c8d;
+  font-size: 0.98rem;
+  margin: 0 0 8px 12px;
+  opacity: 0.85;
+}
+.how-it-works-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 32px;
+}
+.how-step {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
+  padding: 24px 20px 20px 20px;
+  min-width: 180px;
+  max-width: 220px;
+  text-align: center;
+  flex: 1 1 180px;
+  transition: box-shadow 0.2s;
+}
+.how-step-icon {
+  width: 64px;
+  height: 64px;
+  background: #eaf3fb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07);
+}
+.how-step-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+.how-step h4 {
+  font-size: 1.1rem;
+  margin: 0 0 8px 0;
+  color: #123459;
+}
+.how-step p {
+  font-size: 0.98rem;
+  color: #567c8d;
+}
+.how-step:hover {
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.13);
+}
+
+/* Snap scroll for mobile */
+@media (max-width: 900px) {
+  .how-it-works-steps.scroll-snap-x,
+  .why-blucollar-grid {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 4vw;
+    padding-right: 4vw;
+  }
+  .how-step, .why-card {
+    min-width: 75vw;
+    max-width: 78vw;
+    flex: 0 0 75vw;
+    scroll-snap-align: center;
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+  .how-scroll-hint {
+    display: block;
+  }
+}
+@media (max-width: 600px) {
+  .how-it-works-section {
+    padding: 32px 0 20px 0;
+  }
+  .how-step {
+    padding: 18px 10px 16px 10px;
+    min-width: 85vw;
+    max-width: 90vw;
+  }
+}
+
+/* Why Choose BluCollar Section */
+.why-blucollar-section {
+  background: #eaf3fb;
+  padding: 48px 0 32px 0;
+  margin: 0 0 32px 0;
+}
+.why-blucollar-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 32px;
+}
+.why-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
+  padding: 24px 20px 20px 20px;
+  min-width: 180px;
+  max-width: 220px;
+  text-align: center;
+  flex: 1 1 180px;
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.why-icon {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+.why-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  color: #123459;
+}
+.why-card p {
+  font-size: 0.98rem;
+  color: #567c8d;
+}
+.why-card:hover {
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.13);
+}
+@media (max-width: 900px) {
+  .why-blucollar-grid {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 8px;
+  }
+  .why-card {
+    min-width: 80vw;
+    max-width: 85vw;
+    flex: 0 0 80vw;
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}
+@media (max-width: 600px) {
+  .why-blucollar-section {
+    padding: 32px 0 20px 0;
+  }
+  .why-card {
+    padding: 18px 10px 16px 10px;
+    min-width: 85vw;
+    max-width: 90vw;
+  }
+}
+
+/* Find Reliable Workers Map Section */
+.find-workers-map-section {
+  background: #f4f8ff;
+  padding: 48px 0 32px 0;
+  margin: 0 0 32px 0;
+}
+.find-workers-map-section .section-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.find-workers-map-section h2 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #123459;
+  margin-bottom: 8px;
+}
+.find-workers-map-section p {
+  color: #567c8d;
+  font-size: 1.08rem;
+}
+.map-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
+  background: #eaf3fb;
+}
+@media (max-width: 900px) {
+  .find-workers-map-section {
+    padding: 32px 0 20px 0;
+  }
+  .map-wrapper {
+    max-width: 100vw;
+    min-height: 220px;
+    border-radius: 12px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .find-workers-map-section h2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .how-it-works-steps {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 40px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .how-step {
+    flex: 1 1 0;
+    min-width: 220px;
+    max-width: 260px;
+    min-height: 180px;
+    height: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 2px 16px rgba(44, 62, 80, 0.09);
+    padding: 24px 18px 18px 18px;
+    margin: 0;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .how-step:hover {
+    box-shadow: 0 6px 32px rgba(44, 62, 80, 0.15);
+  }
+  .how-step-icon {
+    width: 64px;
+    height: 64px;
+    background: #f4f8ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    margin-top: 0;
+    position: static;
+  }
+  .how-step h4 {
+    font-size: 1.15rem;
+    margin: 0 0 12px 0;
+    color: #123459;
+    text-align: center;
+    line-height: 1.22;
+    letter-spacing: 0.01em;
+  }
+  .how-step p {
+    font-size: 1.01rem;
+    color: #567c8d;
+    text-align: center;
+    margin: 0;
+    line-height: 1.5;
+    word-break: break-word;
+    letter-spacing: 0.01em;
+  }
+}
+
+
+
+

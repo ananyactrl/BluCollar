@@ -1,35 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
-const containerStyle = { width: '100%', height: '200px' };
-const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
-const DEFAULT_CENTER = { lat: 28.6139, lng: 77.2090 }; // New Delhi as fallback
+const JobLocationMap = ({ height = '320px' }) => {
+  const containerStyle = { width: '100%', height };
+  const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
+  const DEFAULT_CENTER = { lat: 28.6139, lng: 77.2090 }; // New Delhi as fallback
 
-const JobLocationMap = ({ lat, lng, name }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: ['places']
   });
 
-  // Validate coordinates
-  const validLat = typeof lat === 'number' ? lat : parseFloat(lat);
-  const validLng = typeof lng === 'number' ? lng : parseFloat(lng);
-  const hasValidCoords =
-    isLoaded &&
-    validLat &&
-    validLng &&
-    !isNaN(validLat) &&
-    !isNaN(validLng) &&
-    Math.abs(validLat) <= 90 &&
-    Math.abs(validLng) <= 180;
+  const [userLocation, setUserLocation] = useState(null);
+  const [geoError, setGeoError] = useState(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          setGeoError(error.message);
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    } else {
+      setGeoError('Geolocation is not supported by this browser.');
+    }
+  }, []);
 
   if (!isLoaded) return <div style={containerStyle} className="map-loading">Loading map...</div>;
+
+  const center = userLocation || DEFAULT_CENTER;
 
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={hasValidCoords ? { lat: validLat, lng: validLng } : DEFAULT_CENTER}
-      zoom={hasValidCoords ? 15 : 5}
+      center={center}
+      zoom={userLocation ? 15 : 5}
       options={{
         zoomControl: true,
         streetViewControl: false,
@@ -44,10 +56,10 @@ const JobLocationMap = ({ lat, lng, name }) => {
         ]
       }}
     >
-      {hasValidCoords && (
+      {userLocation && (
         <Marker
-          position={{ lat: validLat, lng: validLng }}
-          title={name ? `${name}'s location` : 'Job location'}
+          position={userLocation}
+          title={'Your location'}
         />
       )}
     </GoogleMap>

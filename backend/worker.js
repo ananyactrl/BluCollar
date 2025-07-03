@@ -2,7 +2,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql');
 const axios = require('axios');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
@@ -10,23 +9,11 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const app = express();
 const PORT = 5003;
+const db = require('./firebase'); // Firestore
 
 // Enable CORS for all routes
 app.use(cors());
 app.use(express.json());
-
-// ✅ MySQL connection
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '1234',
-  database: 'Signup',
-});
-
-db.connect((err) => {
-  if (err) console.error('❌ DB connection error:', err);
-  else console.log('✅ Connected to MySQL (worker.js)');
-});
 
 // ✅ Geocoding helper using OpenStreetMap
 const geocode = async (address) => {
@@ -142,3 +129,8 @@ const sendJobAcceptedEmail = async ({ toEmail, customerName, workerName, jobDeta
           <p>Thank you for choosing Servlyn!</p>
         </div>
       `
+    });
+  } catch (error) {
+    console.error('❌ Error sending email:', error.message);
+  }
+};

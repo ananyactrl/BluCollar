@@ -13,6 +13,9 @@ dist-ssr/
 build/
 *.local
 
+serviceAccountKey.json
+
+
 # Env files
 .env
 

@@ -1,7 +1,6 @@
 // backend/signup.js
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 
@@ -28,23 +27,7 @@ app.get('/customer', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/customer.html'));
 });
 
-
-
-// ✅ MySQL Connection
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '1234',
-  database: 'Signup',
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error('DB connection error:', err);
-  } else {
-    console.log('✅ Connected to MySQL (signup.js)');
-  }
-});
+const db = require('./firebase'); // Firestore
 
 // ✅ User Signup
 // ✅ User Signup with password hashing
