@@ -134,3 +134,44 @@ const sendJobAcceptedEmail = async ({ toEmail, customerName, workerName, jobDeta
     console.error('❌ Error sending email:', error.message);
   }
 };
+
+// Accept a job
+async function acceptJob(jobId, workerId) {
+  const jobRef = db.collection('job_requests').doc(jobId);
+  const jobDoc = await jobRef.get();
+  if (!jobDoc.exists || jobDoc.data().status !== 'pending') {
+    throw new Error('Job not available');
+  }
+  await jobRef.update({ status: 'accepted', assignedWorkerId: workerId });
+  return { message: 'Job accepted!' };
+}
+
+// Fetch a job by ID
+async function fetchJob(jobId) {
+  const jobDoc = await db.collection('job_requests').doc(jobId).get();
+  if (!jobDoc.exists) throw new Error('Job not found');
+  return jobDoc.data();
+}
+
+// Complete a job
+async function completeJob(jobId) {
+  const jobRef = db.collection('job_requests').doc(jobId);
+  await jobRef.update({ status: 'completed' });
+  return { message: 'Job marked as completed!' };
+}
+
+// Cancel a job
+async function cancelJob(jobId, reason) {
+  const jobRef = db.collection('job_requests').doc(jobId);
+  await jobRef.update({ status: 'cancelled', cancelReason: reason });
+  return { message: 'Job cancelled!' };
+}
+
+// Get worker by ID
+async function getWorkerById(workerId) {
+  const workerDoc = await db.collection('workers').doc(workerId).get();
+  if (!workerDoc.exists) throw new Error('Worker not found');
+  return { id: workerDoc.id, ...workerDoc.data() };
+}
+
+module.exports = { acceptJob, fetchJob, completeJob, cancelJob, getWorkerById };

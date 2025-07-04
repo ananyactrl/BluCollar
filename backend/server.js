@@ -64,6 +64,18 @@ io.on('connection', (socket) => {
 const aiRoutes = require('./routes/aiRoutes');
 app.use('/api/ai', aiRoutes);
 
+const adminRoutes = require('./admin');
+app.use(adminRoutes);
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
+const workerRoutes = require('./routes/workerRoutes');
+app.use('/api/worker', workerRoutes);
+
+const reviewRoutes = require('./routes/reviewRoutes');
+app.use('/api/reviews', reviewRoutes);
+
 // Health check
 app.get('/', (req, res) => {
   res.send('Backend is live 🚀');

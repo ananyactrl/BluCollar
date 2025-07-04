@@ -12,60 +12,21 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey';
 // Worker matching algorithm
 // 'db' connection will be passed as an argument
 async function findMatchingWorkers(db, serviceType) {
-  return new Promise((resolve, reject) => {
-    // Ensure column names match your MySQL schema for 'workers' table
-    const query = 'SELECT id, name, email, phone, address, profile_photo, specializations, experience, rating, review_count, success_rate, is_available, latitude, longitude, completed_jobs, hourly_rate, bio, documents, availability FROM workers'; 
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error('Error fetching workers from DB:', err);
-        return reject(new Error('Failed to find matching workers'));
-      }
+  // Fetch all workers from Firestore
+  const snapshot = await db.collection('workers').get();
+  const workers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      const scoredWorkers = results.map(worker => {
-        // Parse JSON fields if they are stored as strings in MySQL
-        // The DESCRIBE output uses 'skills' and 'certifications' at the top level
-        // but 'specializations' is present and used in frontend. Use 'specializations' for now.
-        const specializations = typeof worker.specializations === 'string' 
-                                ? JSON.parse(worker.specializations) 
-                                : (worker.specializations || []); // Ensure it's an array
-
-        // Parse other JSON fields as per DESCRIBE output
-        let skills;
-        try {
-          skills = JSON.parse(worker.skills);
-          if (!Array.isArray(skills)) throw new Error();
-        } catch {
-          // Fallback: treat as comma-separated string
-          skills = worker.skills.split(',').map(s => s.trim());
-        }
-        const certifications = typeof worker.certifications === 'string' ? JSON.parse(worker.certifications) : (worker.certifications || []);
-        const documents = typeof worker.documents === 'string' ? JSON.parse(worker.documents) : (worker.documents || []);
-        const availability = typeof worker.availability === 'string' ? JSON.parse(worker.availability) : (worker.availability || {});
-        
-        // Ensure experience is treated as a number for calculation
-        const experience = parseFloat(worker.experience) || 0;
-
-        const plainWorker = {
-          ...worker,
-          specializations, // Use the parsed specializations
-          skills,          // Use the parsed skills
-          certifications,  // Use the parsed certifications
-          documents,       // Use the parsed documents
-          availability,    // Use the parsed availability
-          experience,      // Use the parsed experience as a number
-        };
-        
-        const score = calculateMatchScore(plainWorker, serviceType);
-        return { ...plainWorker, matchScore: score };
-      });
-      
-      const topMatches = scoredWorkers
-        .sort((a, b) => b.matchScore - a.matchScore)
-        .slice(0, 5);
-      
-      resolve(topMatches);
-    });
+  // Score and filter workers
+  const scoredWorkers = workers.map(worker => {
+    const score = calculateMatchScore(worker, serviceType);
+    return { ...worker, matchScore: score };
   });
+
+  const topMatches = scoredWorkers
+    .sort((a, b) => b.matchScore - a.matchScore)
+    .slice(0, 5);
+
+  return topMatches;
 }
 
 // Calculate match score for a worker
@@ -99,167 +60,133 @@ function calculateMatchScore(worker, serviceType) {
 
 // Authenticate worker for login
 async function authenticateWorker(db, emailOrPhone, password) {
-  return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM workers WHERE email = ? OR phone = ?';
-    db.query(query, [emailOrPhone, emailOrPhone], async (err, results) => {
-      if (err) {
-        console.error('Error fetching worker during authentication:', err);
-        return reject(new Error('Authentication failed due to server error.'));
-      }
-      if (results.length === 0) {
-        return reject(new Error('Invalid credentials.'));
-      }
+  // Try to find by email
+  let snapshot = await db.collection('workers')
+    .where('email', '==', emailOrPhone)
+    .get();
+  let workerDoc = snapshot.empty ? null : snapshot.docs[0];
 
-      const worker = results[0];
-      const isMatch = await bcrypt.compare(password, worker.password);
+  // If not found by email, try by phone
+  if (!workerDoc) {
+    const phoneSnap = await db.collection('workers')
+      .where('phone', '==', emailOrPhone)
+      .get();
+    workerDoc = phoneSnap.empty ? null : phoneSnap.docs[0];
+  }
 
-      if (!isMatch) {
-        return reject(new Error('Invalid credentials.'));
-      }
+  if (!workerDoc) throw new Error('Worker not found');
+  const worker = workerDoc.data();
 
-      // Generate JWT
-      const token = jwt.sign(
-        {
-          id: worker.id,
-          email: worker.email,
-          role: 'worker',
-          profession: worker.profession  // ✅ Include profession here!
-        },
-        JWT_SECRET,
-        { expiresIn: '7d' }
-      );
-      
-      
-      // Remove sensitive data before sending back
-      delete worker.password;
-      delete worker.face_photo;
+  const isMatch = await bcrypt.compare(password, worker.password);
 
-      resolve({ worker, token });
-    });
-  });
+  if (!isMatch) {
+    throw new Error('Invalid credentials.');
+  }
+
+  // Return the worker data (or whatever you need)
+  return worker;
 }
 
 // Get worker profile by ID
 async function getWorkerProfile(db, workerId) {
-  return new Promise((resolve, reject) => {
-    const query = 'SELECT id, name, email, phone, address, profession, skills, experience, description, certifications, profile_photo, portfolio_files, rating, review_count, success_rate, is_available, latitude, longitude, completed_jobs, hourly_rate, bio, documents, availability FROM workers WHERE id = ?';
-    db.query(query, [workerId], (err, results) => {
-      if (err) {
-        console.error('Error fetching worker profile:', err);
-        return reject(new Error('Failed to fetch worker profile.'));
-      }
-      if (results.length === 0) {
-        return reject(new Error('Worker not found.'));
-      }
-      const worker = results[0];
-      // Parse JSON fields
-      let skills;
-      try {
-        skills = JSON.parse(worker.skills);
-        if (!Array.isArray(skills)) throw new Error();
-      } catch {
-        // Fallback: treat as comma-separated string
-        skills = worker.skills.split(',').map(s => s.trim());
-      }
-      worker.certifications = worker.certifications ? JSON.parse(worker.certifications) : [];
-      worker.portfolio_files = worker.portfolio_files ? JSON.parse(worker.portfolio_files) : [];
-      worker.documents = worker.documents ? JSON.parse(worker.documents) : [];
-      worker.availability = worker.availability ? JSON.parse(worker.availability) : {};
-
-      resolve(worker);
-    });
-  });
+  const doc = await db.collection('workers').doc(workerId).get();
+  if (!doc.exists) throw new Error('Worker not found');
+  return { id: doc.id, ...doc.data() };
 }
 
 // Get worker dashboard statistics
 async function getWorkerDashboardStats(db, workerId) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // Total Jobs
-      const totalJobsQuery = `SELECT COUNT(*) AS totalJobs FROM job_requests WHERE assignedWorkerId = ? AND status IN ('accepted', 'completed', 'in_progress')`;
-      const totalJobsResult = await new Promise((res, rej) => db.query(totalJobsQuery, [workerId], (err, result) => err ? rej(err) : res(result)));
-      const totalJobs = totalJobsResult[0].totalJobs;
+  // Count total jobs (accepted, completed, in_progress)
+  const jobsSnap = await db.collection('job_requests')
+    .where('assignedWorkerId', '==', workerId)
+    .where('status', 'in', ['accepted', 'completed', 'in_progress'])
+    .get();
+  const totalJobs = jobsSnap.size;
 
-      // Pending Jobs (assigned but not completed/cancelled)
-      const pendingJobsQuery = `SELECT COUNT(*) AS pendingJobs FROM job_requests WHERE assignedWorkerId = ? AND status = 'accepted'`;
-      const pendingJobsResult = await new Promise((res, rej) => db.query(pendingJobsQuery, [workerId], (err, result) => err ? rej(err) : res(result)));
-      const pendingJobs = pendingJobsResult[0].pendingJobs;
+  // Count pending jobs (accepted only)
+  const pendingSnap = await db.collection('job_requests')
+    .where('assignedWorkerId', '==', workerId)
+    .where('status', '==', 'accepted')
+    .get();
+  const pendingJobs = pendingSnap.size;
 
-      // Total Earnings (sum of hourlyRate * hours for completed jobs)
-      // This assumes you have a way to track hours/cost per job, or a fixed payment.
-      // For now, let's simulate or fetch a simple sum from a hypothetical 'earnings' or 'completed_jobs' table.
-      // If job_requests has a 'price' or 'total_amount' for completed jobs:
-      const totalEarningsQuery = `SELECT SUM(total_amount) AS totalEarnings FROM job_requests WHERE assignedWorkerId = ? AND status = 'completed'`;
-      const totalEarningsResult = await new Promise((res, rej) => db.query(totalEarningsQuery, [workerId], (err, result) => err ? rej(err) : res(result)));
-      const totalEarnings = totalEarningsResult[0].totalEarnings || 0;
-
-      resolve({
-        totalJobs,
-        pendingJobs,
-        totalEarnings
-      });
-    } catch (err) {
-      console.error('Error fetching worker dashboard stats:', err);
-      reject(new Error('Failed to fetch dashboard statistics.'));
-    }
+  // Sum total earnings for completed jobs
+  const completedSnap = await db.collection('job_requests')
+    .where('assignedWorkerId', '==', workerId)
+    .where('status', '==', 'completed')
+    .get();
+  let totalEarnings = 0;
+  completedSnap.forEach(doc => {
+    const data = doc.data();
+    totalEarnings += data.total_amount || 0;
   });
+
+  return {
+    totalJobs,
+    pendingJobs,
+    totalEarnings
+  };
 }
 
+// Get ongoing jobs for a worker
 async function getOngoingWorkerJobs(db, workerId) {
-  return new Promise((resolve, reject) => {
-    const query = `
-      SELECT id, service_type, description, address, date, time, status, total_amount, client_id
-      FROM job_requests
-      WHERE assignedWorkerId = ? AND status IN ('accepted', 'in_progress')
-      ORDER BY date ASC, time ASC
-    `;
-    db.query(query, [workerId], (err, results) => {
-      if (err) {
-        console.error('Error fetching ongoing worker jobs:', err);
-        return reject(new Error('Failed to fetch ongoing jobs.'));
-      }
-      resolve(results);
-    });
-  });
+  const snapshot = await db.collection('job_requests')
+    .where('assignedWorkerId', '==', workerId)
+    .where('status', 'in', ['accepted', 'in_progress'])
+    .orderBy('date', 'asc')
+    .orderBy('time', 'asc')
+    .get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
+// Get past jobs for a worker
 async function getPastWorkerJobs(db, workerId, { status, sortBy, order }) {
-  return new Promise((resolve, reject) => {
-    let query = `
-      SELECT id, service_type, description, address, date, time, status, total_amount, client_id
-      FROM job_requests
-      WHERE assignedWorkerId = ? AND status IN ('completed', 'cancelled')
-    `;
-    const queryParams = [workerId];
+  let query = db.collection('job_requests')
+    .where('assignedWorkerId', '==', workerId)
+    .where('status', 'in', ['completed', 'cancelled']);
 
-    if (status && (status === 'completed' || status === 'cancelled')) {
-      query += ` AND status = ?`;
-      queryParams.push(status);
-    }
+  if (status && (status === 'completed' || status === 'cancelled')) {
+    query = query.where('status', '==', status);
+  }
 
-    const validSortBy = ['date', 'total_amount', 'status'];
-    const validOrder = ['ASC', 'DESC'];
+  // Firestore requires orderBy fields to be indexed and present in the documents
+  const validSortBy = ['date', 'total_amount', 'status'];
+  const validOrder = ['asc', 'desc'];
+  let finalSortBy = 'date';
+  if (sortBy && validSortBy.includes(sortBy)) {
+    finalSortBy = sortBy;
+  }
+  let finalOrder = 'desc';
+  if (order && validOrder.includes(order.toLowerCase())) {
+    finalOrder = order.toLowerCase();
+  }
+  query = query.orderBy(finalSortBy, finalOrder);
 
-    let finalSortBy = 'date';
-    if (sortBy && validSortBy.includes(sortBy)) {
-      finalSortBy = sortBy;
-    }
+  const snapshot = await query.get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
 
-    let finalOrder = 'DESC';
-    if (order && validOrder.includes(order.toUpperCase())) {
-      finalOrder = order.toUpperCase();
-    }
+// Example: Get worker by email or phone (Firestore)
+async function getWorkerByEmailOrPhone(db, emailOrPhone) {
+  let snapshot = await db.collection('workers').where('email', '==', emailOrPhone).get();
+  let workerDoc = snapshot.empty ? null : snapshot.docs[0];
+  if (!workerDoc) {
+    snapshot = await db.collection('workers').where('phone', '==', emailOrPhone).get();
+    workerDoc = snapshot.empty ? null : snapshot.docs[0];
+  }
+  if (!workerDoc) throw new Error('Worker not found');
+  return workerDoc.data();
+}
 
-    query += ` ORDER BY ${finalSortBy} ${finalOrder}`;
+// Example: Add a new worker (Firestore)
+async function addWorker(db, workerData) {
+  await db.collection('workers').add(workerData);
+}
 
-    db.query(query, queryParams, (err, results) => {
-      if (err) {
-        console.error('Error fetching past worker jobs:', err);
-        return reject(new Error('Failed to fetch past jobs.'));
-      }
-      resolve(results);
-    });
-  });
+// Example: Get all workers (Firestore)
+async function getAllWorkers(db) {
+  const snapshot = await db.collection('workers').get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
 module.exports = {
@@ -281,5 +208,8 @@ module.exports = {
   getWorkerProfile,
   getWorkerDashboardStats,
   getOngoingWorkerJobs,
-  getPastWorkerJobs
+  getPastWorkerJobs,
+  getWorkerByEmailOrPhone,
+  addWorker,
+  getAllWorkers
 }; 
