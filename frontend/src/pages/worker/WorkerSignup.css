@@ -615,20 +615,22 @@
     color: #0a1a2f;
   }
   .form-group input[type="file"]::-webkit-file-upload-button {
-    margin-right: 10px;
-    border: none;
-    background: #e6ecf5;
+    background: transparent;
     color: #123459;
-    padding: 8px 14px;
-    border-radius: 6px;
+    border: 2px solid #123459;
+    border-radius: 8px;
+    padding: 10px 18px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
   }
   .form-group input[type="file"]::-webkit-file-upload-button:hover {
-    background: #d1e0f7;
-    color: #0a1a2f;
+    background: #f5f8ff;
+    color: #1a4c81;
+  }
+  .form-group input[type="file"] {
+    color: #123459;
   }
   .profession-cards {
     grid-template-columns: 1fr;

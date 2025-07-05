@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const authenticateToken = require('./authMiddleware'); // Adjust path if needed
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey';
 const db = require("../firebase"); // Firestore
+const { getFirestore } = require('firebase-admin/firestore');
 
 // Test endpoint to verify backend is working
 router.get('/test', (req, res) => {
@@ -236,48 +237,19 @@ router.get('/jobs/pending', authenticateToken, async (req, res) => {
   }
 });
 
-// GET /api/worker/search - public endpoint to search workers
+// GET /api/worker/search - fetch all workers
 router.get('/search', async (req, res) => {
-  let { service, location, gender, sort } = req.query;
-  let orderBy = 'name ASC';
-  if (sort === 'rating_desc') orderBy = 'rating DESC';
-  if (sort === 'rating_asc') orderBy = 'rating ASC';
-
-  // Build WHERE clause dynamically
-  let whereClauses = [];
-  let params = [];
-
-  if (service) {
-    // Match either profession or skills (skills is a JSON string)
-    whereClauses.push('(LOWER(profession) LIKE ? OR LOWER(skills) LIKE ?)');
-    params.push(`%${service.toLowerCase()}%`);
-    params.push(`%${service.toLowerCase()}%`);
+  try {
+    const snapshot = await db.collection('workers').get();
+    const workers = [];
+    snapshot.forEach(doc => {
+      workers.push({ id: doc.id, ...doc.data() });
+    });
+    res.json(workers);
+  } catch (error) {
+    console.error('Error fetching workers:', error);
+    res.status(500).json({ error: 'Failed to fetch workers' });
   }
-  if (location) {
-    whereClauses.push('LOWER(address) LIKE ?');
-    params.push(`%${location.toLowerCase()}%`);
-  }
-  if (gender) {
-    whereClauses.push('LOWER(gender) = ?');
-    params.push(gender.toLowerCase());
-  }
-
-  let where = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
-
-  const query = `
-    SELECT id, name, email, phone, address, profession, rating, reviewCount, successRate, isAvailable, profile_photo
-    FROM workers
-    ${where}
-    ORDER BY ${orderBy}
-  `;
-
-  db.query(query, params, (err, results) => {
-    if (err) {
-      console.error('Error fetching workers:', err);
-      return res.status(500).json({ message: 'Failed to fetch workers' });
-    }
-    res.json(results);
-  });
 });
 
 // Accept a job (Firestore)

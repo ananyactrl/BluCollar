@@ -6,9 +6,9 @@ import './WorkerMobile.css';
 import maidService from '../../assets/wmremove-transformed.jpeg';
 import plumberImage from '../../assets/wmremove-transformed (5).jpeg';
 import electricianImage from '../../assets/wmremove-transformed (2).jpeg';
-import heroImage1 from '../../assets/AdobeStock_431135906_Preview.jpeg';
-import heroImage2 from '../../assets/AdobeStock_458508034_Preview.jpeg';
-import heroImage3 from '../../assets/AdobeStock_845208776_Preview.jpeg';
+import heroImage1 from '../../assets/DeWatermark.ai_1751696171655.jpeg';
+import heroImage2 from '../../assets/DeWatermark.ai_1751696190350.jpeg';
+import heroImage3 from '../../assets/wmremove-transformed (6).jpeg';
 import cookingImage from '../../assets/wmremove-transformed (1).jpeg';
 import WorkerHeader from '../../components/WorkerHeader';
 import Footer from '../../components/Footer';
@@ -34,7 +34,7 @@ const WorkerLanding = () => {
   return (
     <>
       <WorkerHeader />
-      <div className="worker-landing-container" style={{ paddingTop: '60px' }}>
+      <div style={{ background: 'none', minHeight: '100vh', marginTop: 0, paddingTop: 0 }}>
         {/* Hero Section */}
         <section
           className="worker-hero"
@@ -65,36 +65,30 @@ const WorkerLanding = () => {
           </div>
         </section>
 
-        {/* Why Join Section */}
-        <section className="why-join-section">
-          <h2 className="section-title">{t.whyJoinTitle}</h2>
-          <div className="benefits-cards">
-            <div className="benefit-card">
-              <h3 className="benefit-title">{t.benefits.flexibleSchedule.title}</h3>
-              <p className="benefit-description">
-                {t.benefits.flexibleSchedule.description}
-              </p>
+        {/* Why Work With Us Section */}
+        <section className="why-work-section">
+          <h2 className="why-title">Why Work With Us?</h2>
+          <p className="why-subtitle">Join thousands of local service professionals who earn a living helping their community</p>
+          <div className="why-features">
+            <div className="why-feature-card">
+              <div className="why-feature-icon"><span role="img" aria-label="clock">🕒</span></div>
+              <h3>Work Your Hours</h3>
+              <p>Choose when and where you work. Perfect for part-time or full-time income.</p>
             </div>
-
-            <div className="benefit-card">
-              <h3 className="benefit-title">{t.benefits.steadyIncome.title}</h3>
-              <p className="benefit-description">
-                {t.benefits.steadyIncome.description}
-              </p>
+            <div className="why-feature-card">
+              <div className="why-feature-icon"><span role="img" aria-label="chart">📈</span></div>
+              <h3>Regular Work</h3>
+              <p>Get consistent job requests from verified customers in your neighborhood.</p>
             </div>
-
-            <div className="benefit-card">
-              <h3 className="benefit-title">{t.benefits.professionalGrowth.title}</h3>
-              <p className="benefit-description">
-                {t.benefits.professionalGrowth.description}
-              </p>
+            <div className="why-feature-card">
+              <div className="why-feature-icon"><span role="img" aria-label="star">⭐</span></div>
+              <h3>Build Your Reputation</h3>
+              <p>Earn ratings and reviews to attract more customers and higher-paying jobs.</p>
             </div>
-
-            <div className="benefit-card">
-              <h3 className="benefit-title">{t.benefits.supportSystem.title}</h3>
-              <p className="benefit-description">
-                {t.benefits.supportSystem.description}
-              </p>
+            <div className="why-feature-card">
+              <div className="why-feature-icon"><span role="img" aria-label="shield">🛡️</span></div>
+              <h3>We Support You</h3>
+              <p>Get help with customer issues, payments, and growing your service business.</p>
             </div>
           </div>
         </section>
@@ -103,9 +97,10 @@ const WorkerLanding = () => {
         <section className="worker-services">
           <h2 className="section-title">{t.services.title}</h2>
           <div className="service-cards">
-            <div className="service-card">
+            <div className="service-card maid">
               <div className="image-container">
                 <img src={maidService} alt="Maid" />
+                <div className="service-overlay"></div>
               </div>
               <h3>{t.services.maid.title}</h3>
               <p>{t.services.maid.description}</p>
@@ -117,9 +112,10 @@ const WorkerLanding = () => {
               </Link>
             </div>
 
-            <div className="service-card">
+            <div className="service-card plumbing">
               <div className="image-container">
                 <img src={plumberImage} alt="Plumbing" className="service-image" />
+                <div className="service-overlay"></div>
               </div>
               <h3>{t.services.plumbing.title}</h3>
               <p>{t.services.plumbing.description}</p>
@@ -131,9 +127,10 @@ const WorkerLanding = () => {
               </Link>
             </div>
 
-            <div className="service-card">
+            <div className="service-card electrical">
               <div className="image-container">
                 <img src={electricianImage} alt="Electrical" className="service-image" />
+                <div className="service-overlay"></div>
               </div>
               <h3>{t.services.electrical.title}</h3>
               <p>{t.services.electrical.description}</p>
@@ -146,9 +143,10 @@ const WorkerLanding = () => {
             </div>
 
             {/* Cook card */}
-            <div className="service-card">
+            <div className="service-card cooking">
               <div className="image-container">
                 <img src={cookingImage} alt="Cook" className="service-image" />
+                <div className="service-overlay"></div>
               </div>
               <h3>{t.services.cooking?.title || 'Cook'}</h3>
               <p>{t.services.cooking?.description || 'Register as a professional cook.'}</p>

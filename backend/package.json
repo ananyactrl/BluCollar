@@ -4,9 +4,9 @@
   "description": "Backend for Servlyn application",
   "main": "worker.js",
   "scripts": {
-    "start": "node worker.js",
-    "dev": "nodemon worker.js",
-    "testdb": "node dbTest.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    
   },
   "keywords": [],
   "author": "",

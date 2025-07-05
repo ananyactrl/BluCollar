@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaBars, FaChevronDown } from 'react-icons/fa';
 import { useLanguage } from './LanguageContext';
+import './WorkerHeader.css';
 
 // MobileHeader component for mobile view
 const MobileHeader = ({ onHamburgerClick, showProfileDropdown, workerUser, workerToken, profileDropdownRef }) => {
@@ -104,17 +105,17 @@ const WorkerHeader = () => {
       )}
       {/* Desktop Header */}
       <header className="worker-header desktop-header">
-        <div className="navbar-container">
-          <Link to="/" className="logo">BluCollar</Link>
-          <nav className="nav-links">
-            <Link to="/worker" className="nav-link">Home</Link>
-            <Link to="/worker/jobs" className="nav-link">See Job Requests</Link>
+        <div className="worker-navbar">
+          <Link to="/" className="worker-logo">BluCollar</Link>
+          <nav className="worker-nav">
+            <Link to="/worker" className="worker-nav-link">Home</Link>
+            <Link to="/worker/jobs" className="worker-nav-link">See Job Requests</Link>
           </nav>
-          <div className="nav-buttons">
+          <div className="worker-actions">
             {!workerToken && (
               <>
-                <Link to="/worker/login" className="header-btn header-btn-outline">Login</Link>
-                <Link to="/worker/signup" className="header-btn header-btn-solid">Join Us</Link>
+                <Link to="/worker/login" className="worker-btn worker-btn-outline">Login</Link>
+                <Link to="/worker/signup" className="worker-btn worker-btn-solid">Join Us</Link>
               </>
             )}
             {workerToken && (
@@ -199,11 +200,11 @@ const WorkerHeader = () => {
                 )}
               </div>
             )}
-            <div className="language-selector">
+            <div className="worker-lang">
               <select
                 value={language}
                 onChange={e => setLanguage(e.target.value)}
-                className="language-dropdown"
+                className="worker-lang-dropdown"
               >
                 <option value="english">English</option>
                 <option value="hindi">हिंदी</option>

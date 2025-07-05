@@ -430,4 +430,92 @@
     }
   }
 
+.worker-navbar {
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  margin: 0;
+  height: 64px; /* or auto */
+}
+
+.worker-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #123459;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.worker-nav {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.worker-nav-link {
+  font-size: 1.08rem;
+  color: #123459;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.worker-nav-link:hover {
+  background: #f1f8ff;
+  color: #1A4C81;
+}
+
+.worker-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-left: 2.5rem;
+}
+
+.worker-btn {
+  padding: 0.6rem 2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 120px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.worker-btn-outline {
+  background: #fff;
+  color: #123459;
+  border: 2px solid #123459;
+}
+
+.worker-btn-outline:hover {
+  background: #f1f8ff;
+  color: #123459;
+}
+
+.worker-btn-solid {
+  background: #123459;
+  color: #fff;
+  border: 2px solid #123459;
+}
+
+.worker-btn-solid:hover {
+  background: #1A4C81;
+  border-color: #1A4C81;
+}
   

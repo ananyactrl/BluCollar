@@ -118,7 +118,7 @@ export default function JobRequestForm() {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await fetch(`${API}/job-request`, {
+      const response = await fetch(`${API}/ai/job-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ export default function JobRequestForm() {
       try {
         const token = localStorage.getItem('token');
         if (!token) return;
-        const res = await axios.get(`${API}/my-bookings`, {
+        const res = await axios.get(`${API}/ai/my-bookings`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         // Find the first active request (pending or accepted)
