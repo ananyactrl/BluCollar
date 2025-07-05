@@ -191,6 +191,8 @@ router.post('/job-request', clientAuthenticateToken, jobRequestUpload.array('doc
   try {
     await db.collection('job_requests').add({
       ...jobData,
+      service_type: jobData.serviceType || jobData.service_type,
+      status: 'pending',
       createdAt: new Date()
     });
     res.status(201).json({ message: 'Job request submitted!' });

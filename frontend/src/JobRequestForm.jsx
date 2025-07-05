@@ -191,8 +191,8 @@ export default function JobRequestForm() {
         const res = await axios.get(`${API}/ai/my-bookings`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        // Find the first active request (pending or accepted)
-        const active = res.data.find(j => j.status === 'pending' || j.status === 'accepted');
+        // Find the first active request (pending or ongoing)
+        const active = res.data.find(j => j.status === 'pending' || j.status === 'ongoing');
         setActiveRequest(active || null);
       } catch (err) {
         setActiveRequest(null);

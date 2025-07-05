@@ -12,7 +12,7 @@ Modal.setAppElement('#root'); // For accessibility
 
 const STATUS_COLORS = {
   pending: '#f59e42',
-  accepted: '#1A4C81',
+  ongoing: '#1A4C81',
   completed: '#2ecc40',
   cancelled: '#dc2626',
 };
@@ -30,7 +30,7 @@ const CalendarView = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await axios.get(`${API_URL}/api/my-bookings`, { withCredentials: true });
+      const res = await axios.get(`${API_URL}/api/ai/my-bookings`, { withCredentials: true });
       setBookings(res.data);
     } catch (err) {
       setError('Failed to fetch bookings.');
@@ -141,7 +141,7 @@ const CalendarView = () => {
                 <strong>{b.service}</strong> at {b.time} <br />
                 Status: <span style={{ color: STATUS_COLORS[b.status] || '#123459' }}>{b.status}</span> <br />
                 {b.workerName && <>Worker: {b.workerName}<br /></>}
-                {b.status === 'pending' || b.status === 'accepted' ? (
+                {b.status === 'pending' || b.status === 'ongoing' ? (
                   <button className="cancel-btn" onClick={() => handleCancel(b.id)}>Cancel</button>
                 ) : null}
               </li>

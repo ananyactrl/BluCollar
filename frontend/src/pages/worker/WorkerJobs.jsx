@@ -179,7 +179,7 @@ function WorkerJobs() {
       });
 
       if (response.data.message) {
-        toast.success('Job accepted successfully!');
+        toast.success('Job started successfully!');
         fetchOngoingJobs();
         setActiveTab("ongoing");
       }
@@ -304,7 +304,7 @@ function WorkerJobs() {
                     </div>
                   </div>
                 )}
-                {job.status === 'accepted' && (
+                {job.status === 'ongoing' && (
                   <div className="job-actions">
                     <button className="complete-job-button" onClick={() => handleComplete(job.id)}>
                       Mark as Completed

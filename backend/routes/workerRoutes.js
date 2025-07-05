@@ -179,7 +179,7 @@ router.get('/jobs/ongoing', authenticateToken, async (req, res) => {
   try {
     const snapshot = await db.collection('job_requests')
       .where('assignedWorkerId', '==', workerId)
-      .where('status', 'in', ['accepted', 'ongoing'])
+      .where('status', '==', 'ongoing')
       .get();
     const jobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(jobs);
@@ -261,7 +261,7 @@ router.post('/worker/accept', authenticateToken, async (req, res) => {
     if (!jobDoc.exists || jobDoc.data().status !== 'pending') {
       return res.status(400).json({ message: 'Job not available' });
     }
-    await jobRef.update({ status: 'accepted', assignedWorkerId: workerId });
+    await jobRef.update({ status: 'ongoing', assignedWorkerId: workerId });
     res.json({ message: 'Job accepted!' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to accept job' });
@@ -338,6 +338,18 @@ router.post('/notify', async (req, res) => {
     });
     return res.json({ message: 'Notification sent to worker.' });
   });
+});
+
+// Toggle worker availability
+router.post('/availability', authenticateToken, async (req, res) => {
+  const { isAvailable } = req.body;
+  try {
+    const workerRef = db.collection('workers').doc(req.worker.id);
+    await workerRef.update({ isAvailable });
+    res.json({ message: 'Availability updated', isAvailable });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update availability' });
+  }
 });
 
 module.exports = router;

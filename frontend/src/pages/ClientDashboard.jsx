@@ -76,7 +76,7 @@ export default function ClientDashboard() {
                     return;
                 }
 
-                const response = await axios.get(`${API}/my-bookings`, {
+                const response = await axios.get(`${API}/ai/my-bookings`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

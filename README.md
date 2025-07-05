@@ -1,7 +1,6 @@
-
 # 🔧 BluCollar Hub
 
-A full-stack web platform connecting users with skilled blue-collar workers (like maids, plumbers, electricians) for on-demand, fair, and verified home services. Built with modern frontend and backend technologies for real-world deployment.
+A full-stack web platform connecting users with skilled blue-collar workers (maids, plumbers, electricians, and more) for on-demand, fair, and verified home services. Built with a modern, scalable tech stack and a custom, professional UI/UX.
 
 ---
 
@@ -14,67 +13,61 @@ A full-stack web platform connecting users with skilled blue-collar workers (lik
 ## 🛠️ Tech Stack
 
 ### ⚛️ Frontend
-
-- **React** (v19.0.0)
-- **Vite** (v6.2.0)
-- **React Router DOM** (v7.5.2)
-- **Axios** (v1.8.4)
-- **Tailwind CSS** (v4.1.4)
-- **React Icons** (v5.5.0)
-- **Framer Motion** (v11.0.8)
+- **React** (v19.x)
+- **Vite** (v6.x)
+- **React Router DOM** (v7.x)
+- **Axios** (v1.x)
+- **Tailwind CSS** (v4.x)
+- **React Icons** (v5.x)
+- **Framer Motion** (v11.x)
 - **AOS (Animate On Scroll)**
-- **GSAP** for advanced animations
+- **GSAP** (animations)
+- **Three.js**, **React Three Fiber**, **Drei** (3D/graphics)
+- **Socket.io-client** (real-time features)
+- **React Toastify** (notifications)
+- **React Modal** (modals)
+- **React Calendar** (calendar UI)
+- **Bootstrap** (v5.x, for some components)
+- **Dayjs** (date/time utils)
+- **jwt-decode** (JWT parsing)
 
-### 🗺️ Maps & Location
-
-- **Leaflet** (v1.9.4)
-- **React Leaflet** (v5.0.0)
-- **Google Maps API**
-
-### 🧠 3D & Graphics
-
-- **Three.js** (v0.176.0)
-- **React Three Fiber** (v9.1.2)
-- **React Three Drei** (v10.0.7)
+### 🎨 Modern UI/UX
+- Custom CSS for all layouts and components
+- Capsule-shaped buttons, responsive header, and navigation
+- Consistent design system across all pages
+- Mobile-first, fully responsive
 
 ---
 
 ### 🔙 Backend
-
-- **Node.js**
-- **Express.js** (v4.18.2)
-- **MySQL** (v2.18.1)
-
-### 🔐 Authentication & Security
-
-- **JWT** (jsonwebtoken v9.0.2)
-- **Bcrypt** (v5.1.1)
-- **CORS** (v2.8.5)
-
-### 🧰 Utilities
-
-- **Dotenv** for environment variables
-- **Nodemailer** (v6.9.7)
-- **Multer** for file uploads
-- **Axios** (used on both client & server)
+- **Node.js** (v18+)
+- **Express.js** (v4.x)
+- **Firebase Admin SDK** (Firestore/Realtime Database, Firebase Auth)
+- **Socket.io** (real-time communication)
+- **JWT** (jsonwebtoken v9.x)
+- **Bcrypt** (v5.x)
+- **CORS** (v2.x)
+- **Dotenv** (env vars)
+- **Nodemailer** (email)
+- **Multer** (file uploads)
 
 ---
 
 ### 🧪 Dev Tools
-
-- **Vite** for frontend dev
-- **Nodemon** for backend auto-reload
-- **ESLint** for linting
-- **PostCSS** for CSS processing
+- **Vite** (frontend dev/build)
+- **Nodemon** (backend auto-reload)
+- **ESLint** (linting)
+- **PostCSS** (CSS processing)
 
 ---
 
 ## 📂 Project Structure
 
 ```
-/frontend    → React + Tailwind + Vite app
-/backend     → Node.js + Express + MySQL API
+/signup1/frontend    → React + Vite + Tailwind app
+/signup1/backend     → Node.js + Express + Firebase API
 ```
+
 ---
 
 ## 📦 How to Run
@@ -82,15 +75,16 @@ A full-stack web platform connecting users with skilled blue-collar workers (lik
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/blu0617/BluCollar.git
-cd Servlyn1
+cd servlyn1
 ```
 
 ### 2. Setup Backend
 ```bash
-cd backend
+cd signup1/backend
 npm install
-npm run dev  # or node index.js
+npm run dev  # or npm start
 ```
+- Configure your Firebase credentials in `backend/firebase.js` and `backend/serviceAccountKey.json` as needed.
 
 ### 3. Setup Frontend
 ```bash
@@ -101,20 +95,30 @@ npm run dev
 
 ---
 
-## 📸 Screenshots
+## 🌐 Deployment
+- **Frontend:** Vercel (https://blucollar.vercel.app/)
+- **Backend:** (e.g. Render, Railway, or your own server)
 
+---
+
+## 📸 Screenshots
 > _(Add screenshots in a `/screenshots` folder and display them here)_
 
 ---
 
-## 📄 License
+## 🤝 Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
+---
+
+## 📄 License
 This project is licensed under the MIT License.
 
 ---
 
-## ✨ Author
-
-**Ananya Singh** ([@blu0617](https://github.com/blu0617))  
+## ✨ Author & Contact
+**Ananya Singh** ([LinkedIn](https://www.linkedin.com/in/ananya-singh-60a730372/))  
 MIT Academy of Engineering, 2025
+
+For questions, contact via LinkedIn or open an issue on GitHub.
 
