@@ -50,7 +50,7 @@ const Services = () => {
   return (
     <>
       <Header />
-      <div className="page-wrapper" style={{ paddingTop: '60px' }}>
+      <div className="page-wrapper">
         {/* Services Content */}
         <div className="services-container">
           <div className="services-header" data-aos="fade-right" data-aos-delay="100">

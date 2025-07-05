@@ -7,8 +7,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  /* Temporary borders for debugging */
-  border: 1px solid red; 
+  /* Remove border for production */
 }
 
 * {
@@ -29,8 +28,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  /* Temporary borders for debugging */
-  border: 2px solid green;
+  /* Remove border for production */
 }
 
 a {
@@ -49,8 +47,7 @@ ul {
   position: relative;
   overflow: hidden;
   background-color: #ffffff;
-  /* Temporary borders for debugging */
-  border: 3px solid blue;
+  /* Remove border for production */
 }
 
 /* Main Content */
@@ -2378,12 +2375,6 @@ ul {
   color: #123459;
   text-decoration: none;
   margin-left: 4px;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
 }
 
 .nav-link {
