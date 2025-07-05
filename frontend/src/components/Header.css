@@ -16,25 +16,25 @@
 }
 
 .navbar-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 3rem;
-  height: 80px;
-  background: #fff;
-  width: 100%;
-  margin: 0;
-  box-sizing: border-box;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 3rem !important;
+  height: 80px !important;
+  background: #fff !important;
+  width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  margin-right: auto;
-  min-width: 160px;
-  flex-shrink: 0;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+  margin-right: auto !important;
+  min-width: 160px !important;
+  flex-shrink: 0 !important;
 }
 
 .logo-dots {
@@ -55,9 +55,9 @@
 
 .brand-name {
   font-size: 1.3rem !important;
-  font-weight: 700;
-  color: #123459;
-  letter-spacing: 0.5px;
+  font-weight: 700 !important;
+  color: #123459 !important;
+  letter-spacing: 0.5px !important;
   margin-left: 0 !important;
 }
 
@@ -70,13 +70,13 @@
 }
 
 .nav-links {
-  display: flex;
-  align-items: center;
-  gap: 3rem !important;
-  flex: 1;
-  justify-content: center;
-  white-space: nowrap;
-  margin: 0 4rem;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5rem !important;
+  flex: 1 !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  margin: 0 4rem !important;
 }
 
 .nav-link {
@@ -94,51 +94,50 @@
 }
 
 .nav-buttons {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-shrink: 0;
-  min-width: 240px;
-  justify-content: flex-end;
-  margin-left: 7rem;
-  margin-right: 7rem;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.5rem !important;
+  flex-shrink: 0 !important;
+  min-width: 240px !important;
+  justify-content: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
 }
 
 .header-btn {
-  height: 46px;
-  min-width: 110px;
-  padding: 0.6rem 1.5rem;
-  font-size: 0.95rem;
-  border-radius: 23px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  box-sizing: border-box;
+  padding: 0.75rem 2rem !important;
+  border-radius: 9999px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: all 0.2s !important;
+  min-width: 120px !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  cursor: pointer !important;
 }
 
 .header-btn-outline {
-  color: #123459;
-  background: transparent;
+  color: #123459 !important;
+  background: transparent !important;
   border: 2px solid #123459 !important;
 }
 
 .header-btn-outline:hover {
-  background: #f5f8ff;
+  background: #f5f8ff !important;
 }
 
 .header-btn-solid {
-  background: #123459;
-  color: #fff;
-  border: none;
+  background: #123459 !important;
+  color: #fff !important;
+  border: none !important;
 }
 
 .header-btn-solid:hover {
-  background: #1A4C81;
+  background: #1A4C81 !important;
 }
 
 /* Mobile Header Styles */
