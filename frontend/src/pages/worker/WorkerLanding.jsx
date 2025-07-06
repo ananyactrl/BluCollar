@@ -13,6 +13,8 @@ import cookingImage from '../../assets/wmremove-transformed (1).jpeg';
 import WorkerHeader from '../../components/WorkerHeader';
 import Footer from '../../components/Footer';
 import { useLanguage } from '../../components/LanguageContext';
+import { getSocket } from '../../services/socketService'; // adjust path if needed
+import { toast } from 'react-toastify';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-fku9.onrender.com';
 
@@ -22,6 +24,7 @@ const WorkerLanding = () => {
   const { language } = useLanguage();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const t = translations[language];
+  const [bookingBanner, setBookingBanner] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,8 +34,29 @@ const WorkerLanding = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const socket = getSocket();
+    const workerUser = JSON.parse(localStorage.getItem('workerUser'));
+    if (workerUser?.id) {
+      socket.emit('join-room', `worker_${workerUser.id}`);
+    }
+    socket.on('direct-booking', (data) => {
+      setBookingBanner(data.message || 'You have a new booking request!');
+      toast.info(data.message || 'You have a new booking request!');
+    });
+    return () => {
+      socket.off('direct-booking');
+    };
+  }, []);
+
   return (
     <>
+      {bookingBanner && (
+        <div style={{background:'#123459',color:'#fff',padding:'1rem',textAlign:'center',position:'fixed',top:0,left:0,right:0,zIndex:1000}}>
+          <span>{bookingBanner}</span>
+          <button style={{marginLeft:'2rem',background:'none',border:'none',color:'#fff',fontWeight:'bold',fontSize:'1.2rem',cursor:'pointer'}} onClick={()=>setBookingBanner(null)}>&times;</button>
+        </div>
+      )}
       <WorkerHeader />
       <div style={{ background: 'none', minHeight: '100vh', marginTop: 0, paddingTop: 0 }}>
         {/* Hero Section */}
