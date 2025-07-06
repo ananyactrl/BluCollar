@@ -110,8 +110,8 @@ const FindWorkers = () => {
   // Book Now handler: send notification to worker
   const handleBookNow = async (worker) => {
     try {
-      // You may want to collect job details here, for now just send notification
-      await axios.post(`${API}/worker/notify`, { workerId: worker.id });
+      const user = JSON.parse(localStorage.getItem('user'));
+      await axios.post(`${API}/worker/notify`, { workerId: worker.id, clientName: user?.name });
       toast.success(`Notification sent to ${worker.name}!`);
     } catch (err) {
       toast.error('Failed to notify worker.');

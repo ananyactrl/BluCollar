@@ -195,6 +195,7 @@ router.get('/jobs/history', authenticateToken, async (req, res) => {
     const pastJobs = await getPastWorkerJobs(db, req.worker.id, { status, sortBy, order });
     res.json(pastJobs);
   } catch (error) {
+    console.error('Error fetching past jobs:', error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -318,7 +319,7 @@ router.get('/worker/:id', authenticateToken, async (req, res) => {
 
 // Add this endpoint for direct notification from Find Workers page
 router.post('/notify', async (req, res) => {
-  const { workerId } = req.body;
+  const { workerId, clientName } = req.body;
   if (!workerId) return res.status(400).json({ message: 'workerId required' });
 
   try {
@@ -329,7 +330,8 @@ router.post('/notify', async (req, res) => {
     // Emit notification via Socket.IO
     const io = req.app.get('io');
     io.to(`worker_${workerId}`).emit('direct-booking', {
-      message: `You have a new booking request!`
+      workerId,
+      message: `${clientName || 'A user'} sent a booking request!`
     });
     return res.json({ message: 'Notification sent to worker.' });
   } catch (err) {
