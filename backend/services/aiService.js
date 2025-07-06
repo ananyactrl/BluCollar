@@ -149,7 +149,10 @@ async function getPastWorkerJobs(db, workerId, { status, sortBy, order }) {
     query = query.where('status', '==', status);
   }
 
-  // Firestore requires orderBy fields to be indexed and present in the documents
+  const snapshot = await query.get();
+  let jobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  // Sort in-memory
   const validSortBy = ['date', 'total_amount'];
   const validOrder = ['asc', 'desc'];
   let finalSortBy = 'date';
@@ -160,10 +163,26 @@ async function getPastWorkerJobs(db, workerId, { status, sortBy, order }) {
   if (order && validOrder.includes(order.toLowerCase())) {
     finalOrder = order.toLowerCase();
   }
-  query = query.orderBy(finalSortBy, finalOrder);
 
-  const snapshot = await query.get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  jobs.sort((a, b) => {
+    let valA = a[finalSortBy];
+    let valB = b[finalSortBy];
+
+    if (finalSortBy === 'date') {
+      valA = new Date(a.date).getTime();
+      valB = new Date(b.date).getTime();
+    }
+
+    if (valA < valB) {
+      return finalOrder === 'asc' ? -1 : 1;
+    }
+    if (valA > valB) {
+      return finalOrder === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
+  return jobs;
 }
 
 // Example: Get worker by email or phone (Firestore)

@@ -12,8 +12,8 @@ const Header = () => {
     if (workerStored) return JSON.parse(workerStored);
     return null;
   });
-  const isWorker = !!localStorage.getItem('workerToken');
-  const isCustomer = !!localStorage.getItem('token');
+  const isWorker = !!localStorage.getItem('workerToken') && !localStorage.getItem('token');
+  const isCustomer = !!localStorage.getItem('token') && !localStorage.getItem('workerToken');
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
