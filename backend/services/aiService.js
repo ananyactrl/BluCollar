@@ -150,7 +150,7 @@ async function getPastWorkerJobs(db, workerId, { status, sortBy, order }) {
   }
 
   // Firestore requires orderBy fields to be indexed and present in the documents
-  const validSortBy = ['date', 'total_amount', 'status'];
+  const validSortBy = ['date', 'total_amount'];
   const validOrder = ['asc', 'desc'];
   let finalSortBy = 'date';
   if (sortBy && validSortBy.includes(sortBy)) {
