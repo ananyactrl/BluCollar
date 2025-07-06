@@ -56,15 +56,17 @@ function WorkerDashboard() {
   return (
     <div className="worker-landing">
       <WorkerHeader />
-      <main style={{ minHeight: '80vh' }}>
-        <section className="worker-hero" style={{ background: 'linear-gradient(120deg, #f5fafd 0%, #eaf6fb 100%)', color: '#123459', minHeight: 'unset', padding: '4rem 0 2rem' }}>
+      <main style={{ minHeight: '80vh', background: '#fafdff' }}>
+        <section className="worker-hero" style={{ background: 'linear-gradient(120deg, #fafdff 0%, #eaf6fb 100%)', color: '#123459', minHeight: 'unset', padding: '4rem 0 2rem' }}>
           <div className="hero-content" style={{ justifyContent: 'center', alignItems: 'center' }}>
             <div className="hero-text">
               <div className="title-container">
-                <h1>Welcome, {workerName}!</h1>
+                <h1 style={{ color: '#123459', textShadow: '0 2px 8px #eaf6fb' }}>Welcome, {workerName}!</h1>
               </div>
-              <p className="hero-description">Here's a summary of your activities and earnings.</p>
-              <button onClick={handleLogout} className="primary-button" style={{ marginTop: '1rem' }}>{t.logout_button}</button>
+              <p className="hero-description" style={{ color: '#567c8d' }}>Here's a summary of your activities and earnings.</p>
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+                <button onClick={handleLogout} className="primary-button">{t.logout_button}</button>
+              </div>
             </div>
           </div>
         </section>
@@ -72,26 +74,26 @@ function WorkerDashboard() {
         {error && <p className="error-message" style={{ color: 'red', textAlign: 'center', margin: '1rem 0' }}>{error}</p>}
 
         <section className="worker-benefits" style={{ padding: '2rem 0 0 0', background: 'none' }}>
-          <div className="section-title">Your Stats</div>
-          <div className="benefits-grid">
+          <div className="section-title" style={{ color: '#123459', fontWeight: 700, fontSize: '1.5rem', marginBottom: '1.5rem' }}>Your Stats</div>
+          <div className="benefits-grid" style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 2px 8px #eaf6fb', padding: '2rem 1rem', gap: '2rem' }}>
             <div className="benefit-card">
-              <h3 className="benefit-title">{t.total_jobs}</h3>
-              <p className="benefit-description">{jobStats.totalJobs}</p>
+              <h3 className="benefit-title" style={{ color: '#153a67' }}>{t.total_jobs}</h3>
+              <p className="benefit-description" style={{ color: '#123459', fontWeight: 700 }}>{jobStats.totalJobs}</p>
             </div>
             <div className="benefit-card">
-              <h3 className="benefit-title">{t.pending_jobs}</h3>
-              <p className="benefit-description">{jobStats.pendingJobs}</p>
+              <h3 className="benefit-title" style={{ color: '#153a67' }}>{t.pending_jobs}</h3>
+              <p className="benefit-description" style={{ color: '#123459', fontWeight: 700 }}>{jobStats.pendingJobs}</p>
             </div>
             <div className="benefit-card">
-              <h3 className="benefit-title">{t.total_earnings}</h3>
-              <p className="benefit-description">${jobStats.totalEarnings ? jobStats.totalEarnings.toFixed(2) : '0.00'}</p>
+              <h3 className="benefit-title" style={{ color: '#153a67' }}>{t.total_earnings}</h3>
+              <p className="benefit-description" style={{ color: '#123459', fontWeight: 700 }}>${jobStats.totalEarnings ? jobStats.totalEarnings.toFixed(2) : '0.00'}</p>
             </div>
           </div>
         </section>
 
         <section className="worker-services" style={{ padding: '2rem 0 0 0', background: 'none' }}>
-          <div className="section-title">Quick Actions</div>
-          <div className="hero-buttons" style={{ justifyContent: 'center', marginBottom: '2rem' }}>
+          <div className="section-title" style={{ color: '#123459', fontWeight: 700, fontSize: '1.5rem', marginBottom: '1.5rem' }}>Quick Actions</div>
+          <div className="hero-buttons" style={{ justifyContent: 'center', marginBottom: '2rem', background: '#fff', borderRadius: '16px', boxShadow: '0 2px 8px #eaf6fb', padding: '2rem 1rem', gap: '2rem' }}>
             <button className="primary-button" onClick={() => navigate('/worker/jobs')}>{t.view_my_jobs_button}</button>
             <button className="outline-button" onClick={() => navigate('/worker/account')}>{t.view_profile_button}</button>
           </div>
