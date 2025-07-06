@@ -51,6 +51,12 @@ io.on('connection', (socket) => {
     socket.join(profession);
     console.log(`👷 Joined room: ${profession}`);
   });
+  socket.on('join-worker-room', (workerId) => {
+    if (workerId) {
+      socket.join(`worker_${workerId}`);
+      console.log(`✅ Worker with ID ${workerId} joined their notification room.`);
+    }
+  });
   socket.on('disconnect', () => {
     console.log('❌ Client disconnected');
   });

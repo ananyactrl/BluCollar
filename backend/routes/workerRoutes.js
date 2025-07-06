@@ -253,7 +253,7 @@ router.get('/search', async (req, res) => {
 });
 
 // Accept a job (Firestore)
-router.post('/worker/accept', authenticateToken, async (req, res) => {
+router.post('/accept', authenticateToken, async (req, res) => {
   const { jobId, workerId } = req.body;
   try {
     const jobRef = db.collection('job_requests').doc(jobId);
@@ -329,7 +329,6 @@ router.post('/notify', async (req, res) => {
     // Emit notification via Socket.IO
     const io = req.app.get('io');
     io.to(`worker_${workerId}`).emit('direct-booking', {
-      workerId,
       message: `You have a new booking request!`
     });
     return res.json({ message: 'Notification sent to worker.' });

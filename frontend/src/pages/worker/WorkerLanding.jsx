@@ -38,7 +38,7 @@ const WorkerLanding = () => {
     const socket = getSocket();
     const workerUser = JSON.parse(localStorage.getItem('workerUser'));
     if (workerUser?.id) {
-      socket.emit('join-room', `worker_${workerUser.id}`);
+      socket.emit('join-worker-room', workerUser.id);
     }
     socket.on('direct-booking', (data) => {
       setBookingBanner(data.message || 'You have a new booking request!');

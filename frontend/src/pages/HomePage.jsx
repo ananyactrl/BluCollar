@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../index.css';
-import { FaUserShield, FaBolt, FaTag, FaCheckCircle, FaTools, FaHandshake, FaChartLine, FaUsers, FaCalendarCheck, FaUserCog, FaTruckMoving, FaCommentDots, FaUser, FaCamera, FaRobot, FaExclamationTriangle, FaTruck, FaRegCommentDots } from 'react-icons/fa';
+import { FaUserShield, FaBolt, FaTag, FaCheckCircle, FaTools, FaHandshake, FaChartLine, FaUsers, FaCalendarCheck, FaUserCog, FaTruckMoving, FaCommentDots, FaUser, FaCamera, FaRobot, FaExclamationTriangle, FaTruck, FaRegCommentDots, FaHome, FaSpa, FaLock } from 'react-icons/fa';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { gsap } from 'gsap';
@@ -435,6 +435,28 @@ const HomePage = () => {
           </svg>
         </div>
       </div>
+      <footer className="mobile-footer">
+        <Link to="/" className="mobile-footer-item active">
+          <span className="uc-logo">UC</span>
+          <span className="footer-item-label">UC</span>
+        </Link>
+        <Link to="/services" className="mobile-footer-item">
+          <FaSpa size={22} />
+          <span className="footer-item-label">Beauty</span>
+        </Link>
+        <Link to="/" className="mobile-footer-item">
+          <FaHome size={22} />
+          <span className="footer-item-label">Homes</span>
+        </Link>
+        <Link to="/services" className="mobile-footer-item">
+          <FaLock size={22} />
+          <span className="footer-item-label">Native</span>
+        </Link>
+        <Link to="/profile" className="mobile-footer-item">
+          <FaUser size={22} />
+          <span className="footer-item-label">Account</span>
+        </Link>
+      </footer>
     </>
   );
 }

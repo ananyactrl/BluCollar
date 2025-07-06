@@ -130,29 +130,30 @@ function WorkerJobs() {
   };
 
   const getCoordinates = async (address) => {
-    return new Promise((resolve) => {
-      if (!address || address === 'N/A') {
-        setMapError('No valid address provided for this job.');
-        resolve(null);
-        return;
-      }
-      if (!window.google || !window.google.maps) {
-        setMapError('Google Maps library not loaded. Check your API key and internet connection.');
-        resolve(null);
-        return;
-      }
+    if (!address || address.trim() === 'N/A' || address.trim().length < 5) {
+      setMapError('No valid address provided for this job.');
+      return null;
+    }
+    if (typeof window.google === 'undefined' || typeof window.google.maps === 'undefined') {
+      setMapError('Google Maps has not loaded. Please check your internet connection and API key.');
+      return null;
+    }
+    try {
       const geocoder = new window.google.maps.Geocoder();
-      geocoder.geocode({ address }, (results, status) => {
-        if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
-          setMapError('');
-          const location = results[0].geometry.location;
-          resolve({ lat: location.lat(), lng: location.lng() });
-        } else {
-          setMapError(`Geocoding failed: ${status}. Address: ${address}`);
-          resolve(null);
-        }
-      });
-    });
+      const results = await geocoder.geocode({ address });
+      if (results && results.length > 0) {
+        const location = results[0].geometry.location;
+        setMapError(''); // Clear previous errors
+        return { lat: location.lat(), lng: location.lng() };
+      } else {
+        setMapError(`Could not find coordinates for: ${address}.`);
+        return null;
+      }
+    } catch (error) {
+      setMapError(`Geocoding error: ${error.message}. Please try again.`);
+      console.error("Geocoding error:", error);
+      return null;
+    }
   };
 
   const haversineDistance = (lat1, lon1, lat2, lon2) => {
@@ -177,7 +178,7 @@ function WorkerJobs() {
         return;
       }
       const response = await axios.post(
-        `${API}/worker/accept`,
+        `${API}/api/worker/accept`,
         { jobId, workerId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
