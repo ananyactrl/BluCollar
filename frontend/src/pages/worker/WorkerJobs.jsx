@@ -170,22 +170,23 @@ function WorkerJobs() {
   const handleAccept = async (jobId) => {
     try {
       const token = localStorage.getItem('workerToken');
-      if (!token) {
-        toast.error('Please log in to accept jobs.');
+      const workerUser = JSON.parse(localStorage.getItem('workerUser'));
+      const workerId = workerUser?.id;
+      if (!token || !workerId) {
+        toast.error('Please log in as a worker.');
         return;
       }
-      const response = await axios.post(`${API}/api/worker/accept`, { jobId }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (response.data.message) {
-        toast.success('Job started successfully!');
-        fetchOngoingJobs();
-        setActiveTab("ongoing");
-      }
-    } catch (error) {
-      console.error('Error accepting job:', error);
-      toast.error(error.response?.data?.message || 'Failed to accept job. Please try again.');
+      const response = await axios.post(
+        `${API}/worker/accept`,
+        { jobId, workerId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success(response.data.message || 'Job accepted!');
+      fetchOngoingJobs();
+      setActiveTab("ongoing");
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to accept job. Please try again.');
+      console.error('Accept job error:', err);
     }
   };
 

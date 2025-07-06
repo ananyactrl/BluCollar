@@ -6,6 +6,8 @@ import { translations } from '../../locales/workerDashboard';
 import WorkerHeader from '../../components/WorkerHeader';
 import Footer from '../../components/Footer';
 import './WorkerLanding.css';
+import { getSocket } from '../../services/socketService';
+import { toast } from 'react-toastify';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
@@ -47,6 +49,20 @@ function WorkerDashboard() {
     };
     fetchWorkerData();
   }, [navigate]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    const workerUser = JSON.parse(localStorage.getItem('workerUser'));
+    if (workerUser?.id) {
+      socket.emit('join-room', `worker_${workerUser.id}`);
+    }
+    socket.on('direct-booking', (data) => {
+      toast.info(data.message || 'You have a new booking request!');
+    });
+    return () => {
+      socket.off('direct-booking');
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('workerToken');

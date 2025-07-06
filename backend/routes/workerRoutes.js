@@ -321,15 +321,11 @@ router.post('/notify', async (req, res) => {
   const { workerId } = req.body;
   if (!workerId) return res.status(400).json({ message: 'workerId required' });
 
-  db.query('SELECT * FROM workers WHERE id = ?', [workerId], (err, results) => {
-    if (err) {
-      console.error('Error finding worker:', err);
-      return res.status(500).json({ message: 'Database error' });
-    }
-    if (!results || results.length === 0) {
+  try {
+    const workerDoc = await db.collection('workers').doc(workerId).get();
+    if (!workerDoc.exists) {
       return res.status(404).json({ message: 'Worker not found' });
     }
-    const worker = results[0];
     // Emit notification via Socket.IO
     const io = req.app.get('io');
     io.to(`worker_${workerId}`).emit('direct-booking', {
@@ -337,7 +333,10 @@ router.post('/notify', async (req, res) => {
       message: `You have a new booking request!`
     });
     return res.json({ message: 'Notification sent to worker.' });
-  });
+  } catch (err) {
+    console.error('Error finding worker:', err);
+    return res.status(500).json({ message: 'Database error' });
+  }
 });
 
 // Toggle worker availability

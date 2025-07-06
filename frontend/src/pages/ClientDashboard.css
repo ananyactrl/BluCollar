@@ -228,4 +228,7 @@
     .dashboard-username {
         margin-right: 0;
     }
+    .bookings-list {
+        grid-template-columns: 1fr !important;
+    }
 } 
