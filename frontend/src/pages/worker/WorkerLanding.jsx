@@ -25,6 +25,11 @@ const WorkerLanding = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const t = translations[language];
   const [bookingBanner, setBookingBanner] = useState(null);
+  const [jobStats, setJobStats] = useState({
+    totalJobs: 0,
+    completedJobs: 0,
+    pendingJobs: 0
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -37,27 +42,87 @@ const WorkerLanding = () => {
   useEffect(() => {
     const socket = getSocket();
     const workerUser = JSON.parse(localStorage.getItem('workerUser'));
+    
     if (workerUser?.id) {
       socket.emit('join-worker-room', workerUser.id);
+      
+      // Fetch worker stats
+      const fetchStats = async () => {
+        try {
+          const response = await axios.get(`${API}/worker/stats/${workerUser.id}`);
+          setJobStats(response.data);
+        } catch (err) {
+          console.error('Error fetching stats:', err);
+        }
+      };
+      fetchStats();
     }
-    socket.on('direct-booking', (data) => {
-      setBookingBanner(data.message || 'You have a new booking request!');
-      toast.info(data.message || 'You have a new booking request!');
+
+    // Persistent notification logic
+    // Load unseen bookings from localStorage
+    const stored = localStorage.getItem('unseenBookings');
+    if (stored) {
+      setBookingBanner(JSON.parse(stored)[0]?.message || null);
+    }
+
+    socket.on('booking-request', (data) => {
+      setBookingBanner(`${data.customerName} has requested your service!`);
+      toast.info(`New booking request from ${data.customerName}!`, {
+        position: "top-right",
+        autoClose: 5000
+      });
+      // Save to localStorage for persistence
+      const prev = JSON.parse(localStorage.getItem('unseenBookings') || '[]');
+      const updated = [...prev, data];
+      localStorage.setItem('unseenBookings', JSON.stringify(updated));
     });
+
     return () => {
-      socket.off('direct-booking');
+      socket.off('booking-request');
     };
   }, []);
+
+  // Mark notification as seen
+  const handleCloseBanner = () => {
+    setBookingBanner(null);
+    // Remove the first unseen booking
+    const prev = JSON.parse(localStorage.getItem('unseenBookings') || '[]');
+    const updated = prev.slice(1);
+    localStorage.setItem('unseenBookings', JSON.stringify(updated));
+  };
+
+  // Add this section in your JSX where appropriate
+  const StatsSection = () => (
+    <div className="worker-stats-section">
+      <h2>Your Statistics</h2>
+      <div className="stats-grid">
+        <div className="stat-card">
+          <h3>Total Jobs</h3>
+          <p>{jobStats.totalJobs}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Completed Jobs</h3>
+          <p>{jobStats.completedJobs}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Pending Jobs</h3>
+          <p>{jobStats.pendingJobs}</p>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <>
       {bookingBanner && (
-        <div style={{background:'#123459',color:'#fff',padding:'1rem',textAlign:'center',position:'fixed',top:0,left:0,right:0,zIndex:1000}}>
+        <div className="booking-banner">
           <span>{bookingBanner}</span>
-          <button style={{marginLeft:'2rem',background:'none',border:'none',color:'#fff',fontWeight:'bold',fontSize:'1.2rem',cursor:'pointer'}} onClick={()=>setBookingBanner(null)}>&times;</button>
+          <button onClick={handleCloseBanner}>&times;</button>
         </div>
       )}
       <WorkerHeader />
+      {/* Add StatsSection after the hero section */}
+      <StatsSection />
       <div style={{ background: 'none', minHeight: '100vh', marginTop: 0, paddingTop: 0 }}>
         {/* Hero Section */}
         <section
@@ -189,4 +254,4 @@ const WorkerLanding = () => {
   );
 };
 
-export default WorkerLanding; 
+export default WorkerLanding;

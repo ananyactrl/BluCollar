@@ -120,10 +120,12 @@ async function getWorkerDashboardStats(db, workerId) {
     const data = doc.data();
     totalEarnings += data.total_amount || 0;
   });
+  const completedJobs = completedSnap.size;
 
   return {
     totalJobs,
     pendingJobs,
+    completedJobs,
     totalEarnings
   };
 }

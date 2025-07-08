@@ -191,6 +191,11 @@ function WorkerJobs() {
     }
   };
 
+  // Add a custom event to notify dashboard to refetch stats
+  const notifyDashboardStatsUpdate = () => {
+    window.dispatchEvent(new Event('worker-dashboard-stats-update'));
+  };
+
   const handleComplete = async (jobId) => {
     try {
       const token = localStorage.getItem('workerToken');
@@ -200,8 +205,9 @@ function WorkerJobs() {
       toast.success('Job marked as completed!');
       fetchOngoingJobs();
       setActiveTab('history');
+      notifyDashboardStatsUpdate(); // Notify dashboard to refetch stats
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to mark job as completed.');
+      toast.error(error.response?.data?.message || 'Failed to complete job.');
     }
   };
 

@@ -7,7 +7,7 @@ import 'aos/dist/aos.css';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import axios from 'axios';
-import Header from '../components/Header';
+// Remove: import Header from '../components/Header';
 // Import your images
 import cookingImg from '../assets/wmremove-transformed (1).jpeg';
 import maidImg from '../assets/wmremove-transformed.jpeg';
@@ -15,6 +15,9 @@ import electricianImg from '../assets/wmremove-transformed (2).jpeg';
 import plumberImg from '../assets/wmremove-transformed (5).jpeg';
 import WorkerMatching from '../components/WorkerMatching';
 import JobLocationMap from '../JobLocationMap';
+import MobileFooter from '../components/MobileFooter';
+import { useAuth } from '../context/AuthContext';
+import Header from '../components/Header';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -81,7 +84,7 @@ const HomePage = () => {
   const statsRefs = useRef([]);
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [isEmergencyTriggered, setIsEmergencyTriggered] = useState(false);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { user } = useAuth();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -209,7 +212,7 @@ const HomePage = () => {
   return (
     <>
       <Header />
-      <div className="home-container">
+      <div className="home-container" style={{ paddingBottom: '80px' }}>
         {/* Emergency Button */}
         <button
           className={`emergency-button ${isEmergencyTriggered ? 'triggered' : ''}`}
@@ -414,7 +417,7 @@ const HomePage = () => {
             <p>&copy; {new Date().getFullYear()} BluCollar. All rights reserved.</p>
             <div className="footer-credit">
               <span>
-                Project by <span className="footer-credit-name">Ananya Singh</span>
+                Developed by <span className="footer-credit-name">Ananya Singh</span>
               </span>
               <div className="footer-credit-icons">
                 <a href="https://github.com/ananyactrl/BluCollar" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
@@ -435,28 +438,7 @@ const HomePage = () => {
           </svg>
         </div>
       </div>
-      <footer className="mobile-footer">
-        <Link to="/" className="mobile-footer-item active">
-          <span className="uc-logo">UC</span>
-          <span className="footer-item-label">UC</span>
-        </Link>
-        <Link to="/services" className="mobile-footer-item">
-          <FaSpa size={22} />
-          <span className="footer-item-label">Beauty</span>
-        </Link>
-        <Link to="/" className="mobile-footer-item">
-          <FaHome size={22} />
-          <span className="footer-item-label">Homes</span>
-        </Link>
-        <Link to="/services" className="mobile-footer-item">
-          <FaLock size={22} />
-          <span className="footer-item-label">Native</span>
-        </Link>
-        <Link to="/profile" className="mobile-footer-item">
-          <FaUser size={22} />
-          <span className="footer-item-label">Account</span>
-        </Link>
-      </footer>
+      <MobileFooter />
     </>
   );
 }

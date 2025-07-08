@@ -117,11 +117,18 @@ export default function ClientDashboard() {
         socket.on('job-cancelled', (data) => {
             toast.warning(data.message || 'A worker has cancelled your job!');
         });
+        // Listen for job status update and redirect if ongoing
+        socket.on('job-status-update', (data) => {
+            if (data.status === 'ongoing' && data.jobId) {
+                navigate(`/job-in-progress/${data.jobId}`);
+            }
+        });
         return () => {
             socket.off('job-accepted');
             socket.off('job-cancelled');
+            socket.off('job-status-update');
         };
-    }, [user]);
+    }, [user, navigate]);
 
     if (loading) {
         return <div className="loading-screen">Loading your bookings...</div>;
@@ -130,6 +137,41 @@ export default function ClientDashboard() {
     if (error) {
         return <div className="error-screen">{error}</div>;
     }
+
+    const handleCancelBooking = async (bookingId) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post(`${API}/ai/job-request/${bookingId}/cancel`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            // Update the local state to reflect the cancellation
+            setUpcomingBookings(prevBookings => 
+                prevBookings.filter(booking => booking.id !== bookingId)
+            );
+            setPastBookings(prevBookings => [
+                ...prevBookings,
+                ...upcomingBookings.filter(booking => booking.id === bookingId)
+                    .map(booking => ({ ...booking, status: 'cancelled' }))
+            ]);
+            
+            toast.success('Booking cancelled successfully');
+        } catch (err) {
+            toast.error('Failed to cancel booking. Please try again.');
+            console.error(err);
+        }
+    };
+
+    const handlePayment = async (booking) => {
+        try {
+            // Here you would integrate with your payment gateway
+            // For example, redirect to a payment page or open a payment modal
+            window.open(`/payment?bookingId=${booking.id}&amount=${booking.amount}`, '_blank');
+        } catch (err) {
+            toast.error('Payment initiation failed. Please try again.');
+            console.error(err);
+        }
+    };
 
     return (
         <div className="client-dashboard-container">
@@ -172,10 +214,25 @@ export default function ClientDashboard() {
                                         <p><strong>Worker:</strong> {booking.workerName || 'Pending Assignment'}</p>
                                         <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()} at {booking.time}</p>
                                         <p><strong>Status:</strong> <span className={`status ${booking.status}`}>{booking.status}</span></p>
+                                        <p><strong>Amount:</strong> ₹{booking.amount || 'To be determined'}</p>
                                     </div>
                                     <div className="booking-actions">
-                                        <button className="btn-secondary">Reschedule</button>
-                                        <button className="btn-danger">Cancel</button>
+                                        {booking.status === 'pending' && (
+                                            <button 
+                                                className="btn-danger"
+                                                onClick={() => handleCancelBooking(booking.id)}
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                        {booking.status === 'confirmed' && !booking.isPaid && (
+                                            <button 
+                                                className="btn-primary"
+                                                onClick={() => handlePayment(booking)}
+                                            >
+                                                Pay Now
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             ))
@@ -216,4 +273,4 @@ export default function ClientDashboard() {
             </main>
         </div>
     );
-} 
+}

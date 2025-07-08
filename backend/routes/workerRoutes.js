@@ -263,6 +263,15 @@ router.post('/accept', authenticateToken, async (req, res) => {
       return res.status(400).json({ message: 'Job not available' });
     }
     await jobRef.update({ status: 'ongoing', assignedWorkerId: workerId });
+    // Emit socket event to customer
+    const io = req.app.get('io');
+    const customerId = jobDoc.data().customerId || jobDoc.data().clientId;
+    if (customerId) {
+      io.to(`client_${customerId}`).emit('job-status-update', {
+        jobId,
+        status: 'ongoing',
+      });
+    }
     res.json({ message: 'Job accepted!' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to accept job' });
@@ -286,7 +295,17 @@ router.post('/jobs/complete', authenticateToken, async (req, res) => {
   const { jobId } = req.body;
   try {
     const jobRef = db.collection('job_requests').doc(jobId);
+    const jobDoc = await jobRef.get();
     await jobRef.update({ status: 'completed' });
+    // Emit socket event to customer
+    const io = req.app.get('io');
+    const customerId = jobDoc.data().customerId || jobDoc.data().clientId;
+    if (customerId) {
+      io.to(`client_${customerId}`).emit('job-status-update', {
+        jobId,
+        status: 'completed',
+      });
+    }
     res.json({ message: 'Job marked as completed!' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to complete job' });
@@ -298,7 +317,17 @@ router.post('/jobs/cancel', authenticateToken, async (req, res) => {
   const { jobId, reason } = req.body;
   try {
     const jobRef = db.collection('job_requests').doc(jobId);
+    const jobDoc = await jobRef.get();
     await jobRef.update({ status: 'cancelled', cancelReason: reason });
+    // Emit socket event to customer
+    const io = req.app.get('io');
+    const customerId = jobDoc.data().customerId || jobDoc.data().clientId;
+    if (customerId) {
+      io.to(`client_${customerId}`).emit('job-status-update', {
+        jobId,
+        status: 'cancelled',
+      });
+    }
     res.json({ message: 'Job cancelled!' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to cancel job' });

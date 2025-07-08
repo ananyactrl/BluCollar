@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Services.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+import MobileFooter from '../components/MobileFooter';
+import Header from '../components/Header';
 
 const handleButtonRipple = (e) => {
   const button = e.currentTarget;
@@ -49,8 +50,7 @@ const Services = () => {
 
   return (
     <>
-      <Header />
-      <div className="page-wrapper">
+      <div className="page-wrapper" style={{ paddingBottom: '80px' }}>
         {/* Services Content */}
         <div className="services-container">
           <div className="services-header" data-aos="fade-right" data-aos-delay="100">
@@ -187,6 +187,7 @@ const Services = () => {
         </div>
         <Footer />
       </div>
+      <MobileFooter />
     </>
   );
 };

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './AccountSettings.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import CalendarView from './CalendarView';
+import { useAuth } from '../context/AuthContext';
+import MobileFooter from '../components/MobileFooter';
 import Header from '../components/Header';
+
 
 // --- SVG Icons ---
 const BookingsIcon = () => (
@@ -27,18 +30,15 @@ const PaymentIcon = () => (
 );
 
 const AccountSettings = () => {
-    const [user, setUser] = useState(null);
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [showCalendar, setShowCalendar] = useState(false);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        } else {
+        if (!user) {
             navigate('/login');
         }
-    }, [navigate]);
+    }, [user, navigate]);
 
     const getInitials = (name) => {
         if (!name) return '';
@@ -57,7 +57,7 @@ const AccountSettings = () => {
     return (
         <>
             <Header />
-            <div className="account-settings-container" style={{ paddingTop: '60px' }}>
+            <div className="account-settings-container" style={{ paddingTop: '60px', paddingBottom: '80px' }}>
                 <div className="account-settings-wrapper">
                     <aside className="sidebar">
                         <div className="sidebar-header">
@@ -142,6 +142,9 @@ const AccountSettings = () => {
                 </div>
                 <footer className="footer">
                   <div className="footer-bottom">
+                    <p style={{ margin: 0, fontSize: 15, color: '#123459', fontWeight: 500 }}>
+                      © {new Date().getFullYear()} BluCollar. All rights reserved.
+                    </p>
                     <div className="footer-credit">
                       <span>
                         Developed by <span className="footer-credit-name">Ananya Singh</span>
@@ -158,6 +161,7 @@ const AccountSettings = () => {
                   </div>
                 </footer>
             </div>
+            <MobileFooter />
         </>
     );
 };

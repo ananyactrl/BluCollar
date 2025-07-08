@@ -51,12 +51,6 @@ io.on('connection', (socket) => {
     socket.join(profession);
     console.log(`👷 Joined room: ${profession}`);
   });
-  socket.on('join-worker-room', (workerId) => {
-    if (workerId) {
-      socket.join(`worker_${workerId}`);
-      console.log(`✅ Worker with ID ${workerId} joined their notification room.`);
-    }
-  });
   socket.on('disconnect', () => {
     console.log('❌ Client disconnected');
   });
@@ -64,6 +58,23 @@ io.on('connection', (socket) => {
     socket.join(`job_${job_id}`);
   });
   // You can add more socket events as needed
+});
+
+io.on('connection', (socket) => {
+  console.log('🔌 Client connected via Socket.IO');
+  
+  socket.on('join-worker-room', (workerId) => {
+    socket.join(`worker_${workerId}`);
+    console.log(`👷 Worker joined room: worker_${workerId}`);
+  });
+
+  socket.on('book-worker', ({ workerId, customerName }) => {
+    io.to(`worker_${workerId}`).emit('booking-request', {
+      message: `${customerName} wants to book your service!`,
+      customerName,
+      timestamp: new Date()
+    });
+  });
 });
 
 // --- ROUTES ---
@@ -97,7 +108,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`🚀 Server is live on port ${PORT}`);
 });

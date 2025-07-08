@@ -4,11 +4,13 @@ import axios from 'axios';
 import './FindWorkers.css';
 import { FaStar, FaMapMarkerAlt, FaBriefcase, FaFilter } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import Header from '../components/Header';
 import WorkerHeader from '../components/WorkerHeader';
 import Footer from '../components/Footer';
+import MobileFooter from '../components/MobileFooter';
 import { getReviewSummary } from '../services/reviewService';
-import { getToken } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
+import { getSocket } from '../services/socketService';
+import Header from '../components/Header';
 
 // Better API URL handling with fallback
 const getApiUrl = () => {
@@ -33,6 +35,7 @@ const FindWorkers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [workerRatings, setWorkerRatings] = useState({});
+  const { user } = useAuth();
 
   // Search and filter states
   const [service, setService] = useState(query.get('service') || '');
@@ -77,7 +80,7 @@ const FindWorkers = () => {
 
   useEffect(() => {
     if (workers.length === 0) return;
-    const token = getToken();
+    const token = user?.token; // Use user from context
     const fetchRatings = async () => {
       const ratingsObj = {};
       await Promise.all(workers.map(async (worker) => {
@@ -107,21 +110,41 @@ const FindWorkers = () => {
     fetchWorkers();
   };
 
-  // Book Now handler: send notification to worker
+  // Book Now handler: send notification to worker and create job request
   const handleBookNow = async (worker) => {
     try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      await axios.post(`${API}/worker/notify`, { workerId: worker.id, clientName: user?.name });
-      toast.success(`Notification sent to ${worker.name}!`);
+      if (!user) {
+        toast.error('Please login to book a service');
+        return;
+      }
+
+      // Create job request
+      const jobData = {
+        workerId: worker.id,
+        clientId: user.id,
+        clientName: user.name,
+        status: 'pending',
+        service: worker.profession,
+        date: new Date().toISOString(),
+      };
+
+      const response = await axios.post(`${API}/job-requests`, jobData);
+      
+      // Emit socket event for real-time notification
+      const socket = getSocket();
+      socket.emit('book-worker', { workerId: worker.id, customerName: user.name });
+      
+      toast.success('Service request sent successfully!');
     } catch (err) {
-      toast.error('Failed to notify worker.');
+      toast.error('Failed to send service request. Please try again.');
+      console.error('Booking error:', err);
     }
   };
 
   return (
     <>
       <Header />
-      <div className="find-workers-container" style={{ paddingTop: '100px' }}>
+      <div className="find-workers-container" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
         <div className="container">
           <header className="search-header">
             <h1>Find the Right Professional</h1>
@@ -234,9 +257,10 @@ const FindWorkers = () => {
           </main>
         </div>
         <Footer />
+        <MobileFooter />
       </div>
     </>
   );
 };
 
-export default FindWorkers; 
+export default FindWorkers;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
-const JobLocationMap = ({ height = '320px' }) => {
+const JobLocationMap = ({ lat, lng, height = '320px', name }) => {
   const containerStyle = { width: '100%', height };
   const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
   const DEFAULT_CENTER = { lat: 28.6139, lng: 77.2090 }; // New Delhi as fallback
@@ -15,7 +15,7 @@ const JobLocationMap = ({ height = '320px' }) => {
   const [geoError, setGeoError] = useState(null);
 
   useEffect(() => {
-    if (navigator.geolocation) {
+    if ((!lat || !lng) && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setUserLocation({
@@ -28,20 +28,20 @@ const JobLocationMap = ({ height = '320px' }) => {
         },
         { enableHighAccuracy: true, timeout: 10000 }
       );
-    } else {
-      setGeoError('Geolocation is not supported by this browser.');
     }
-  }, []);
+  }, [lat, lng]);
 
   if (!isLoaded) return <div style={containerStyle} className="map-loading">Loading map...</div>;
 
-  const center = userLocation || DEFAULT_CENTER;
+  const center = (lat && lng)
+    ? { lat: Number(lat), lng: Number(lng) }
+    : userLocation || DEFAULT_CENTER;
 
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={userLocation ? 15 : 5}
+      zoom={(lat && lng) ? 15 : (userLocation ? 15 : 5)}
       options={{
         zoomControl: true,
         streetViewControl: false,
@@ -56,12 +56,11 @@ const JobLocationMap = ({ height = '320px' }) => {
         ]
       }}
     >
-      {userLocation && (
-        <Marker
-          position={userLocation}
-          title={'Your location'}
-        />
-      )}
+      {(lat && lng) ? (
+        <Marker position={center} title={name || 'Job location'} />
+      ) : userLocation ? (
+        <Marker position={userLocation} title={'Your location'} />
+      ) : null}
     </GoogleMap>
   );
 };

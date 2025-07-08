@@ -22,6 +22,8 @@ function WorkerDashboard() {
     totalEarnings: 0
   });
   const [error, setError] = useState('');
+  const [bookingBanner, setBookingBanner] = useState(null);
+  const [unseenBookings, setUnseenBookings] = useState([]);
 
   useEffect(() => {
     const fetchWorkerData = async () => {
@@ -48,21 +50,57 @@ function WorkerDashboard() {
       }
     };
     fetchWorkerData();
+
+    // Listen for stats update event
+    const handleStatsUpdate = () => fetchWorkerData();
+    window.addEventListener('worker-dashboard-stats-update', handleStatsUpdate);
+    return () => {
+      window.removeEventListener('worker-dashboard-stats-update', handleStatsUpdate);
+    };
   }, [navigate]);
+
+  // Persistent notification logic
+  useEffect(() => {
+    // Load unseen bookings from localStorage
+    const stored = localStorage.getItem('unseenBookings');
+    if (stored) {
+      setUnseenBookings(JSON.parse(stored));
+      setBookingBanner(JSON.parse(stored)[0]?.message || null);
+    }
+  }, []);
 
   useEffect(() => {
     const socket = getSocket();
     const workerUser = JSON.parse(localStorage.getItem('workerUser'));
     if (workerUser?.id) {
-      socket.emit('join-room', `worker_${workerUser.id}`);
+      socket.emit('join-worker-room', workerUser.id);
     }
-    socket.on('direct-booking', (data) => {
-      toast.info(data.message || 'You have a new booking request!');
+    // Listen for booking-request
+    socket.on('booking-request', (data) => {
+      setBookingBanner(`${data.customerName} has requested your service!`);
+      toast.info(`New booking request from ${data.customerName}!`, {
+        position: 'top-right',
+        autoClose: 5000
+      });
+      // Save to localStorage for persistence
+      const prev = JSON.parse(localStorage.getItem('unseenBookings') || '[]');
+      const updated = [...prev, data];
+      localStorage.setItem('unseenBookings', JSON.stringify(updated));
+      setUnseenBookings(updated);
     });
     return () => {
-      socket.off('direct-booking');
+      socket.off('booking-request');
     };
   }, []);
+
+  // Mark notification as seen
+  const handleCloseBanner = () => {
+    setBookingBanner(null);
+    // Remove the first unseen booking
+    const updated = unseenBookings.slice(1);
+    setUnseenBookings(updated);
+    localStorage.setItem('unseenBookings', JSON.stringify(updated));
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('workerToken');
@@ -71,6 +109,12 @@ function WorkerDashboard() {
 
   return (
     <div className="worker-landing">
+      {bookingBanner && (
+        <div className="booking-banner">
+          <span>{bookingBanner}</span>
+          <button onClick={handleCloseBanner}>&times;</button>
+        </div>
+      )}
       <WorkerHeader />
       <main style={{ minHeight: '80vh', background: '#fafdff' }}>
         <section className="worker-hero" style={{ background: 'linear-gradient(120deg, #fafdff 0%, #eaf6fb 100%)', color: '#123459', minHeight: 'unset', padding: '4rem 0 2rem' }}>
@@ -95,6 +139,10 @@ function WorkerDashboard() {
             <div className="benefit-card">
               <h3 className="benefit-title" style={{ color: '#153a67' }}>{t.total_jobs}</h3>
               <p className="benefit-description" style={{ color: '#123459', fontWeight: 700 }}>{jobStats.totalJobs}</p>
+            </div>
+            <div className="benefit-card">
+              <h3 className="benefit-title" style={{ color: '#153a67' }}>Completed Jobs</h3>
+              <p className="benefit-description" style={{ color: '#123459', fontWeight: 700 }}>{jobStats.completedJobs || 0}</p>
             </div>
             <div className="benefit-card">
               <h3 className="benefit-title" style={{ color: '#153a67' }}>{t.pending_jobs}</h3>

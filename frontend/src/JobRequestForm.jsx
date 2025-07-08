@@ -5,8 +5,9 @@ import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import AuthRedirectModal from './components/AuthRedirectModal';
-import Header from './components/Header'; // Adjust the path if needed
 import { FaCheckCircle, FaClock, FaCalendarAlt, FaBroom } from "react-icons/fa";
+import MobileFooter from './components/MobileFooter';
+import Header from './components/Header';
 
 import './JobRequestForm.css';
 
@@ -274,7 +275,7 @@ export default function JobRequestForm() {
   return (
     <>
       <Header />
-      <div className="page-wrapper">
+      <div className="page-wrapper" style={{ paddingBottom: '80px' }}>
         <div className="request-form-wrapper">
           <div className="request-form-container">
             <div className="request-form-header">
@@ -538,6 +539,7 @@ export default function JobRequestForm() {
           </div>
         </div>
       </div>
+      <MobileFooter />
     </>
   );
 }
