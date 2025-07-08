@@ -110,7 +110,7 @@ npm run dev
 ## 📸 Screenshots
 > _(Add screenshots in a `/screenshots` folder and display them here)_
 ### Homepage
-![Homepage](screenshots/homepage.png)
+![Homepage](screenshots/CustomerHomepage.png)
 ---
 
 ## 🤝 Contributing
