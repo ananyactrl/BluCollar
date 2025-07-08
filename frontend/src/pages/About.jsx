@@ -6,19 +6,16 @@ import Footer from '../components/Footer';
 const About = () => (
   <>
     <Header />
-    <div className="page-wrapper" style={{ paddingTop: '60px' }}>
+    <div className="page-wrapper" style={{ paddingTop: '20px' }}>
       <div className="home-container">
         <section className="hero-section skillex-fade-in visible" style={{minHeight: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
           <div className="hero-text-container" style={{maxWidth: 700, margin: '0 auto', textAlign: 'center'}}>
-            <h1 className="hero-title gradient-text">About BluCollar</h1>
-            <p className="hero-description" style={{fontSize: '1.2rem', color: '#123459cc', margin: '1.5rem 0'}}>
-              Your trusted partner for seamless, professional home services.
-            </p>
+            
           </div>
         </section>
         <section className="features-section skillex-fade-in visible" style={{paddingTop: 0}}>
           <div className="section-container" style={{maxWidth: 800, margin: '0 auto'}}>
-            <div className="section-header" style={{marginBottom: 32}}>
+            <div className="section-header" style={{marginBottom: 16, marginTop: 0}}>
               <h2 style={{color: '#123459'}}>Who We Are</h2>
             </div>
             <div style={{fontSize: '1.1rem', color: '#123459b3', lineHeight: 1.7, background: '#fff', borderRadius: 16, padding: '2rem', boxShadow: '0 2px 12px rgba(18,52,89,0.04)'}}>

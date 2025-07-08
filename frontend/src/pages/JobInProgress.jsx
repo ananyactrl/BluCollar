@@ -3,12 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getSocket } from '../services/socketService';
 import JobLocationMap from '../JobLocationMap';
 import MobileFooter from '../components/MobileFooter';
+import { useAuth } from '../context/AuthContext';
 
 const API = import.meta.env.VITE_BACKEND_URL + '/api';
 
 const JobInProgress = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [job, setJob] = useState(null);
   const [worker, setWorker] = useState(null);
   const [status, setStatus] = useState('');
@@ -19,7 +21,6 @@ const JobInProgress = () => {
     const fetchJob = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem('token');
         const res = await fetch(`${API}/ai/job-request/${jobId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -42,7 +43,7 @@ const JobInProgress = () => {
       }
     };
     fetchJob();
-  }, [jobId]);
+  }, [jobId, token]);
 
   useEffect(() => {
     const socket = getSocket();
@@ -66,7 +67,6 @@ const JobInProgress = () => {
 
   const handleCancel = async () => {
     try {
-      const token = localStorage.getItem('token');
       await fetch(`${API}/ai/job-request/${jobId}/cancel`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }

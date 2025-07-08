@@ -37,7 +37,6 @@ export default function JobRequestForm() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   const [formData, setFormData] = useState({
-    client_id: 1, // Placeholder client_id
     name: user ? user.name : '',
     email: user ? user.email : '',
     phone_number: '',
@@ -115,21 +114,19 @@ export default function JobRequestForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const token = localStorage.getItem('token');
-
+      const jobData = {
+        ...formData,
+        client_id: user ? user.id : null,
+      };
       const response = await fetch(`${API}/ai/job-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          userId: user ? user.id : null,
-          serviceType: formData.serviceType,
-          // ...other fields
-        }),
+        body: JSON.stringify(jobData),
       });
 
       if (response.status === 401) {

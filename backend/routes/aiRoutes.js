@@ -189,8 +189,11 @@ router.get('/my-bookings', clientAuthenticateToken, async (req, res) => {
 router.post('/job-request', clientAuthenticateToken, jobRequestUpload.array('documents', 5), async (req, res) => {
   const jobData = req.body;
   try {
+    const clientId = req.user.id;
+    if (!clientId) return res.status(400).json({ message: 'Missing client ID' });
     await db.collection('job_requests').add({
       ...jobData,
+      client_id: clientId,
       service_type: jobData.serviceType || jobData.service_type,
       status: 'pending',
       createdAt: new Date()

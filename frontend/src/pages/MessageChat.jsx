@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 import './MessageChat.css';
+import { useAuth } from '../context/AuthContext';
 
 const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
@@ -10,17 +11,11 @@ export default function MessageChat({ job_id }) {
   const [input, setInput] = useState('');
   const socketRef = useRef(null);
   const threadRef = useRef(null);
+  const { user } = useAuth();
 
-  // Get sender_id and sender_role from localStorage or context
-  let sender_id = null;
-  let sender_role = null;
-  try {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-      sender_id = user.id;
-      sender_role = user.role || 'client'; // Adjust as per your user object
-    }
-  } catch (e) {}
+  // Get sender_id and sender_role from AuthContext or fallback
+  let sender_id = user?.id;
+  let sender_role = user?.role || 'client';
   // Fallback for demo
   if (!sender_id) sender_id = 101;
   if (!sender_role) sender_role = 'client';

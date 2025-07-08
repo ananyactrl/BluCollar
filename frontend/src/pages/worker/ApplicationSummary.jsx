@@ -4,6 +4,7 @@ import axios from 'axios';
 import './ApplicationSummary.css';
 import './WorkerMobile.css';
 import { FaUserCheck } from 'react-icons/fa';
+import WorkerHeader from '../../components/WorkerHeader';
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
@@ -50,39 +51,42 @@ const ApplicationSummary = () => {
   };
 
   return (
-    <div className="summary-page">
-      <div className="summary-card">
-        <div className="summary-header">
-            <div className="summary-icon-wrapper">
-                <FaUserCheck size={24} />
-            </div>
-            <h2>Application Summary</h2>
-            <p>Please review your details before submitting. You can go back to make changes.</p>
-        </div>
-        
-        {error && <div className="summary-error">{error}</div>}
+    <>
+      <WorkerHeader />
+      <div className="summary-page">
+        <div className="summary-card">
+          <div className="summary-header">
+              <div className="summary-icon-wrapper">
+                  <FaUserCheck size={24} />
+              </div>
+              <h2>Application Summary</h2>
+              <p>Please review your details before submitting. You can go back to make changes.</p>
+          </div>
+          
+          {error && <div className="summary-error">{error}</div>}
 
-        <div className="summary-details">
-            {/* You can optionally display a summary of the details here */}
-            <p><strong>Profession:</strong> {workerData.profession}</p>
-            <p><strong>Name:</strong> {workerData.name}</p>
-            <p><strong>Email:</strong> {workerData.email}</p>
-        </div>
-        
-        <div className="summary-actions">
-            <button 
-                className="submit-app-btn" 
-                onClick={handleFinalSubmit}
-                disabled={isSubmitting}
-            >
-                {isSubmitting ? 'Submitting...' : 'Submit Application'}
-            </button>
-            <button className="back-btn" onClick={() => navigate(-1)}>
-                Back
-            </button>
+          <div className="summary-details">
+              {/* You can optionally display a summary of the details here */}
+              <p><strong>Profession:</strong> {workerData.profession}</p>
+              <p><strong>Name:</strong> {workerData.name}</p>
+              <p><strong>Email:</strong> {workerData.email}</p>
+          </div>
+          
+          <div className="summary-actions">
+              <button 
+                  className="submit-app-btn" 
+                  onClick={handleFinalSubmit}
+                  disabled={isSubmitting}
+              >
+                  {isSubmitting ? 'Submitting...' : 'Submit Application'}
+              </button>
+              <button className="back-btn" onClick={() => navigate(-1)}>
+                  Back
+              </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

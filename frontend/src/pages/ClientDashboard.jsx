@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getSocket } from '../services/socketService';
+import { useAuth } from '../context/AuthContext';
 
 // Placeholder data - in a real app, this would come from an API
 const upcomingBookingsData = [
@@ -64,12 +65,11 @@ export default function ClientDashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user'));
+    const { user, token, logout } = useAuth();
 
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const token = localStorage.getItem('token');
                 if (!token) {
                     setError('You must be logged in to see your bookings.');
                     setLoading(false);
@@ -90,10 +90,7 @@ export default function ClientDashboard() {
                 setPastBookings(past);
             } catch (err) {
                 if (err.response && err.response.status === 403 && err.response.data.message?.includes('jwt expired')) {
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    localStorage.removeItem('workerToken');
-                    navigate('/login');
+                    logout();
                 } else {
                     setError('Failed to load bookings. Please try again later.');
                     console.error(err);
@@ -104,7 +101,7 @@ export default function ClientDashboard() {
         };
 
         fetchBookings();
-    }, [navigate]);
+    }, [navigate, token, logout]);
 
     useEffect(() => {
         const socket = getSocket();
@@ -140,7 +137,6 @@ export default function ClientDashboard() {
 
     const handleCancelBooking = async (bookingId) => {
         try {
-            const token = localStorage.getItem('token');
             await axios.post(`${API}/ai/job-request/${bookingId}/cancel`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -181,12 +177,7 @@ export default function ClientDashboard() {
                     <>
                         <span className="dashboard-username">{user.name}</span>
                         <button className="dashboard-account-btn" onClick={() => navigate('/account-settings')}>Account Details</button>
-                        <button className="dashboard-logout-btn" onClick={() => {
-                            localStorage.removeItem('token');
-                            localStorage.removeItem('user');
-                            localStorage.removeItem('workerToken');
-                            navigate('/login');
-                        }}>Logout</button>
+                        <button className="dashboard-logout-btn" onClick={logout}>Logout</button>
                     </>
                 ) : (
                     <button className="dashboard-login-btn" onClick={() => navigate('/login')}>Login</button>

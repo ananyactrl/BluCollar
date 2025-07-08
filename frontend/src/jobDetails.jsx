@@ -4,6 +4,7 @@ import './jobDetails.css';
 import { GoogleMap, DirectionsRenderer, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { getToken } from './context/AuthContext';
 import { getReviewSummary, getReviews } from './services/reviewService';
+import { useAuth } from './context/AuthContext';
 
 const containerStyle = { width: '100%', height: '350px' };
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
@@ -106,6 +107,7 @@ export default function JobDetailsWrapper() {
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const API = import.meta.env.VITE_API_BASE_URL;
+  const { user } = useAuth();
 
   useEffect(() => {
     fetch(`${API}/api/job-request/${id}`)
@@ -165,7 +167,6 @@ export default function JobDetailsWrapper() {
   if (!job) return <div className="job-details-loading">Loading...</div>;
 
   // Only show button if job is completed, user is customer, and not already reviewed
-  const user = JSON.parse(localStorage.getItem('user'));
   const canReview = job.status === 'completed' && user && user.id === job.customer_id && !reviewed;
 
   return (

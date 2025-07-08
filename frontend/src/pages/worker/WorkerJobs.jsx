@@ -8,6 +8,7 @@ import './WorkerMobile.css';
 import { jwtDecode } from 'jwt-decode';
 import { getSocket, disconnectSocket } from '../../services/socketService';
 import Footer from '../../components/Footer';
+import WorkerHeader from '../../components/WorkerHeader';
 
 const API = import.meta.env.VITE_BACKEND_URL || 'https://blucollar-e4mr.onrender.com';
 
@@ -239,6 +240,7 @@ function WorkerJobs() {
 
   return (
     <>
+      <WorkerHeader />
       <div className="worker-jobs-container">
         <ToastContainer />
         <h1 className="page-title">Worker Jobs</h1>
