@@ -1,70 +1,76 @@
 # 🔧 BluCollar Hub
 
-A full-stack web platform connecting users with skilled blue-collar workers (maids, plumbers, electricians, and more) for on-demand, fair, and verified home services. Built with a modern, scalable tech stack and a custom, professional UI/UX.
+**BluCollar Hub** is a full-stack web platform that connects users with skilled blue-collar workers — like electricians, plumbers, and maids — for on-demand, verified home services.
+
+This platform enables:
+- Worker registration & authentication
+- Job posting and real-time profession-based matching
+- Worker dashboards, job status updates, and reviews
+- Map-based service areas with animated UI elements
 
 ---
 
 ## 🚀 Live Demo
 
-> https://blucollar.vercel.app/
+🔗 [https://blucollar.vercel.app](https://blucollar.vercel.app)
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### ⚛️ Frontend
+
 - **React** (v19.x)
 - **Vite** (v6.x)
 - **React Router DOM** (v7.x)
-- **Axios** (v1.x)
-- **Tailwind CSS** (v4.x)
-- **React Icons** (v5.x)
-- **Framer Motion** (v11.x)
-- **AOS (Animate On Scroll)**
-- **GSAP** (animations)
-- **Three.js**, **React Three Fiber**, **Drei** (3D/graphics)
-- **Socket.io-client** (real-time features)
-- **React Toastify** (notifications)
-- **React Modal** (modals)
-- **React Calendar** (calendar UI)
-- **Bootstrap** (v5.x, for some components)
-- **Dayjs** (date/time utils)
-- **jwt-decode** (JWT parsing)
+- **Axios** – API communication
+- **Framer Motion**, **AOS**, **GSAP** – Smooth animations
+- **Bootstrap** (v5.x) – Responsive components
+- **React Toastify** – Notifications
+- **React Modal**, **React Calendar** – Modals & Calendar UI
+- **Socket.io-client** – Real-time status updates
+- **Three.js**, **React Three Fiber**, **Drei** – 3D graphics
+- **Dayjs** – Date utilities
+- **jwt-decode** – JWT token parsing
+- **Google Maps API** – Location features
 
-### 🎨 Modern UI/UX
-- Custom CSS for all layouts and components
-- Capsule-shaped buttons, responsive header, and navigation
+### 🎨 UI/UX Highlights
+
+- Custom CSS for layouts and animations
+- Capsule buttons, scroll effects, responsive UI
+- Mobile-first, clean and professional UI
 - Consistent design system across all pages
-- Mobile-first, fully responsive
 
 ---
 
 ### 🔙 Backend
+
 - **Node.js** (v18+)
 - **Express.js** (v4.x)
-- **Firebase Admin SDK** (Firestore/Realtime Database, Firebase Auth)
-- **Socket.io** (real-time communication)
-- **JWT** (jsonwebtoken v9.x)
-- **Bcrypt** (v5.x)
-- **CORS** (v2.x)
-- **Dotenv** (env vars)
-- **Nodemailer** (email)
-- **Multer** (file uploads)
+- **Firebase Admin SDK**
+  - Firestore DB (job data, users, worker profiles)
+  - Firebase Auth (authentication for users/workers)
+- **JWT** – Token generation & verification
+- **Bcrypt** – Password hashing
+- **Socket.io** – Real-time job acceptance/updates
+- **Multer** – Profile image uploads
+- **Nodemailer** – Email notifications
+- **CORS**, **Dotenv**
 
 ---
 
 ### 🧪 Dev Tools
-- **Vite** (frontend dev/build)
-- **Nodemon** (backend auto-reload)
-- **ESLint** (linting)
-- **PostCSS** (CSS processing)
+
+- **Vite** – Frontend dev server & build
+- **Nodemon** – Backend hot reload
+- **ESLint**, **PostCSS**
 
 ---
 
 ## 📂 Project Structure
 
 ```
-/signup1/frontend    → React + Vite + Tailwind app
+/signup1/frontend    → React + Vite 
 /signup1/backend     → Node.js + Express + Firebase API
 ```
 
@@ -82,13 +88,13 @@ cd servlyn1
 ```bash
 cd signup1/backend
 npm install
-npm run dev  # or npm start
+node server.js
 ```
 - Configure your Firebase credentials in `backend/firebase.js` and `backend/serviceAccountKey.json` as needed.
 
 ### 3. Setup Frontend
 ```bash
-cd ../frontend
+cd signup1/frontend
 npm install
 npm run dev
 ```
@@ -97,7 +103,7 @@ npm run dev
 
 ## 🌐 Deployment
 - **Frontend:** Vercel (https://blucollar.vercel.app/)
-- **Backend:** (e.g. Render, Railway, or your own server)
+- **Backend:** (e.g. Render,Firebase, or your own server)
 
 ---
 
