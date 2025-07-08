@@ -26,7 +26,7 @@ const defaultCenter = {
 
 const libraries = ['places'];
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 export default function JobRequestForm() {
   const location = useLocation();
@@ -60,7 +60,7 @@ export default function JobRequestForm() {
   const [marker, setMarker] = useState(defaultCenter);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI',
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries
   });
 

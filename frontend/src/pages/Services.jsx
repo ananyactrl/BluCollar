@@ -187,8 +187,8 @@ const Services = () => {
           </div>
         </div>
         <Footer />
+        <MobileFooter />
       </div>
-      <MobileFooter />
     </>
   );
 };

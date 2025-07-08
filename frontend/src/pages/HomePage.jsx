@@ -438,6 +438,7 @@ const HomePage = () => {
           </svg>
         </div>
       </div>
+      <MobileFooter />
     </>
   );
 }

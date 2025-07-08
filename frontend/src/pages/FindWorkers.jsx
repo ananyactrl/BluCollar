@@ -121,14 +121,17 @@ const FindWorkers = () => {
       // Create job request
       const jobData = {
         workerId: worker.id,
-        clientId: user.id,
+        serviceType: worker.profession, // Use serviceType for backend
         clientName: user.name,
+        address: worker.address || '', // Add address if available
         status: 'pending',
-        service: worker.profession,
         date: new Date().toISOString(),
       };
 
-      const response = await axios.post(`${API}/job-requests`, jobData);
+      const token = user.token || localStorage.getItem('token');
+      const response = await axios.post(`${API}/ai/job-request`, jobData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       
       // Emit socket event for real-time notification
       const socket = getSocket();

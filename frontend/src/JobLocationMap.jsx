@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader, InfoWindow } from '@react-google-maps/api';
+
+const libraries = ['places'];
 
 const JobLocationMap = ({ lat, lng, height = '320px', name }) => {
   const containerStyle = { width: '100%', height };
-  const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const DEFAULT_CENTER = { lat: 28.6139, lng: 77.2090 }; // New Delhi as fallback
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    libraries: ['places']
+    libraries
   });
 
   const [userLocation, setUserLocation] = useState(null);
@@ -58,9 +60,16 @@ const JobLocationMap = ({ lat, lng, height = '320px', name }) => {
     >
       {(lat && lng) ? (
         <Marker position={center} title={name || 'Job location'} />
-      ) : userLocation ? (
-        <Marker position={userLocation} title={'Your location'} />
-      ) : null}
+      ) : (
+        <Marker position={userLocation || DEFAULT_CENTER}>
+          <InfoWindow position={userLocation || DEFAULT_CENTER}>
+            <div style={{ fontSize: 14, color: '#123459' }}>
+              {name ? <b>{name}</b> : null}<br />
+              {geoError ? geoError : 'Location not found, showing default.'}
+            </div>
+          </InfoWindow>
+        </Marker>
+      )}
     </GoogleMap>
   );
 };

@@ -7,12 +7,14 @@ import { getReviewSummary, getReviews } from './services/reviewService';
 import { useAuth } from './context/AuthContext';
 
 const containerStyle = { width: '100%', height: '350px' };
-const GOOGLE_MAPS_API_KEY = 'AIzaSyDcEBM1lUnoyZBk0dH9M877_YyofV1rarI';
+const libraries = ['places'];
+
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 function WorkerJobMap({ destinationAddress }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    libraries: ['places']
+    libraries
   });
   const [directions, setDirections] = useState(null);
   const [mapCenter, setMapCenter] = useState({ lat: 18.5204, lng: 73.8567 });
