@@ -3,7 +3,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import AuthRedirectModal from './components/AuthRedirectModal';
 import { FaCheckCircle, FaClock, FaCalendarAlt, FaBroom } from "react-icons/fa";
 import MobileFooter from './components/MobileFooter';
@@ -23,10 +24,6 @@ const defaultCenter = {
   lat: 18.5204, // Pune default
   lng: 73.8567
 };
-
-const libraries = ['places'];
-
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 export default function JobRequestForm() {
   const location = useLocation();
@@ -59,32 +56,16 @@ export default function JobRequestForm() {
 
   const [marker, setMarker] = useState(defaultCenter);
 
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    libraries
-  });
-
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [activeRequest, setActiveRequest] = useState(null);
-  const [loadingActive, setLoadingActive] = useState(true);
-
-  const handleChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
-
   const onMapClick = useCallback((event) => {
+    // Leaflet event: event.latlng
     setMarker({
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng()
+      lat: event.latlng.lat,
+      lng: event.latlng.lng
     });
     setFormData(prev => ({
       ...prev,
-      latitude: event.latLng.lat(),
-      longitude: event.latLng.lng()
+      latitude: event.latlng.lat,
+      longitude: event.latlng.lng
     }));
   }, []);
 
@@ -497,33 +478,22 @@ export default function JobRequestForm() {
 
               <div>
                 <label>Pick your location on the map</label>
-                {isLoaded ? (
-                  <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 ? marker : { lat: 28.6139, lng: 77.2090 }}
-                    zoom={marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 ? 15 : 5}
-                    onClick={onMapClick}
-                    options={{
-                      zoomControl: true,
-                      streetViewControl: false,
-                      mapTypeControl: false,
-                      fullscreenControl: false,
-                      styles: [
-                        {
-                          featureType: 'poi',
-                          elementType: 'labels',
-                          stylers: [{ visibility: 'off' }]
-                        }
-                      ]
-                    }}
-                  >
-                    {marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 && (
-                      <Marker position={marker} title="Selected Location" />
-                    )}
-                  </GoogleMap>
-                ) : (
-                  <div style={containerStyle} className="map-loading">Loading map...</div>
-                )}
+                <MapContainer
+                  center={marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 ? marker : { lat: 28.6139, lng: 77.2090 }}
+                  zoom={marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 ? 15 : 5}
+                  style={containerStyle}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <MapClickHandler onMapClick={onMapClick} />
+                  {marker && !isNaN(marker.lat) && !isNaN(marker.lng) && Math.abs(marker.lat) <= 90 && Math.abs(marker.lng) <= 180 && (
+                    <Marker position={marker}>
+                      <Popup>Selected Location</Popup>
+                    </Marker>
+                  )}
+                </MapContainer>
                 <div>
                   <small>Selected Lat: {formData.latitude}, Lng: {formData.longitude}</small>
                 </div>
@@ -539,4 +509,11 @@ export default function JobRequestForm() {
       <MobileFooter />
     </>
   );
+}
+
+function MapClickHandler({ onMapClick }) {
+  useMapEvents({
+    click: onMapClick
+  });
+  return null;
 }

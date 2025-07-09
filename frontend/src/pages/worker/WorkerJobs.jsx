@@ -130,29 +130,51 @@ function WorkerJobs() {
     }
   };
 
+  function cleanAddress(address) {
+    if (!address) return '';
+    // Remove extra spaces and redundant commas
+    return address
+      .split(',')
+      .map(part => part.trim())
+      .filter(Boolean)
+      .join(', ');
+  }
+
   const getCoordinates = async (address) => {
-    if (!address || address.trim() === 'N/A' || address.trim().length < 5) {
+    const cleanedAddress = cleanAddress(address);
+    if (!cleanedAddress || cleanedAddress.length < 5) {
       setMapError('No valid address provided for this job.');
       return null;
     }
-    if (typeof window.google === 'undefined' || typeof window.google.maps === 'undefined') {
-      setMapError('Google Maps has not loaded. Please check your internet connection and API key.');
-      return null;
-    }
     try {
-      const geocoder = new window.google.maps.Geocoder();
-      const results = await geocoder.geocode({ address });
-      if (results && results.length > 0) {
-        const location = results[0].geometry.location;
-        setMapError(''); // Clear previous errors
-        return { lat: location.lat(), lng: location.lng() };
-      } else {
-        setMapError(`Could not find coordinates for: ${address}.`);
-        return null;
+      // Try full cleaned address
+      let response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanedAddress)}`
+      );
+      let data = await response.json();
+      if (data && data.length > 0) {
+        setMapError('');
+        return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
       }
+      // Fallback: Try with just city/state/country (last 3 parts)
+      const parts = cleanedAddress.split(',');
+      if (parts.length > 2) {
+        const fallbackAddress = parts.slice(-3).join(',').trim();
+        if (fallbackAddress.length > 0) {
+          response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fallbackAddress)}`
+          );
+          data = await response.json();
+          if (data && data.length > 0) {
+            setMapError('Could not find full address, showing city/state.');
+            return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+          }
+        }
+      }
+      setMapError(`Could not find coordinates for: ${cleanedAddress}.`);
+      return null;
     } catch (error) {
       setMapError(`Geocoding error: ${error.message}. Please try again.`);
-      console.error("Geocoding error:", error);
       return null;
     }
   };
@@ -302,16 +324,17 @@ function WorkerJobs() {
                   )}
                 </div>
                 {job.lat && job.lng ? (
-                  <div className="map-container"><JobLocationMap lat={job.lat} lng={job.lng} name={job.service_type} /></div>
+                  <div className="map-container">
+                    <JobLocationMap lat={job.lat} lng={job.lng} name={job.service_type} />
+                  </div>
                 ) : (
-                  <div className="map-placeholder">
-                    Map not available<br />
-                    {mapError && <div style={{ color: '#d9534f', fontSize: 13, marginTop: 4 }}>{mapError}</div>}
-                    {!mapError && <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>No coordinates found for this address.</div>}
-                    {/* Fallback map with default location */}
-                    <div style={{ marginTop: 8 }}>
-                      <JobLocationMap lat={28.6139} lng={77.2090} name="Default Location" />
-                    </div>
+                  <div className="map-container">
+                    <JobLocationMap lat={28.6139} lng={77.2090} name="Default Location" />
+                    {mapError && (
+                      <div style={{ color: '#d9534f', fontSize: 13, marginTop: 4 }}>
+                        {mapError} Showing default location.
+                      </div>
+                    )}
                   </div>
                 )}
                 {job.status === 'ongoing' && (

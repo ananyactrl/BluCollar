@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './jobDetails.css';
-import { GoogleMap, DirectionsRenderer, Marker, useJsApiLoader } from '@react-google-maps/api';
+
 import { getToken } from './context/AuthContext';
 import { getReviewSummary, getReviews } from './services/reviewService';
 import { useAuth } from './context/AuthContext';

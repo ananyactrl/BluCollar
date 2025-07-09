@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, Marker, useJsApiLoader, InfoWindow } from '@react-google-maps/api';
-
-const libraries = ['places'];
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const JobLocationMap = ({ lat, lng, height = '320px', name }) => {
   const containerStyle = { width: '100%', height };
-  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const DEFAULT_CENTER = { lat: 28.6139, lng: 77.2090 }; // New Delhi as fallback
-
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    libraries
-  });
 
   const [userLocation, setUserLocation] = useState(null);
   const [geoError, setGeoError] = useState(null);
@@ -33,44 +26,36 @@ const JobLocationMap = ({ lat, lng, height = '320px', name }) => {
     }
   }, [lat, lng]);
 
-  if (!isLoaded) return <div style={containerStyle} className="map-loading">Loading map...</div>;
-
   const center = (lat && lng)
     ? { lat: Number(lat), lng: Number(lng) }
     : userLocation || DEFAULT_CENTER;
 
+  const markerPosition = (lat && lng)
+    ? { lat: Number(lat), lng: Number(lng) }
+    : userLocation || DEFAULT_CENTER;
+
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
+    <MapContainer
       center={center}
       zoom={(lat && lng) ? 15 : (userLocation ? 15 : 5)}
-      options={{
-        zoomControl: true,
-        streetViewControl: false,
-        mapTypeControl: false,
-        fullscreenControl: false,
-        styles: [
-          {
-            featureType: 'poi',
-            elementType: 'labels',
-            stylers: [{ visibility: 'off' }]
-          }
-        ]
-      }}
+      style={containerStyle}
+      scrollWheelZoom={true}
     >
-      {(lat && lng) ? (
-        <Marker position={center} title={name || 'Job location'} />
-      ) : (
-        <Marker position={userLocation || DEFAULT_CENTER}>
-          <InfoWindow position={userLocation || DEFAULT_CENTER}>
-            <div style={{ fontSize: 14, color: '#123459' }}>
-              {name ? <b>{name}</b> : null}<br />
-              {geoError ? geoError : 'Location not found, showing default.'}
-            </div>
-          </InfoWindow>
-        </Marker>
-      )}
-    </GoogleMap>
+      <TileLayer
+        attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={markerPosition}>
+        <Popup>
+          {name ? <b>{name}</b> : null}<br />
+          {geoError
+            ? geoError
+            : (lat && lng
+                ? 'Job location'
+                : 'Location not found, showing default.')}
+        </Popup>
+      </Marker>
+    </MapContainer>
   );
 };
 
